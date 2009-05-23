@@ -1,0 +1,29 @@
+<project name="twitteybot" default="war">
+	<path id="classpath">
+		<pathelement path="classes" />
+		<fileset dir="${basedir}/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	<target name="war" depends="compile">
+		<war destfile="twitteybot.war">
+			<lib dir="${basedir}/lib" />
+			<classes dir="${basedir}/classes" />
+			<webinf file="${basedir}/*.xml">
+				<exclude name="build.xml" />
+			</webinf>
+		</war>
+		<unwar dest="${basedir}/twittey" src="${basedir}/twitteybot.war" overwrite="true">
+		</unwar>
+		<delete dir="classes" />
+	</target>
+	<target name="compile">
+		<mkdir dir="classes" />
+
+		<echo message="Compiling the twitteybot" />
+		<javac destdir="classes" debug="on">
+			<src path="${basedir}/src" />
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+</project>
