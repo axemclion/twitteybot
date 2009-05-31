@@ -36,12 +36,10 @@ public class TwitterFacade {
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection
-                .getInputStream()));
-            log.log(Level.FINEST, reader.readLine());
-
             writer.write("status=" + this.sanitize(statusText));
             writer.close();
+            if(connection.getResponseCode() == 200)
+            	status = true;
             log.log(Level.INFO, this.login, statusText);
 
         } catch (Exception e) {
