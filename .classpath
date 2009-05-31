@@ -11,23 +11,23 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/jdom.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/rome-1.0RC1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/shared/geronimo-servlet_2.5_spec-1.2.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/shared/appengine-local-runtime-shared.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/shared/geronimo-el_1.0_spec-1.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/shared/geronimo-jsp_2.1_spec-1.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/shared/jsp/repackaged-appengine-ant-1.6.5.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/shared/jsp/repackaged-appengine-ant-launcher-1.6.5.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/shared/jsp/repackaged-appengine-commons-el-1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/shared/jsp/repackaged-appengine-commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/shared/jsp/repackaged-appengine-jasper-compiler-5.0.28.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/shared/jsp/repackaged-appengine-jasper-runtime-5.0.28.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/user/orm/datanucleus-appengine-1.0.1.final.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/user/orm/datanucleus-core-1.1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/user/orm/datanucleus-jpa-1.1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/user/orm/geronimo-jpa_3.0_spec-1.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/user/orm/geronimo-jta_1.1_spec-1.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/user/orm/jdo2-api-2.3-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Google/appengine/lib/user/appengine-api-1.0-sdk-1.2.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/shared/appengine-local-runtime-shared.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/shared/geronimo-el_1.0_spec-1.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/shared/geronimo-jsp_2.1_spec-1.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/shared/geronimo-servlet_2.5_spec-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/shared/jsp/ant-1.6.5.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/shared/jsp/ant-launcher-1.6.5.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/shared/jsp/commons-el-1.0.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/shared/jsp/jasper-compiler-5.0.28.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/shared/jsp/jasper-runtime-5.0.28.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/user/appengine-api-1.0-sdk-1.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/user/orm/datanucleus-appengine-1.0.0.final.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/user/orm/datanucleus-core-1.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/user/orm/datanucleus-jpa-1.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/user/orm/geronimo-jpa_3.0_spec-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/user/orm/geronimo-jta_1.1_spec-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/user/orm/jdo2-api-2.3-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/appengine-java/lib/shared/jsp/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
