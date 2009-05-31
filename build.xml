@@ -13,9 +13,10 @@
 				<exclude name="build.xml" />
 			</webinf>
 		</war>
-		<unwar dest="${basedir}/twittey" src="${basedir}/twitteybot.war" overwrite="true">
+		<unwar dest="${basedir}/war" src="${basedir}/twitteybot.war" overwrite="true">
 		</unwar>
 		<delete dir="classes" />
+		<delete file="twitteybot.war"/>
 	</target>
 	<target name="compile">
 		<mkdir dir="classes" />

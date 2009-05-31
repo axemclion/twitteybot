@@ -24,7 +24,7 @@ public class TwitBot {
 	private String login = "twitteybot";
 	private String password = "Welcome1";
 
-	public void twitter(String status) throws URIException, IOException,
+	public int twitter(String status) throws URIException, IOException,
 			HttpException {
 		String statusURL = "/statuses/update.xml";
 		String userPassword = login + ":" + password;
@@ -37,6 +37,7 @@ public class TwitBot {
 		OutputStreamWriter writer = new OutputStreamWriter(openConnection.getOutputStream());
         writer.write("status=" + status);
         writer.close();
+        return openConnection.getResponseCode();
 	}
 
 	public String getFeed() throws FeedException, IOException,

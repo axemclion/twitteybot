@@ -19,8 +19,8 @@ public class AdminServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		TwitBot bot = new TwitBot();
-		bot.twitter("Just testing");
-		resp.getWriter().write("tweet successful");
+		String message = req.getParameter("message");
+		int twitter = bot.twitter(message);
+		resp.getWriter().write("twitterred with status code: "+twitter);
 	}
-
 }
