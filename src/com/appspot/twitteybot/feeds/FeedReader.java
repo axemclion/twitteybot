@@ -14,11 +14,11 @@ import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
 
 public class FeedReader {
-    private String feedUrl;
+    private URL feedUrl;
     private static final Logger log = Logger.getLogger(FeedReader.class.getName());
 
-    public FeedReader(final String feedUrl) {
-        this.feedUrl = feedUrl;
+    public FeedReader(final URL url) {
+        this.feedUrl = url;
     }
 
     public List<SyndEntryImpl> getItems() {
@@ -27,16 +27,16 @@ public class FeedReader {
         SyndFeed feed = null;
         List<SyndEntryImpl> entries = null;
         try {
-            feed = input.build(new XmlReader(new URL(this.feedUrl)));
+            feed = input.build(new XmlReader(this.feedUrl));
             entries = feed.getEntries();
         } catch (IllegalArgumentException e) {
-            log.log(Level.SEVERE, this.feedUrl, e);
+            log.log(Level.SEVERE, this.feedUrl.toString(), e);
         } catch (MalformedURLException e) {
-            log.log(Level.SEVERE, this.feedUrl, e);
+            log.log(Level.SEVERE, this.feedUrl.toString(), e);
         } catch (FeedException e) {
-            log.log(Level.SEVERE, this.feedUrl, e);
+            log.log(Level.SEVERE, this.feedUrl.toString(), e);
         } catch (IOException e) {
-            log.log(Level.SEVERE, this.feedUrl, e);
+            log.log(Level.SEVERE, this.feedUrl.toString(), e);
         }
         return entries;
     }

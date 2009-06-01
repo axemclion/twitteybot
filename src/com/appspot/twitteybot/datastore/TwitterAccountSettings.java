@@ -1,14 +1,19 @@
 package com.appspot.twitteybot.datastore;
 
+import java.net.URL;
 import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import com.google.appengine.api.datastore.Link;
-
-public class TwitterSettings {
+/**
+ * Class holding the configuration settings on individual twitter accounts
+ */
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
+public class TwitterAccountSettings {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -21,10 +26,13 @@ public class TwitterSettings {
     private String password;
 
     @Persistent
-    private Map<Link, Long> feeds;
+    private URL feedUrl;
 
     @Persistent
-    private Long updateInterval;
+    private Long feedInterval;
+
+    @Persistent
+    private Long twitterInterval;
 
     public Long getId() {
         return id;
@@ -50,20 +58,28 @@ public class TwitterSettings {
         this.password = password;
     }
 
-    public Map<Link, Long> getFeeds() {
-        return feeds;
+    public URL getFeedUrl() {
+        return feedUrl;
     }
 
-    public void setFeeds(Map<Link, Long> feeds) {
-        this.feeds = feeds;
+    public void setFeedUrl(URL feedUrl) {
+        this.feedUrl = feedUrl;
     }
 
-    public Long getUpdateInterval() {
-        return updateInterval;
+    public Long getFeedInterval() {
+        return feedInterval;
     }
 
-    public void setUpdateInterval(Long updateInterval) {
-        this.updateInterval = updateInterval;
+    public void setFeedInterval(Long feedInterval) {
+        this.feedInterval = feedInterval;
+    }
+
+    public Long getTwitterInterval() {
+        return twitterInterval;
+    }
+
+    public void setTwitterInterval(Long twitterInterval) {
+        this.twitterInterval = twitterInterval;
     }
 
 }
