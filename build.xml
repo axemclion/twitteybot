@@ -34,8 +34,17 @@
 		<enhance_war war="war" />
 	</target>
 
-	<target name="runserver" depends="datanucleusenhance" description="Starts the development server.">
-		<dev_appserver war="war" />
+	<target name="debugserver" depends="datanucleusenhance" description="Starts the development server.">
+		<dev_appserver war="war" port="8888">
+			<options>
+				<arg value="--jvm_flag=-Xdebug" />
+				<arg value="--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9999" />
+			</options>
+		</dev_appserver>
+	</target>
+
+	<target name="runserver" depends="datanucleusenhance">
+		<dev_appserver war="war" port="8888" />
 	</target>
 
 	<target name="update" depends="datanucleusenhance" description="Uploads the application to App Engine.">
