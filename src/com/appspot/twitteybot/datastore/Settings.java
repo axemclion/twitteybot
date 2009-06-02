@@ -1,6 +1,7 @@
 package com.appspot.twitteybot.datastore;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -23,7 +24,7 @@ public class Settings {
     private User user;
 
     @Persistent
-    private String twitterAccountName;
+    private List<TwitterAccount> twitterAccounts;
 
     @Persistent
     private Date dateCreated;
@@ -44,12 +45,12 @@ public class Settings {
         this.user = user;
     }
 
-    public String getTwitterAccountName() {
-        return twitterAccountName;
+    public List<TwitterAccount> getTwitterAccounts() {
+        return twitterAccounts;
     }
 
-    public void setTwitterAccountName(String twitterAccountName) {
-        this.twitterAccountName = twitterAccountName;
+    public void setTwitterAccounts(List<TwitterAccount> twitterAccounts) {
+        this.twitterAccounts = twitterAccounts;
     }
 
     public Date getDateCreated() {
@@ -59,5 +60,4 @@ public class Settings {
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
-
 }
