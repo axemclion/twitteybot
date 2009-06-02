@@ -63,5 +63,4 @@ public class TwitterStatus {
     public void setFeedUrl(URL feedUrl) {
         this.feedUrl = feedUrl;
     }
-
 }
