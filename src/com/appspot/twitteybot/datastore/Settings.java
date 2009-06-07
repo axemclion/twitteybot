@@ -16,6 +16,8 @@ import com.google.appengine.api.users.User;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Settings {
+
+    @SuppressWarnings(value="unused")
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Long id;
@@ -29,35 +31,28 @@ public class Settings {
     @Persistent
     private Date dateCreated;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public User getUser() {
-        return user;
+	return user;
     }
 
     public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<TwitterAccount> getTwitterAccounts() {
-        return twitterAccounts;
-    }
-
-    public void setTwitterAccounts(List<TwitterAccount> twitterAccounts) {
-        this.twitterAccounts = twitterAccounts;
+	this.user = user;
     }
 
     public Date getDateCreated() {
-        return dateCreated;
+	return dateCreated;
     }
 
     public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
+	this.dateCreated = dateCreated;
     }
+
+    public List<TwitterAccount> getTwitterAccounts() {
+	return twitterAccounts;
+    }
+
+    public void setTwitterAccounts(List<TwitterAccount> twitterAccounts) {
+	this.twitterAccounts = twitterAccounts;
+    }
+
 }

@@ -16,7 +16,7 @@ import javax.cache.CacheManager;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 
-import com.appspot.twitteybot.PersistanceFactory;
+import com.appspot.twitteybot.PMF;
 import com.appspot.twitteybot.datastore.FeedConfiguration;
 import com.appspot.twitteybot.datastore.Settings;
 import com.appspot.twitteybot.datastore.TwitterAccount;
@@ -33,38 +33,39 @@ public class FeedReader {
     static final String KEY_FEED_URLS = "FeedUrls";
 
     public FeedReader() {
-        List<FeedConfiguration> feedUrls = this.getFeedUrls();
-        if (feedUrls == null) {
-            feedUrls = this.loadUrlsFromDatastore();
-            this.getCache().put(FeedReader.KEY_FEED_URLS, feedUrls);
-            log.log(Level.INFO, "Loading URLs from datastore");
-        }
+	List<FeedConfiguration> feedUrls = this.getFeedUrls();
+	if (feedUrls == null) {
+	    feedUrls = this.loadUrlsFromDatastore();
+	    this.getCache().put(FeedReader.KEY_FEED_URLS, feedUrls);
+	    log.log(Level.INFO, "Loading URLs from datastore");
+	}
     }
 
     /**
-     * Gets the Feed Cache. If the feed Cache is not available, it will be created, registered and
-     * returned.
+     * Gets the Feed Cache. If the feed Cache is not available, it will be
+     * created, registered and returned.
      * 
-     * @return Cache where the feed URL will be put in. Created if it does not exist.
+     * @return Cache where the feed URL will be put in. Created if it does not
+     *         exist.
      */
     public Cache getCache() {
-        CacheManager cacheManager = CacheManager.getInstance();
-        Cache cache = cacheManager.getCache(FeedReader.CACHE_NAME);
-        try {
-            if (cache == null) {
-                cache = cacheManager.getCacheFactory().createCache(Collections.emptyMap());
-                cacheManager.registerCache(FeedReader.CACHE_NAME, cache);
-                log.log(Level.INFO, "Cache not found, creating a new cache");
-            }
-        } catch (CacheException e) {
-            log.log(Level.SEVERE, "CacheError", e);
-            throw new RuntimeException("Could not create Cache. Cannot continue working");
-        }
-        return cache;
+	CacheManager cacheManager = CacheManager.getInstance();
+	Cache cache = cacheManager.getCache(FeedReader.CACHE_NAME);
+	try {
+	    if (cache == null) {
+		cache = cacheManager.getCacheFactory().createCache(Collections.emptyMap());
+		cacheManager.registerCache(FeedReader.CACHE_NAME, cache);
+		log.log(Level.INFO, "Cache not found, creating a new cache");
+	    }
+	} catch (CacheException e) {
+	    log.log(Level.SEVERE, "CacheError", e);
+	    throw new RuntimeException("Could not create Cache. Cannot continue working");
+	}
+	return cache;
     }
 
     public List<FeedConfiguration> getFeedUrls() {
-        return (List<FeedConfiguration>)this.getCache().get(FeedReader.KEY_FEED_URLS);
+	return (List<FeedConfiguration>) this.getCache().get(FeedReader.KEY_FEED_URLS);
     }
 
     /**
@@ -73,30 +74,30 @@ public class FeedReader {
      * @return Map of Feed URLs and
      */
     private List<FeedConfiguration> loadUrlsFromDatastore() {
-        log.log(Level.INFO, "loading URLs into a map");
-        List<FeedConfiguration> result = new ArrayList<FeedConfiguration>();
+	log.log(Level.INFO, "loading URLs into a map");
+	List<FeedConfiguration> result = new ArrayList<FeedConfiguration>();
 
-        PersistenceManager pm = PersistanceFactory.getManager();
+	PersistenceManager pm = PMF.get().getPersistenceManager();
 
-        Extent<Settings> settings = pm.getExtent(Settings.class, false);
+	Extent<Settings> settings = pm.getExtent(Settings.class, false);
 
-        for (Settings userSetting : settings) {
-            for (TwitterAccount twitterAccount : userSetting.getTwitterAccounts()) {
-                for (FeedConfiguration feed : twitterAccount.getFeedUrls()) {
-                    Calendar cal = Calendar.getInstance();
-                    FeedConfiguration config = new FeedConfiguration();
-                    config.setFeedUpdateInterval(feed.getFeedUpdateInterval());
-                    config.setFeedUrl(feed.getFeedUrl());
-                    config.setPreviousUpdate(cal);
-                    cal.add(Calendar.MINUTE, feed.getFeedUpdateInterval());
-                    config.setNextUpdate(cal);
+	for (Settings userSetting : settings) {
+	    log.log(Level.FINER, "Looking for ", userSetting.getUser().getNickname());
+	    for (TwitterAccount twitterAccount : userSetting.getTwitterAccounts()) {
+		log.log(Level.FINER, "\tTwitter ", twitterAccount.getUserName());
+		for (FeedConfiguration feed : twitterAccount.getFeedUrls()) {
+		    log.log(Level.FINE, "\t\tFeed URL", feed.getFeedUrl());
+		    Calendar cal = Calendar.getInstance();
+		    FeedConfiguration config = new FeedConfiguration(feed.getFeedUrl(), feed.getFeedUpdateInterval());
+		    config.setPreviousUpdate(cal.getTime());
+		    cal.add(Calendar.MINUTE, feed.getFeedUpdateInterval());
+		    config.setNextUpdate(cal.getTime());
 
-                    log.log(Level.FINE, "Loaded URL ", feed.getFeedUrl());
-                }
-
-            }
-        }
-        return result;
+		    log.log(Level.FINE, "Loaded URL ", feed.getFeedUrl());
+		}
+	    }
+	}
+	return result;
     }
 
     /**
@@ -106,22 +107,22 @@ public class FeedReader {
      * @param instance
      */
     public void saveFeeds(List<URL> activeFeedURLs) {
-        for (URL feedUrl : activeFeedURLs) {
-            SyndFeedInput input = new SyndFeedInput();
-            try {
-                SyndFeed feed = input.build(new XmlReader(feedUrl));
-                List<SyndEntryImpl> feedList = feed.getEntries();
-                for (SyndEntryImpl entry : feedList) {
-                    TwitterStatus status = new TwitterStatus(new Date(), entry, feedUrl);
-                }
-            } catch (IOException e) {
-                log.log(Level.WARNING, feedUrl.toExternalForm(), e);
-            } catch (IllegalArgumentException e) {
-                log.log(Level.WARNING, feedUrl.toExternalForm(), e);
-            } catch (FeedException e) {
-                log.log(Level.WARNING, feedUrl.toExternalForm(), e);
-            }
-        }
+	for (URL feedUrl : activeFeedURLs) {
+	    SyndFeedInput input = new SyndFeedInput();
+	    try {
+		SyndFeed feed = input.build(new XmlReader(feedUrl));
+		List<SyndEntryImpl> feedList = feed.getEntries();
+		for (SyndEntryImpl entry : feedList) {
+		    TwitterStatus status = new TwitterStatus(new Date(), entry, feedUrl);
+		}
+	    } catch (IOException e) {
+		log.log(Level.WARNING, feedUrl.toExternalForm(), e);
+	    } catch (IllegalArgumentException e) {
+		log.log(Level.WARNING, feedUrl.toExternalForm(), e);
+	    } catch (FeedException e) {
+		log.log(Level.WARNING, feedUrl.toExternalForm(), e);
+	    }
+	}
     }
 
     /**
@@ -130,6 +131,6 @@ public class FeedReader {
      * @param configs
      */
     public void updateCache(List<FeedConfiguration> configs) {
-        this.getCache().put(FeedReader.KEY_FEED_URLS, configs);
+	this.getCache().put(FeedReader.KEY_FEED_URLS, configs);
     }
 }

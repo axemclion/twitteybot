@@ -1,57 +1,72 @@
 package com.appspot.twitteybot.datastore;
 
-import java.net.URL;
-import java.util.Calendar;
+import java.util.Date;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
+
+import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class FeedConfiguration {
 
+    @SuppressWarnings("unused")
+    @PrimaryKey
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+    private Key key;
+
     @Persistent
-    private URL feedUrl;
+    private String feedUrl;
 
     @Persistent
     private int feedUpdateInterval;
 
     @Persistent
-    private Calendar previousUpdate;
+    private Date previousUpdate;
 
     @Persistent
-    private Calendar nextUpdate;
+    private Date nextUpdate;
 
-    public URL getFeedUrl() {
-        return feedUrl;
+    public FeedConfiguration(String url, int i) {
+	this.feedUpdateInterval = i;
+	this.feedUrl = url;
+	this.nextUpdate = new Date();
+	this.previousUpdate = new Date();
     }
 
-    public void setFeedUrl(URL feedUrl) {
-        this.feedUrl = feedUrl;
+    public String getFeedUrl() {
+	return feedUrl;
+    }
+
+    public void setFeedUrl(String feedUrl) {
+	this.feedUrl = feedUrl;
     }
 
     public int getFeedUpdateInterval() {
-        return feedUpdateInterval;
+	return feedUpdateInterval;
     }
 
     public void setFeedUpdateInterval(int feedUpdateInterval) {
-        this.feedUpdateInterval = feedUpdateInterval;
+	this.feedUpdateInterval = feedUpdateInterval;
     }
 
-    public Calendar getPreviousUpdate() {
-        return previousUpdate;
+    public Date getPreviousUpdate() {
+	return previousUpdate;
     }
 
-    public void setPreviousUpdate(Calendar previousUpdate) {
-        this.previousUpdate = previousUpdate;
+    public void setPreviousUpdate(Date previousUpdate) {
+	this.previousUpdate = previousUpdate;
     }
 
-    public Calendar getNextUpdate() {
-        return nextUpdate;
+    public Date getNextUpdate() {
+	return nextUpdate;
     }
 
-    public void setNextUpdate(Calendar nextUpdate) {
-        this.nextUpdate = nextUpdate;
+    public void setNextUpdate(Date nextUpdate) {
+	this.nextUpdate = nextUpdate;
     }
 
 }

@@ -1,21 +1,27 @@
 package com.appspot.twitteybot;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import javax.cache.Cache;
-import javax.cache.CacheException;
-import javax.cache.CacheManager;
+import javax.jdo.PersistenceManager;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.appspot.twitteybot.datastore.FeedConfiguration;
+import com.appspot.twitteybot.datastore.Settings;
+import com.appspot.twitteybot.datastore.TwitterAccount;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+
 public class SampleServlet
     extends HttpServlet {
 
-    private static final String CACHE_NAME = "sampleCacheName";
-    private static final String KEY_NAME = "cacheKeyName";
+    private static final long serialVersionUID = -7936711444530844272L;
 
     @Override
     public void init() throws ServletException {
@@ -26,21 +32,36 @@ public class SampleServlet
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
         IOException {
 
-        try {
-            CacheManager cacheManager = CacheManager.getInstance();
-            Cache cache = cacheManager.getCache(SampleServlet.CACHE_NAME);
-
-            if (cache == null) {
-                cache = cacheManager.getCacheFactory().createCache(Collections.emptyMap());
-                cache.put(SampleServlet.KEY_NAME, "axe");
-                cacheManager.registerCache(SampleServlet.CACHE_NAME, cache);
-                resp.getWriter().write("Writing to cache");
-            } else {
-                resp.getWriter().write((String)cache.get(SampleServlet.KEY_NAME));
-            }
-
-        } catch (CacheException e) {
-            e.printStackTrace();
+        UserService userService = UserServiceFactory.getUserService();
+        User user = userService.getCurrentUser();
+        if (user == null) {
+            resp.sendRedirect(userService.createLoginURL(req.getRequestURI()));
         }
+
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        FeedConfiguration url1 = new FeedConfiguration("http://rss.news.yahoo.com/rss/topstories",
+            10);
+        FeedConfiguration url2 = new FeedConfiguration("http://rss.news.yahoo.com/rss/highestrated",
+            3);
+
+        List<FeedConfiguration> urls = new ArrayList<FeedConfiguration>();
+        urls.add(url1);
+        urls.add(url2);
+        TwitterAccount account = new TwitterAccount();
+        account.setFeedUrls(urls);
+        account.setUserName("twitteybot");
+        account.setPassword("Welcome1");
+        account.setTwitterInterval(10L);
+
+        List<TwitterAccount> accounts = new ArrayList<TwitterAccount>();
+        accounts.add(account);
+
+        Settings testSettings = new Settings();
+        testSettings.setDateCreated(new Date());
+        testSettings.setUser(user);
+        testSettings.setTwitterAccounts(accounts);
+
+        pm.makePersistent(testSettings);
     }
 }

@@ -8,15 +8,18 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.google.appengine.api.datastore.Key;
+
 /**
  * Class holding the configuration settings on individual twitter accounts
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class TwitterAccount {
 
+    @SuppressWarnings("unused")
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Long id;
+    private Key key;
 
     @Persistent
     private String userName;
@@ -30,44 +33,36 @@ public class TwitterAccount {
     @Persistent
     private List<FeedConfiguration> feedUrls;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getUserName() {
-        return userName;
+	return userName;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+	this.userName = userName;
     }
 
     public String getPassword() {
-        return password;
+	return password;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+	this.password = password;
     }
 
     public Long getTwitterInterval() {
-        return twitterInterval;
+	return twitterInterval;
     }
 
     public void setTwitterInterval(Long twitterInterval) {
-        this.twitterInterval = twitterInterval;
+	this.twitterInterval = twitterInterval;
     }
 
     public List<FeedConfiguration> getFeedUrls() {
-        return feedUrls;
+	return feedUrls;
     }
 
     public void setFeedUrls(List<FeedConfiguration> feedUrl) {
-        this.feedUrls = feedUrl;
+	this.feedUrls = feedUrl;
     }
 
 }
