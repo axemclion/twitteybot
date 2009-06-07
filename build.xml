@@ -47,7 +47,7 @@
 		<dev_appserver war="war" port="8888" />
 	</target>
 
-	<target name="update" depends="datanucleusenhance" description="Uploads the application to App Engine.">
+	<target name="update" depends="clean, datanucleusenhance" description="Uploads the application to App Engine.">
 		<appcfg action="update" war="war" />
 	</target>
 
@@ -59,15 +59,9 @@
 		<appcfg action="rollback" war="war" />
 	</target>
 
-	<target name="request_logs" description="Downloads log data from App Engine for the application.">
-		<appcfg action="request_logs" war="war">
-			<options>
-				<arg value="--num_days=5" />
-			</options>
-			<args>
-				<arg value="logs.txt" />
-			</args>
-		</appcfg>
+	<target name="clean">
+		<delete dir="${basedir}/war/WEB-INF/classes" verbose="true"/>
+		<delete dir="${basedir}/war/WEB-INF/appengine-generated" verbose="true"/>
 	</target>
 
 </project>
