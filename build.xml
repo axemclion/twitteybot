@@ -1,5 +1,9 @@
 <project default="compile">
 	<property name="sdk.dir" location="c:\Program Files\Google\appengine" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="web.dir" value="${basedir}/web" />
+	<property name="res.dir" value="${basedir}/res" />
+
 	<import file="${sdk.dir}/config/user/ant-macros.xml" />
 
 	<path id="project.classpath">
@@ -12,15 +16,32 @@
 		</fileset>
 	</path>
 
+	<target name="copyFiles">
+		<copy todir="war" verbose="true">
+			<fileset dir="${web.dir}">
+				<exclude name="**/*.svn" />
+			</fileset>
+			<fileset dir="${res.dir}">
+				<exclude name="**/*.svn" />
+			</fileset>
+
+		</copy>
+	</target>
+
 	<target name="copyjars" description="Copies the App Engine JARs to the WAR.">
-		<copy todir="war/WEB-INF/lib" flatten="true">
+		<copy todir="war/WEB-INF/lib" flatten="true" verbose="true">
 			<fileset dir="${sdk.dir}/lib/user">
 				<include name="**/*.jar" />
+				<exclude name="**/*.svn" />
+			</fileset>
+			<fileset dir="${lib.dir}">
+				<include name="**/*.jar" />
+				<exclude name="**/*.svn" />
 			</fileset>
 		</copy>
 	</target>
 
-	<target name="compile" depends="copyjars" description="Compiles Java source and copies other source files to the WAR.">
+	<target name="compile" depends="copyFiles, copyjars" description="Compiles Java source and copies other source files to the WAR.">
 		<mkdir dir="war/WEB-INF/classes" />
 		<copy todir="war/WEB-INF/classes">
 			<fileset dir="src">
@@ -60,8 +81,8 @@
 	</target>
 
 	<target name="clean">
-		<delete dir="${basedir}/war/WEB-INF/classes" verbose="true"/>
-		<delete dir="${basedir}/war/WEB-INF/appengine-generated" verbose="true"/>
+		<delete dir="${basedir}/war/WEB-INF/classes" verbose="true" />
+		<delete dir="${basedir}/war/WEB-INF/appengine-generated" verbose="true" />
 	</target>
 
 </project>

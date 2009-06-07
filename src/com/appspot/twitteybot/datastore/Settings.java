@@ -17,7 +17,7 @@ import com.google.appengine.api.users.User;
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Settings {
 
-    @SuppressWarnings(value="unused")
+    @SuppressWarnings(value = "unused")
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Long id;
