@@ -68,5 +68,4 @@ public class FeedConfiguration {
     public void setNextUpdate(Date nextUpdate) {
 	this.nextUpdate = nextUpdate;
     }
-
 }
