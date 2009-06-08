@@ -2,8 +2,6 @@ package com.appspot.twitteybot.feeds;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -13,13 +11,9 @@ import java.util.logging.Logger;
 import javax.cache.Cache;
 import javax.cache.CacheException;
 import javax.cache.CacheManager;
-import javax.jdo.Extent;
-import javax.jdo.PersistenceManager;
 
-import com.appspot.twitteybot.PMF;
+import com.appspot.twitteybot.datastore.DataStoreHelper;
 import com.appspot.twitteybot.datastore.FeedConfiguration;
-import com.appspot.twitteybot.datastore.Settings;
-import com.appspot.twitteybot.datastore.TwitterAccount;
 import com.appspot.twitteybot.datastore.TwitterStatus;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -35,7 +29,7 @@ public class FeedReader {
     public FeedReader() {
 	List<FeedConfiguration> feedUrls = this.getFeedUrls();
 	if (feedUrls == null) {
-	    feedUrls = this.loadUrlsFromDatastore();
+	    feedUrls = DataStoreHelper.dumpAllFeeds();
 	    this.getCache().put(FeedReader.KEY_FEED_URLS, feedUrls);
 	    log.log(Level.INFO, "Loading URLs from datastore");
 	}
@@ -73,32 +67,6 @@ public class FeedReader {
      * 
      * @return Map of Feed URLs and
      */
-    private List<FeedConfiguration> loadUrlsFromDatastore() {
-	log.log(Level.INFO, "loading URLs into a map");
-	List<FeedConfiguration> result = new ArrayList<FeedConfiguration>();
-
-	PersistenceManager pm = PMF.get().getPersistenceManager();
-
-	Extent<Settings> settings = pm.getExtent(Settings.class, false);
-
-	for (Settings userSetting : settings) {
-	    log.log(Level.FINER, "Looking for ", userSetting.getUser().getNickname());
-	    for (TwitterAccount twitterAccount : userSetting.getTwitterAccounts()) {
-		log.log(Level.FINER, "\tTwitter ", twitterAccount.getUserName());
-		for (FeedConfiguration feed : twitterAccount.getFeedUrls()) {
-		    log.log(Level.FINE, "\t\tFeed URL", feed.getFeedUrl());
-		    Calendar cal = Calendar.getInstance();
-		    FeedConfiguration config = new FeedConfiguration(feed.getFeedUrl(), feed.getFeedUpdateInterval());
-		    config.setPreviousUpdate(cal.getTime());
-		    cal.add(Calendar.MINUTE, feed.getFeedUpdateInterval());
-		    config.setNextUpdate(cal.getTime());
-
-		    log.log(Level.FINE, "Loaded URL ", feed.getFeedUrl());
-		}
-	    }
-	}
-	return result;
-    }
 
     /**
      * Fetches from a set of active URLs
@@ -114,6 +82,7 @@ public class FeedReader {
 		List<SyndEntryImpl> feedList = feed.getEntries();
 		for (SyndEntryImpl entry : feedList) {
 		    TwitterStatus status = new TwitterStatus(new Date(), entry, feedUrl);
+		    log.log(Level.FINER, feedUrl.toString(), status);
 		}
 	    } catch (IOException e) {
 		log.log(Level.WARNING, feedUrl.toExternalForm(), e);

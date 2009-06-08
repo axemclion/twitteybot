@@ -1,4 +1,4 @@
-package com.appspot.twitteybot;
+package com.appspot.twitteybot.datastore;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;

@@ -32,6 +32,16 @@
         <url-pattern>/pages/main</url-pattern>
     </servlet-mapping>
 
+	 <servlet>
+        <servlet-name>TwitterAccountManager</servlet-name>
+        <servlet-class>com.appspot.twitteybot.ui.TwitterAccountManager</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TwitterAccountManager</servlet-name>
+        <url-pattern>/pages/twitter</url-pattern>
+    </servlet-mapping>
+
+
     <welcome-file-list>
         <welcome-file>/pages/main</welcome-file>
     </welcome-file-list>

@@ -22,7 +22,7 @@ public class TwitterAccount {
     private Key key;
 
     @Persistent
-    private String userName;
+    private String twitterName;
 
     @Persistent
     private String password;
@@ -34,11 +34,11 @@ public class TwitterAccount {
     private List<FeedConfiguration> feedUrls;
 
     public String getUserName() {
-	return userName;
+	return twitterName;
     }
 
     public void setUserName(String userName) {
-	this.userName = userName;
+	this.twitterName = userName;
     }
 
     public String getPassword() {
