@@ -38,6 +38,11 @@ public class UserConfigDataHelper {
 	return result;
     }
 
+    /**
+     * Creates a new user with the Id of the user who has logged in.
+     * 
+     * @param user
+     */
     public void createNewUser(User user) {
 	log.log(Level.INFO, "User not found, creating one in the data store", user.getNickname());
 	UserConfig result = new UserConfig();
