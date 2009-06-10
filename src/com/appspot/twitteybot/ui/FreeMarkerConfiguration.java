@@ -45,18 +45,16 @@ public class FreeMarkerConfiguration {
      * @param templateFile
      *            name of the template file
      * @return String with properties substituted
+     * @throws IOException
+     * @throws TemplateException
      * @throws TemplateException
      */
-    public static String getProcessedTemplate(Map<String, ?> props, String templateFile) throws TemplateException {
+    public static String getProcessedTemplate(Map<String, ?> props, String templateFile) throws TemplateException,
+	    IOException {
 	Writer out = new StringWriter();
 	Configuration cfg = FreeMarkerConfiguration.get();
-	try {
-	    Template template = cfg.getTemplate(templateFile);
-	    template.process(props, out);
-	} catch (IOException e) {
-	    log.log(Level.WARNING, "Could not find template file", templateFile);
-	    throw new TemplateException("Could not find template file " + templateFile, null);
-	}
+	Template template = cfg.getTemplate(templateFile);
+	template.process(props, out);
 	return out.toString();
     }
 
@@ -72,10 +70,11 @@ public class FreeMarkerConfiguration {
 	try {
 	    writer.write(getProcessedTemplate(templateValues, templateFile));
 	} catch (TemplateException e) {
-	    writer.write("Internal Server Error, please try again later");
-	    writer.write(e.getMessage());
+	    log.log(Level.WARNING, templateFile, e);
 	    e.printStackTrace(writer);
-	    log.log(Level.WARNING, "Template Error", e);
+	} catch (IOException e) {
+	    log.log(Level.WARNING, templateFile, e);
+	    e.printStackTrace(writer);
 	}
     }
 }

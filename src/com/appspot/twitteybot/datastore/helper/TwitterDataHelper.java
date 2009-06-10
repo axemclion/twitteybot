@@ -1,26 +1,24 @@
-package com.appspot.twitteybot.datastore;
+package com.appspot.twitteybot.datastore.helper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-
+import com.appspot.twitteybot.datastore.FeedConfiguration;
+import com.appspot.twitteybot.datastore.TwitterAccount;
+import com.appspot.twitteybot.datastore.UserConfig;
 import com.google.appengine.api.users.User;
 
 /**
  * DAO helper class, tries to abstract the way the data is obtained or
  * structured at the data store level
  */
-public class DataStoreHelper {
+public class TwitterDataHelper {
 
-    private static final Logger log = Logger.getLogger(DataStoreHelper.class.getName());
+    private static final Logger log = Logger.getLogger(TwitterDataHelper.class.getName());
 
-    private User user;
-    private UserConfig config;
-    private PersistenceManager pm;
+    private UserConfigDataHelper userConfigHelper;
 
     /**
      * Public constructor that also performs the lookup of the user from the
@@ -29,46 +27,25 @@ public class DataStoreHelper {
      * @param user
      *            is set for all operations on the helper object
      */
-    public DataStoreHelper(User user) {
-	this.pm = PMF.get().getPersistenceManager();
-	this.user = user;
-	this.config = this.populateUserConfigFromStore();
+    public TwitterDataHelper(User user) {
+	this.userConfigHelper = new UserConfigDataHelper(user);
     }
 
-    @SuppressWarnings("unchecked")
-    private UserConfig populateUserConfigFromStore() {
-	Query query = pm.newQuery(UserConfig.class);
-	query.setFilter("user == userName");
-	query.declareParameters("com.google.appengine.api.users.User userName");
-	List<UserConfig> users = (List<UserConfig>) query.execute(user);
-	UserConfig result = null;
-	if (users != null && users.size() > 0) {
-	    result = users.get(0);
-	} else {
-	    log.log(Level.INFO, "User not found, creating one in the data store", user.getNickname());
-	    result = new UserConfig();
-	    result.setUser(user);
-	    result.setTwitterAccounts(new ArrayList<TwitterAccount>());
-	    this.pm.makePersistent(result);
-	}
-	return result;
-    }
-
-    /**
-     * Gets the user configuration
-     * 
-     * @return the UserConfig object for the user, obtained from the datastore
-     */
-    public UserConfig getUserConfig() {
-	return this.config;
+    public TwitterDataHelper(UserConfigDataHelper userConfigHelper) {
+	this.userConfigHelper = userConfigHelper;
     }
 
     /**
      * @return List of all Twitter accounts associated with this user
      */
     public List<TwitterAccount> getAllTwitterAccounts() {
-	UserConfig userConfig = this.getUserConfig();
-	return userConfig.getTwitterAccounts();
+	UserConfig config = this.userConfigHelper.getUserConfig();
+	if (config == null) {
+	    return new ArrayList<TwitterAccount>();
+	} else {
+	    return config.getTwitterAccounts();
+	}
+
     }
 
     /**
@@ -88,7 +65,7 @@ public class DataStoreHelper {
 		break;
 	    }
 	}
-	log.log(Level.FINER, user.getNickname(), result);
+	log.log(Level.FINER, this.userConfigHelper.getUserConfig().getUser().getNickname(), result);
 	return result;
     }
 
@@ -137,6 +114,37 @@ public class DataStoreHelper {
      * this object should not be modified for furthur use
      */
     public void commit() {
-	this.pm.close();
+	this.userConfigHelper.commit();
+    }
+
+    /**
+     * Creates a new twitter account. If a twitter account with the name exists,
+     * it updates it.
+     * 
+     * @param username
+     * @param password
+     * @param interval
+     */
+    public boolean setTwitterAccount(String username, String password, Long interval) {
+	TwitterAccount account = this.getTwitterAccount(username);
+	if (account == null) {
+	    account = new TwitterAccount();
+	    account.setUserName(username);
+	    log.log(Level.FINE, "Created ");
+	    this.userConfigHelper.getUserConfig().getTwitterAccounts().add(account);
+	}
+	account.setPassword(password);
+	account.setTwitterInterval(interval);
+	return true;
+    }
+
+    /**
+     * Deletes the twitter account name from store
+     * 
+     * @param username
+     * @return
+     */
+    public boolean deleteAccount(String username) {
+	return false;
     }
 }

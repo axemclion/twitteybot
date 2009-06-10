@@ -12,7 +12,6 @@ import javax.cache.Cache;
 import javax.cache.CacheException;
 import javax.cache.CacheManager;
 
-import com.appspot.twitteybot.datastore.DataStoreHelper;
 import com.appspot.twitteybot.datastore.FeedConfiguration;
 import com.appspot.twitteybot.datastore.TwitterStatus;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
@@ -29,7 +28,8 @@ public class FeedReader {
     public FeedReader() {
 	List<FeedConfiguration> feedUrls = this.getFeedUrls();
 	if (feedUrls == null) {
-	    feedUrls = DataStoreHelper.dumpAllFeeds();
+	    // TODO Dump all Feed URLs
+	    feedUrls = null;
 	    this.getCache().put(FeedReader.KEY_FEED_URLS, feedUrls);
 	    log.log(Level.INFO, "Loading URLs from datastore");
 	}
