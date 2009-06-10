@@ -65,7 +65,6 @@ public class TwitterDataHelper {
 		break;
 	    }
 	}
-	log.log(Level.FINER, this.userConfigHelper.getUserConfig().getUser().getNickname(), result);
 	return result;
     }
 

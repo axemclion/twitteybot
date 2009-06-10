@@ -38,7 +38,8 @@ public class TwitterAccountManager extends HttpServlet {
     static final String PARAM_INTERVAL = "interval";
 
     private static final String FTL_TWITTER_ACCOUNTS = "accounts";
-    private static final String FTL_TWITTERACCOUNT = "twitterPage";
+    private static final String FTL_PAGE_TWITTER = "twitterPage";
+    private static final String FTL_PAGE_FEEDS = "feedsPage";
 
     private static final String ADD_ACCOUNT_FTL = "AddTwitterAccount.ftl";
     private static final String FTL_SHOW_ACCOUNT = "ShowAccounts.ftl";
@@ -60,7 +61,6 @@ public class TwitterAccountManager extends HttpServlet {
 
 	String action = req.getParameter(PARAM_ACTION);
 	TwitterDataHelper twitterHelper = new TwitterDataHelper(user);
-	TwitterAccount account = twitterHelper.getTwitterAccount(req.getParameter(PARAM_USER_NAME));
 
 	log.log(Level.FINE, "Action ", action);
 
@@ -71,15 +71,16 @@ public class TwitterAccountManager extends HttpServlet {
 	if (action.equals(ACTION_ADD_ACCOUNT)) {
 	    String username = req.getParameter(PARAM_USER_NAME);
 	    String password = req.getParameter(PARAM_PASSWORD);
-	    Long interval = 0L;
-	    interval = Long.parseLong(req.getParameter(PARAM_INTERVAL));
+	    Long interval = Long.parseLong(req.getParameter(PARAM_INTERVAL));
 	    if (!twitterHelper.setTwitterAccount(username, password, interval)) {
 		resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not add or update twitter account");
+		return;
 	    }
 	} else if (action.equals(ACTION_DELETE_ACCOUNT)) {
 	    String username = req.getParameter(PARAM_USER_NAME);
 	    if (!twitterHelper.deleteAccount(username)) {
 		resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not delete twitter account");
+		return;
 	    }
 	} else if (action.equals(ACTION_SHOW_ACCOUNTS)) {
 	    Map<String, Object> props = new HashMap<String, Object>();
@@ -89,7 +90,9 @@ public class TwitterAccountManager extends HttpServlet {
 	    }
 
 	    props.put(FTL_TWITTER_ACCOUNTS, twitterAccounts);
-	    props.put(FTL_TWITTERACCOUNT, Pages.PAGE_TWITTER_ACCOUNTS);
+	    props.put(FTL_PAGE_TWITTER, Pages.PAGE_TWITTER_ACCOUNTS);
+	    props.put(FTL_PAGE_FEEDS, Pages.PAGE_FEEDS);
+
 	    FreeMarkerConfiguration.writeResponse(props, FTL_SHOW_ACCOUNT, resp.getWriter());
 
 	} else {
@@ -97,8 +100,8 @@ public class TwitterAccountManager extends HttpServlet {
 	    props.put(PARAM_USER_NAME, PARAM_USER_NAME);
 	    props.put(PARAM_PASSWORD, PARAM_PASSWORD);
 	    props.put(PARAM_INTERVAL, PARAM_INTERVAL);
-
-	    if (action.equals(ACTION_EDIT_ACCOUNT) && account != null) {
+	    TwitterAccount account = twitterHelper.getTwitterAccount(req.getParameter(PARAM_USER_NAME));
+	    if (account != null) {
 		props.put("usernameValue", account.getUserName());
 		props.put("intervalValue", account.getTwitterInterval());
 	    }

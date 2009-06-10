@@ -41,6 +41,15 @@
         <url-pattern>/pages/twitter</url-pattern>
     </servlet-mapping>
 
+	 <servlet>
+        <servlet-name>FeedConfigManager</servlet-name>
+        <servlet-class>com.appspot.twitteybot.ui.FeedConfigManager</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FeedConfigManager</servlet-name>
+        <url-pattern>/pages/feeds</url-pattern>
+    </servlet-mapping>
+
 
     <welcome-file-list>
         <welcome-file>/pages/main</welcome-file>
