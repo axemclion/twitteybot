@@ -2,7 +2,7 @@
     <ul>
         <#list accounts as item>
         <li>
-            <a href = "/pages/feeds?action=show"> ${item}</a>
+            <a href = "${feedsPage}action=show&twitter=${item}"> ${item}</a>
             <a href = "${twitterPage}action=edit&username=${item}" target="_blank">[edit]</a>
             <a href="${twitterPage}action=delete&username=${item}" target="_blank">[delete]</a>
         </li>
