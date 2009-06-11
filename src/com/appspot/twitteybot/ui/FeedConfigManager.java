@@ -35,6 +35,8 @@ public class FeedConfigManager extends HttpServlet {
 
     private static final String FTL_FEED_URLS = "feeds";
     private static final String FTL_PAGE_FEEDS = "feedsPage";
+    private static final String FTL_PAGE_UPLOAD = "uploadPage";
+    private static final String FTL_PAGE_STATUS = "statusPage";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -73,6 +75,9 @@ public class FeedConfigManager extends HttpServlet {
 	    props.put(FTL_FEED_URLS, feedUrls);
 	    props.put(FTL_PAGE_FEEDS, Pages.PAGE_FEEDS + PARAM_TWITTER_NAME + "="
 		    + feedHelper.getTwitterAccount().getUserName());
+	    props.put(FTL_PAGE_UPLOAD, Pages.PAGE_UPLOAD_STATUS);
+	    props.put(PARAM_TWITTER_NAME, feedHelper.getTwitterAccount().getUserName());
+	    props.put(FTL_PAGE_STATUS, Pages.PAGE_STATUS);
 	    FreeMarkerConfiguration.writeResponse(props, SHOW_FEED_FTL, resp.getWriter());
 	} else if (action.equals(ACTION_EDIT)) {
 	    Map<String, Object> props = new HashMap<String, Object>();

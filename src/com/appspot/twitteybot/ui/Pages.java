@@ -5,5 +5,8 @@ public class Pages {
 
     public static final String PAGE_MAIN = "/pages/main";
     public static final String PAGE_TWITTER_ACCOUNTS = "/pages/twitter?";
-    public static final Object PAGE_FEEDS = "/pages/feeds?";
+    public static final String PAGE_FEEDS = "/pages/feeds?";
+    public static final Object PAGE_UPLOAD_STATUS = "/pages/upload?";
+
+    public static final Object PAGE_STATUS = "/pages/status?";
 }

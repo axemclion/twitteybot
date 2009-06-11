@@ -47,6 +47,9 @@ public class FeedConfigHelper {
      */
     public FeedConfiguration getFeed(String parameter) {
 	FeedConfiguration result = null;
+	if (this.twitterAccount == null) {
+	    return null;
+	}
 	for (FeedConfiguration feed : this.getTwitterAccount().getFeedUrls()) {
 	    if (feed.getFeedUrl().equals(parameter)) {
 		result = feed;

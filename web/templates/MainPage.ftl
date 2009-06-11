@@ -4,7 +4,7 @@
         <link rel="stylesheet" type=text/css href="/css/main.css"/>
     </head>
     <body>
-        <div class = "header">${username}</div>
+        <div class = "header">${username!""}</div>
         <div class = "content">
         	<div class = "twitter-account-pane">
         		<a href = "/pages/twitter?action=show" target="_self">View twitter accounts</a>
