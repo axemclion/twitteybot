@@ -25,7 +25,8 @@ public class FeedReader {
     private static final Logger log = Logger.getLogger(FeedReader.class.getName());
     private static final String CACHE_NAME = "FeedReaderCache";
     static final String KEY_FEED_URLS = "FeedUrls";
-
+    
+    @SuppressWarnings("unchecked")
     public FeedReader() {
 	List<FeedConfiguration> feedUrls = this.getFeedUrls();
 	if (feedUrls == null) {
@@ -58,6 +59,7 @@ public class FeedReader {
 	return cache;
     }
 
+    @SuppressWarnings("unchecked")
     public List<FeedConfiguration> getFeedUrls() {
 	return (List<FeedConfiguration>) this.getCache().get(FeedReader.KEY_FEED_URLS);
     }
@@ -79,9 +81,10 @@ public class FeedReader {
 	    SyndFeedInput input = new SyndFeedInput();
 	    try {
 		SyndFeed feed = input.build(new XmlReader(feedUrl));
+		@SuppressWarnings("unchecked")
 		List<SyndEntryImpl> feedList = feed.getEntries();
 		for (SyndEntryImpl entry : feedList) {
-		    TwitterStatus status = new TwitterStatus(new Date(), entry, feedUrl);
+		    TwitterStatus status = new TwitterStatus(new Date(), entry.getTitle(), feedUrl.toString());
 		    log.log(Level.FINER, feedUrl.toString(), status);
 		}
 	    } catch (IOException e) {
@@ -99,6 +102,7 @@ public class FeedReader {
      * 
      * @param configs
      */
+    @SuppressWarnings("unchecked")
     public void updateCache(List<FeedConfiguration> configs) {
 	this.getCache().put(FeedReader.KEY_FEED_URLS, configs);
     }

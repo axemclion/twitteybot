@@ -1,6 +1,5 @@
 package com.appspot.twitteybot.datastore;
 
-import java.net.URL;
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -8,8 +7,6 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-
-import com.sun.syndication.feed.synd.SyndEntryImpl;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class TwitterStatus {
@@ -22,45 +19,45 @@ public class TwitterStatus {
     private Date updatedTime;
 
     @Persistent
-    private SyndEntryImpl status;
+    private String status;
 
-    private URL feedUrl;
+    private String feedUrl;
 
-    public TwitterStatus(Date updateTime, SyndEntryImpl status, URL url) {
-        this.feedUrl = url;
-        this.updatedTime = updateTime;
-        this.status = status;
+    public TwitterStatus(Date updateTime, String status, String url) {
+	this.feedUrl = url;
+	this.updatedTime = updateTime;
+	this.status = status;
     }
 
     public Long getId() {
-        return id;
+	return id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+	this.id = id;
     }
 
     public Date getUpdatedTime() {
-        return updatedTime;
+	return updatedTime;
     }
 
     public void setUpdatedTime(Date updatedTime) {
-        this.updatedTime = updatedTime;
+	this.updatedTime = updatedTime;
     }
 
-    public SyndEntryImpl getStatus() {
-        return status;
+    public String getStatus() {
+	return status;
     }
 
-    public void setStatus(SyndEntryImpl status) {
-        this.status = status;
+    public void setStatus(String status) {
+	this.status = status;
     }
 
-    public URL getFeedUrl() {
-        return feedUrl;
+    public String getFeedUrl() {
+	return feedUrl;
     }
 
-    public void setFeedUrl(URL feedUrl) {
-        this.feedUrl = feedUrl;
+    public void setFeedUrl(String feedUrl) {
+	this.feedUrl = feedUrl;
     }
 }

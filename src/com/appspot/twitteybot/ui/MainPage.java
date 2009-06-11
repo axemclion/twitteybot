@@ -34,7 +34,7 @@ public class MainPage extends HttpServlet {
 	}
 
 	UserConfigDataHelper userConfigHelper = new UserConfigDataHelper(user);
-	if (userConfigHelper.getUserConfig() == null) {
+	if (userConfigHelper.getUserConfig() == null && user != null) {
 	    userConfigHelper.createNewUser(user);
 	}
 
