@@ -1,5 +1,5 @@
 <project default="compile">
-	<property name="sdk.dir" location="c:\Program Files\Google\appengine" />
+	<property name="sdk.dir" location="c:\appengine-java" />
 	<property name="lib.dir" value="${basedir}/lib" />
 	<property name="web.dir" value="${basedir}/web" />
 	<property name="res.dir" value="${basedir}/res" />

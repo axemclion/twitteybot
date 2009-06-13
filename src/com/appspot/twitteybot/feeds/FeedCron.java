@@ -29,11 +29,14 @@ public class FeedCron extends HttpServlet {
 	List<URL> activeFeedURLs = new ArrayList<URL>();
 	Calendar currentTime = Calendar.getInstance();
 
-	List<FeedConfiguration> configs = reader.getFeedUrls();
+	List<FeedConfiguration> configs = new ArrayList<FeedConfiguration>();//reader.getFeedUrls();
+	FeedConfiguration feed_1 = new FeedConfiguration("http://news.google.com/?output=rss",5);
+	configs.add(feed_1);	
 	for (FeedConfiguration config : configs) {
 	    Calendar cal = Calendar.getInstance();
 	    cal.setTime(config.getNextUpdate());
-	    if (Math.round(cal.getTimeInMillis() / 1000) == Math.round(currentTime.getTimeInMillis() / 1000)) {
+//	    if (Math.round(cal.getTimeInMillis() / 1000) == Math.round(currentTime.getTimeInMillis() / 1000)) 
+	    {
 		log.log(Level.FINE, "Reading Log", config.getFeedUrl());
 		activeFeedURLs.add(new URL(config.getFeedUrl()));
 		config.setPreviousUpdate(currentTime.getTime());
@@ -41,7 +44,5 @@ public class FeedCron extends HttpServlet {
 		config.setNextUpdate(currentTime.getTime());
 	    }
 	}
-	reader.updateCache(configs);
-	reader.saveFeeds(activeFeedURLs);
     }
 }
