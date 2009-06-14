@@ -1,6 +1,6 @@
 package com.appspot.twitteybot.datastore;
 
-import java.util.Date;
+import java.io.Serializable;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -11,7 +11,9 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class FeedConfiguration {
+public class FeedConfiguration implements Serializable {
+
+    private static final long serialVersionUID = -6711800941703445288L;
 
     @SuppressWarnings("unused")
     @PrimaryKey
@@ -24,17 +26,9 @@ public class FeedConfiguration {
     @Persistent
     private int feedUpdateInterval;
 
-    @Persistent
-    private Date previousUpdate;
-
-    @Persistent
-    private Date nextUpdate;
-
     public FeedConfiguration(String url, int i) {
 	this.feedUpdateInterval = i;
 	this.feedUrl = url;
-	this.nextUpdate = new Date();
-	this.previousUpdate = new Date();
     }
 
     public String getFeedUrl() {
@@ -53,19 +47,4 @@ public class FeedConfiguration {
 	this.feedUpdateInterval = feedUpdateInterval;
     }
 
-    public Date getPreviousUpdate() {
-	return previousUpdate;
-    }
-
-    public void setPreviousUpdate(Date previousUpdate) {
-	this.previousUpdate = previousUpdate;
-    }
-
-    public Date getNextUpdate() {
-	return nextUpdate;
-    }
-
-    public void setNextUpdate(Date nextUpdate) {
-	this.nextUpdate = nextUpdate;
-    }
 }

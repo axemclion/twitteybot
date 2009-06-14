@@ -34,9 +34,6 @@ public class StatusFileUploader extends HttpServlet {
     private static final Logger log = Logger.getLogger(StatusFileUploader.class.getName());
     private static final long serialVersionUID = 1551252388567429753L;
 
-    private static final String PARAM_SEPARATOR = "seperator";
-    private static final String PARAM_TWITTER = "twitter";
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	UserService userService = UserServiceFactory.getUserService();
@@ -47,8 +44,8 @@ public class StatusFileUploader extends HttpServlet {
 	}
 
 	ServletFileUpload upload = new ServletFileUpload();
-	String separator = this.getSeparator(req.getParameter(PARAM_SEPARATOR));
-	String twitterName = req.getParameter(PARAM_TWITTER);
+	String separator = this.getSeparator(req.getParameter(Pages.PARAM_SEPARATOR));
+	String twitterName = req.getParameter(Pages.PARAM_TWITTER);
 
 	try {
 	    FileItemIterator iterator = upload.getItemIterator(req);

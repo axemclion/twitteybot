@@ -112,5 +112,4 @@ public class FeedConfigHelper {
 	}
 	return result;
     }
-
 }

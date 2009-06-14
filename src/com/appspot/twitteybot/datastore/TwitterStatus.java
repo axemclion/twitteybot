@@ -1,5 +1,6 @@
 package com.appspot.twitteybot.datastore;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -9,7 +10,9 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class TwitterStatus {
+public class TwitterStatus implements Serializable{
+
+    private static final long serialVersionUID = -4714092218169447842L;
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

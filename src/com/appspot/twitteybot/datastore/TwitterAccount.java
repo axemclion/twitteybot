@@ -1,5 +1,6 @@
 package com.appspot.twitteybot.datastore;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -14,7 +15,9 @@ import com.google.appengine.api.datastore.Key;
  * Class holding the configuration settings on individual twitter accounts
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class TwitterAccount {
+public class TwitterAccount implements Serializable{
+
+    private static final long serialVersionUID = -1625626597178446777L;
 
     @SuppressWarnings("unused")
     @PrimaryKey
@@ -28,7 +31,7 @@ public class TwitterAccount {
     private String password;
 
     @Persistent
-    private Long twitterInterval;
+    private int twitterInterval;
 
     @Persistent
     private List<FeedConfiguration> feedUrls;
@@ -49,11 +52,11 @@ public class TwitterAccount {
 	this.password = password;
     }
 
-    public Long getTwitterInterval() {
+    public int getTwitterInterval() {
 	return twitterInterval;
     }
 
-    public void setTwitterInterval(Long twitterInterval) {
+    public void setTwitterInterval(int twitterInterval) {
 	this.twitterInterval = twitterInterval;
     }
 
