@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+
 import com.appspot.twitteybot.datastore.FeedConfiguration;
 import com.appspot.twitteybot.datastore.TwitterAccount;
 import com.appspot.twitteybot.datastore.UserConfig;
@@ -124,7 +127,7 @@ public class TwitterDataHelper {
      * @param password
      * @param interval
      */
-    public boolean setTwitterAccount(String username, String password, Long interval) {
+    public boolean setTwitterAccount(String username, String password, int interval) {
 	TwitterAccount account = this.getTwitterAccount(username);
 	if (account == null) {
 	    account = new TwitterAccount();
@@ -145,5 +148,17 @@ public class TwitterDataHelper {
      */
     public boolean deleteAccount(String username) {
 	return false;
+    }
+
+    public static List<TwitterAccount> dumpAllAccounts() {
+	List<TwitterAccount> result = new ArrayList<TwitterAccount>();
+	PersistenceManager pm = PMF.get().getPersistenceManager();
+	Extent<UserConfig> userConfigs = pm.getExtent(UserConfig.class);
+	for (UserConfig config : userConfigs) {
+	    for (TwitterAccount twitterAccount : config.getTwitterAccounts()) {
+		result.add(twitterAccount);
+	    }
+	}
+	return result;
     }
 }

@@ -16,10 +16,8 @@ import com.appspot.twitteybot.datastore.helper.StatusHelper;
  */
 public class StatusManager extends HttpServlet {
     private static final long serialVersionUID = 1888334549313689006L;
+
     // private static final String PARAM_ACTION = "action";
-    private static final String PARAM_SRC_NAME = "feedname";
-    private static final String FTL_STATUS = "status";
-    private static final String FTL_SHOW_STATUS = "ShowStatus.ftl";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,10 +27,10 @@ public class StatusManager extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	// String action = req.getParameter(PARAM_ACTION);
-	StatusHelper helper = new StatusHelper(req.getParameter(PARAM_SRC_NAME));
+	StatusHelper helper = new StatusHelper(req.getParameter(Pages.PARAM_SRC_NAME));
 
 	Map<String, Object> props = new HashMap<String, Object>();
-	props.put(FTL_STATUS, helper.getAllStatus());
-	FreeMarkerConfiguration.writeResponse(props, FTL_SHOW_STATUS, resp.getWriter());
+	props.put(Pages.FTLVAR_STATUS, helper.getAllStatus());
+	FreeMarkerConfiguration.writeResponse(props, Pages.TEMPLATE_SHOW_STATUS, resp.getWriter());
     }
 }

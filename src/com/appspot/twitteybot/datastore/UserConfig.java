@@ -1,5 +1,6 @@
 package com.appspot.twitteybot.datastore;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -14,7 +15,9 @@ import com.google.appengine.api.users.User;
  * Class holding the configuration settings on individual twitter accounts
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class UserConfig {
+public class UserConfig implements Serializable {
+
+    private static final long serialVersionUID = 2730123362861801431L;
 
     @SuppressWarnings("unused")
     @PrimaryKey

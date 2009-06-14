@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.appspot.twitteybot.feeds.FeedReader;
-
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
@@ -23,7 +21,7 @@ import freemarker.template.TemplateException;
 public class FreeMarkerConfiguration {
 
     private static final String DIR_TEMPLATES = "templates";
-    private static final Logger log = Logger.getLogger(FeedReader.class.getName());
+    private static final Logger log = Logger.getLogger(FreeMarkerConfiguration.class.getName());
 
     private static Configuration get() {
 	Configuration cfg = new Configuration();

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
   <cron>
-    <url>/cron/feed</url>
+    <url>/cron?job=feed</url>
+    <description>Read Feeds every 1 minute</description>
+    <schedule>every 1 minute</schedule>
+  </cron>
+  <cron>
+    <url>/cron?job=twitter</url>
     <description>Read Feeds every 1 minute</description>
     <schedule>every 1 minute</schedule>
   </cron>

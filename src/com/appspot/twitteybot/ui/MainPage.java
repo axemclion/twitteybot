@@ -17,8 +17,6 @@ import com.google.appengine.api.users.UserServiceFactory;
 public class MainPage extends HttpServlet {
 
     private static final long serialVersionUID = 9148447220528278458L;
-    private static final String FTL_USERNAME = "username";
-    private static final String FTL_MAIN_PAGE = "MainPage.ftl";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,7 +28,7 @@ public class MainPage extends HttpServlet {
 	if (user == null) {
 	    resp.sendRedirect(userService.createLoginURL(req.getRequestURI()));
 	} else {
-	    templateValues.put(FTL_USERNAME, user.getNickname());
+	    templateValues.put(Pages.FTLVAR_USERNAME, user.getNickname());
 	}
 
 	UserConfigDataHelper userConfigHelper = new UserConfigDataHelper(user);
@@ -38,6 +36,6 @@ public class MainPage extends HttpServlet {
 	    userConfigHelper.createNewUser(user);
 	}
 
-	FreeMarkerConfiguration.writeResponse(templateValues, FTL_MAIN_PAGE, resp.getWriter());
+	FreeMarkerConfiguration.writeResponse(templateValues, Pages.TEMPLATE_MAIN_PAGE, resp.getWriter());
     }
 }
