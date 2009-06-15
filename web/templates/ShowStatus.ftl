@@ -6,8 +6,9 @@
         </tr>
         <#list status as item>
         <tr>
-			<td>${item.id}</td>
-            <td><textarea disabled = "true">${item.status}</textarea></td>
+            <td>
+                <textarea disabled = "true">${item.status}</textarea>
+            </td>
             <td>${item.updatedTime?datetime}</td>
         </tr>
         </#list>

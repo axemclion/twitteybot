@@ -19,7 +19,6 @@ public class UserConfig implements Serializable {
 
     private static final long serialVersionUID = 2730123362861801431L;
 
-    @SuppressWarnings("unused")
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Long id;
@@ -44,5 +43,13 @@ public class UserConfig implements Serializable {
 
     public void setTwitterAccounts(List<TwitterAccount> twitterAccounts) {
 	this.twitterAccounts = twitterAccounts;
+    }
+
+    public Long getId() {
+	return id;
+    }
+
+    public void setId(Long id) {
+	this.id = id;
     }
 }

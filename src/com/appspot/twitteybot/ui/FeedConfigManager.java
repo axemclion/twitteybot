@@ -56,9 +56,9 @@ public class FeedConfigManager extends HttpServlet {
 	    Map<String, Object> props = new HashMap<String, Object>();
 	    props.put(Pages.FTLVAR_FEED_URLS, feedUrls);
 	    props.put(Pages.FTLVAR_PAGE_FEEDS, Pages.PAGE_FEEDS + Pages.PARAM_TWITTER + "="
-		    + feedHelper.getTwitterAccount().getUserName());
+		    + feedHelper.getTwitterAccount().getTwitterName());
 	    props.put(Pages.FTLVAR_PAGE_UPLOAD, Pages.PAGE_UPLOAD_STATUS);
-	    props.put(Pages.PARAM_TWITTER, feedHelper.getTwitterAccount().getUserName());
+	    props.put(Pages.PARAM_TWITTER, feedHelper.getTwitterAccount().getTwitterName());
 	    props.put(Pages.FTLVAR_PAGE_STATUS, Pages.PAGE_STATUS);
 	    FreeMarkerConfiguration.writeResponse(props, Pages.TEMPLATE_SHOW_FEED, resp.getWriter());
 	} else if (action.equals(Pages.ACTION_EDIT)) {
@@ -72,7 +72,7 @@ public class FeedConfigManager extends HttpServlet {
 		props.put("intervalValue", configuration.getFeedUpdateInterval());
 	    }
 	    props.put("targetUrl", Pages.PAGE_FEEDS + Pages.PARAM_ACTION + "=" + Pages.ACTION_ADD + "&"
-		    + Pages.PARAM_TWITTER + "=" + feedHelper.getTwitterAccount().getUserName());
+		    + Pages.PARAM_TWITTER + "=" + feedHelper.getTwitterAccount().getTwitterName());
 	    FreeMarkerConfiguration.writeResponse(props, Pages.TEMPLATE_ADD_FEED, resp.getWriter());
 	} else if (action.equals(Pages.ACTION_ADD)) {
 	    String feedName = req.getParameter(Pages.PARAM_FEED_NAME);

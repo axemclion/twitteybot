@@ -1,6 +1,7 @@
 package com.appspot.twitteybot.datastore;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -15,7 +16,6 @@ public class FeedConfiguration implements Serializable {
 
     private static final long serialVersionUID = -6711800941703445288L;
 
-    @SuppressWarnings("unused")
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key key;
@@ -25,6 +25,9 @@ public class FeedConfiguration implements Serializable {
 
     @Persistent
     private int feedUpdateInterval;
+
+    @Persistent
+    private List<TwitterStatus> statuses;
 
     public FeedConfiguration(String url, int i) {
 	this.feedUpdateInterval = i;
@@ -47,4 +50,19 @@ public class FeedConfiguration implements Serializable {
 	this.feedUpdateInterval = feedUpdateInterval;
     }
 
+    public Key getKey() {
+	return key;
+    }
+
+    public void setKey(Key key) {
+	this.key = key;
+    }
+
+    public List<TwitterStatus> getStatuses() {
+	return statuses;
+    }
+
+    public void setStatusList(List<TwitterStatus> statusList) {
+	this.statuses = statusList;
+    }
 }

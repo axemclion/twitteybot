@@ -1,29 +1,31 @@
 package com.appspot.twitteybot.datastore.helper;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 
+import com.appspot.twitteybot.datastore.FeedConfiguration;
 import com.appspot.twitteybot.datastore.TwitterStatus;
+import com.google.appengine.api.users.User;
 
 public class StatusHelper {
-    private String feedSource;
-    private Query query;
-    private PersistenceManager pm;
+    private String feedUrl;
+    private FeedConfigHelper feedHelper;
 
-    public StatusHelper(String src) {
-	this.feedSource = src;
-	this.pm = PMF.get().getPersistenceManager();
-	this.query = pm.newQuery(TwitterStatus.class);
+    public StatusHelper(User user, String twittername, String feedUrl) {
+	this.feedHelper = new FeedConfigHelper(user, twittername);
+	this.feedUrl = feedUrl;
+
     }
 
-    @SuppressWarnings("unchecked")
     public List<TwitterStatus> getAllStatus() {
-	this.query.setFilter("feedUrl == url");
-	this.query.declareParameters("String url");
-	return (List<TwitterStatus>) query.execute(this.feedSource);
+	return this.getFeedConfig().getStatuses();
+    }
+
+    private FeedConfiguration getFeedConfig() {
+	return this.feedHelper.getFeed(this.feedUrl);
     }
 
     /**
@@ -31,26 +33,43 @@ public class StatusHelper {
      * 
      * @param status
      */
-    public void addStatus(String status) {
-	if (status.trim() != null) {
-	    TwitterStatus twitterStatus = new TwitterStatus(new Date(), status, this.feedSource);
-	    this.pm.makePersistent(twitterStatus);
-	}
+    public void addStatus(String statusString) {
+	TwitterStatus status = new TwitterStatus(statusString);
+	this.getAllStatus().add(status);
     }
 
-    /**
-     * Appends a list of twitter statuses to the database
-     * 
-     * @param s
-     */
-    public void addStatus(List<String> s) {
-	for (String status : s) {
+    public void addStatus(List<String> asList) {
+	for (String status : asList) {
 	    this.addStatus(status);
 	}
     }
 
     public void commit() {
-	this.pm.close();
+	this.feedHelper.commit();
     }
 
+    public TwitterStatus getLastStatus() {
+	TwitterStatus result = null;
+	List<TwitterStatus> statuses = new ArrayList<TwitterStatus>();
+	for (FeedConfiguration config : this.feedHelper.getAllFeeds()) {
+	    statuses.addAll(config.getStatuses());
+	}
+	Calendar lastUpdateTime = Calendar.getInstance();
+	for (TwitterStatus status : statuses) {
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(status.getUpdatedTime());
+	    if (lastUpdateTime.after(cal)) {
+		result = status;
+		lastUpdateTime.setTime(result.getUpdatedTime());
+	    }
+	}
+	return result;
+    }
+
+    public void deleteStatus(TwitterStatus status) {
+	PersistenceManager pm = PMF.get().getPersistenceManager();
+	status = pm.getObjectById(TwitterStatus.class, status.getKey());
+	pm.deletePersistent(status);
+	pm.close();
+    }
 }

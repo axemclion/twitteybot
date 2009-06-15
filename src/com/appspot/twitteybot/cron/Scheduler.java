@@ -15,6 +15,8 @@ import javax.cache.Cache;
 import javax.cache.CacheException;
 import javax.cache.CacheManager;
 
+import com.google.appengine.api.users.User;
+
 /**
  * This is the scheduler abstract class that is extended by individual Cron
  * tasks. Also handles the MemCache stuff
@@ -33,6 +35,8 @@ public abstract class Scheduler {
 
     protected List<?> jobList;
     private Map<Object, Date> scheduledJobs;
+
+    private User user;
 
     public Scheduler() {
 	this.cacheId = "CACHE";
@@ -139,4 +143,11 @@ public abstract class Scheduler {
 	return Scheduler.instance;
     }
 
+    public void setUser(User user) {
+	this.user = user;
+    }
+
+    public User getUser() {
+	return this.user;
+    }
 }
