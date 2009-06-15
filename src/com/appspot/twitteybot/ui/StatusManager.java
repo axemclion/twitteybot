@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.appspot.twitteybot.datastore.helper.StatusHelper;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 /**
  * Manages the status messages
@@ -26,11 +29,20 @@ public class StatusManager extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	// String action = req.getParameter(PARAM_ACTION);
-	StatusHelper helper = new StatusHelper(req.getParameter(Pages.PARAM_SRC_NAME));
+	UserService userService = UserServiceFactory.getUserService();
+	User user = userService.getCurrentUser();
+	if (user == null) {
+	    resp.sendError(HttpServletResponse.SC_FORBIDDEN, "You are not a registered user to perform this operation");
+	    return;
+	}
 
+	String feedName = req.getParameter(Pages.PARAM_FEED_NAME);
+	String twitterName = req.getParameter(Pages.PARAM_TWITTER);
+
+	StatusHelper helper = new StatusHelper(user, twitterName, feedName);
 	Map<String, Object> props = new HashMap<String, Object>();
 	props.put(Pages.FTLVAR_STATUS, helper.getAllStatus());
 	FreeMarkerConfiguration.writeResponse(props, Pages.TEMPLATE_SHOW_STATUS, resp.getWriter());
+
     }
 }

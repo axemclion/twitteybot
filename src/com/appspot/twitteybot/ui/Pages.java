@@ -14,7 +14,7 @@ public class Pages {
     public static final String ACTION_SHOW = "show";
     public static final String ACTION_DELETE = "delete";
 
-    public static final String PARAM_CRON_JOB = null;
+    public static final String PARAM_CRON_JOB = "job";
     public static final String PARAM_ACTION = "action";
     public static final String PARAM_USER_NAME = "username";
     public static final String PARAM_PASSWORD = "password";
@@ -44,6 +44,7 @@ public class Pages {
     public static final String TEMPLATE_SHOW_FEED = "ShowFeeds.ftl";
     public static final String TEMPLATE_ADD_FEED = "AddFeeds.ftl";
 
-    public static final Object CRON_TWITTER = "twitter";
+    public static final String CRON_TWITTER = "twitter";
+    public static final String CRON_FEED = "feed";
 
 }

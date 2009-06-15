@@ -63,7 +63,7 @@ public class TwitterDataHelper {
 	List<TwitterAccount> accounts = this.getAllTwitterAccounts();
 	TwitterAccount result = null;
 	for (TwitterAccount account : accounts) {
-	    if (account.getUserName().equals(twitterName)) {
+	    if (account.getTwitterName().equals(twitterName)) {
 		result = account;
 		break;
 	    }
@@ -131,7 +131,7 @@ public class TwitterDataHelper {
 	TwitterAccount account = this.getTwitterAccount(username);
 	if (account == null) {
 	    account = new TwitterAccount();
-	    account.setUserName(username);
+	    account.setTwitterName(username);
 	    log.log(Level.FINE, "Created ");
 	    this.userConfigHelper.getUserConfig().getTwitterAccounts().add(account);
 	}
@@ -147,7 +147,11 @@ public class TwitterDataHelper {
      * @return
      */
     public boolean deleteAccount(String username) {
-	return false;
+	PersistenceManager pm = PMF.get().getPersistenceManager();
+	TwitterAccount acc = this.getTwitterAccount(username);
+	acc = pm.getObjectById(TwitterAccount.class, acc.getKey());
+	pm.deletePersistent(acc);
+	return true;
     }
 
     public static List<TwitterAccount> dumpAllAccounts() {

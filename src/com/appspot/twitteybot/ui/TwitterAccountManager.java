@@ -69,7 +69,7 @@ public class TwitterAccountManager extends HttpServlet {
 	    Map<String, Object> props = new HashMap<String, Object>();
 	    List<String> twitterAccounts = new ArrayList<String>();
 	    for (TwitterAccount twitterAccount : twitterHelper.getAllTwitterAccounts()) {
-		twitterAccounts.add(twitterAccount.getUserName());
+		twitterAccounts.add(twitterAccount.getTwitterName());
 	    }
 
 	    props.put(Pages.FTLVAR_TWITTER_ACCOUNTS, twitterAccounts);
@@ -85,7 +85,7 @@ public class TwitterAccountManager extends HttpServlet {
 	    props.put(Pages.PARAM_INTERVAL, Pages.PARAM_INTERVAL);
 	    TwitterAccount account = twitterHelper.getTwitterAccount(req.getParameter(Pages.PARAM_USER_NAME));
 	    if (account != null) {
-		props.put(Pages.FTLVAR_USERNAME_VALUE, account.getUserName());
+		props.put(Pages.FTLVAR_USERNAME_VALUE, account.getTwitterName());
 		props.put(Pages.FTLVAR_INTERVAL_VALUE, account.getTwitterInterval());
 	    }
 	    props.put(Pages.FTLVAR_TARGET_URL, Pages.PAGE_TWITTER_ACCOUNTS + Pages.PARAM_ACTION + "="

@@ -59,13 +59,15 @@ public class StatusFileUploader extends HttpServlet {
 		    while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
 			byteStream.write(buffer, 0, len);
 		    }
-		    StatusHelper helper = new StatusHelper(item.getName());
-		    helper.addStatus(Arrays.asList(byteStream.toString().split(separator)));
-		    helper.commit();
+		    String feedName = "file://" + item.getName();
 
 		    FeedConfigHelper feedConfigHelper = new FeedConfigHelper(user, twitterName);
-		    feedConfigHelper.setFeedConfig(item.getName(), 0);
+		    feedConfigHelper.setFeedConfig(feedName, 0);
 		    feedConfigHelper.commit();
+
+		    StatusHelper helper = new StatusHelper(user, twitterName, feedName);
+		    helper.addStatus(Arrays.asList(byteStream.toString().split(separator)));
+		    helper.commit();
 		}
 	    }
 	} catch (FileUploadException e) {

@@ -9,14 +9,16 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.google.appengine.api.datastore.Key;
+
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class TwitterStatus implements Serializable{
+public class TwitterStatus implements Serializable {
 
     private static final long serialVersionUID = -4714092218169447842L;
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Long id;
+    private Key key;
 
     @Persistent
     private Date updatedTime;
@@ -24,20 +26,9 @@ public class TwitterStatus implements Serializable{
     @Persistent
     private String status;
 
-    private String feedUrl;
-
-    public TwitterStatus(Date updateTime, String status, String url) {
-	this.feedUrl = url;
-	this.updatedTime = updateTime;
+    public TwitterStatus(String status) {
+	this.updatedTime = new Date();
 	this.status = status;
-    }
-
-    public Long getId() {
-	return id;
-    }
-
-    public void setId(Long id) {
-	this.id = id;
     }
 
     public Date getUpdatedTime() {
@@ -56,11 +47,12 @@ public class TwitterStatus implements Serializable{
 	this.status = status;
     }
 
-    public String getFeedUrl() {
-	return feedUrl;
+    public Key getKey() {
+	return key;
     }
 
-    public void setFeedUrl(String feedUrl) {
-	this.feedUrl = feedUrl;
+    public void setKey(Key key) {
+	this.key = key;
     }
+
 }

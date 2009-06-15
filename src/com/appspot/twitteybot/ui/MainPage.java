@@ -33,6 +33,7 @@ public class MainPage extends HttpServlet {
 
 	UserConfigDataHelper userConfigHelper = new UserConfigDataHelper(user);
 	if (userConfigHelper.getUserConfig() == null && user != null) {
+	    // TODO Allow only admin to create users
 	    userConfigHelper.createNewUser(user);
 	}
 

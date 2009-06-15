@@ -15,11 +15,10 @@ import com.google.appengine.api.datastore.Key;
  * Class holding the configuration settings on individual twitter accounts
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class TwitterAccount implements Serializable{
+public class TwitterAccount implements Serializable {
 
     private static final long serialVersionUID = -1625626597178446777L;
 
-    @SuppressWarnings("unused")
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key key;
@@ -35,14 +34,6 @@ public class TwitterAccount implements Serializable{
 
     @Persistent
     private List<FeedConfiguration> feedUrls;
-
-    public String getUserName() {
-	return twitterName;
-    }
-
-    public void setUserName(String userName) {
-	this.twitterName = userName;
-    }
 
     public String getPassword() {
 	return password;
@@ -66,6 +57,22 @@ public class TwitterAccount implements Serializable{
 
     public void setFeedUrls(List<FeedConfiguration> feedUrl) {
 	this.feedUrls = feedUrl;
+    }
+
+    public Key getKey() {
+	return key;
+    }
+
+    public void setKey(Key key) {
+	this.key = key;
+    }
+
+    public String getTwitterName() {
+	return twitterName;
+    }
+
+    public void setTwitterName(String twitterName) {
+	this.twitterName = twitterName;
     }
 
 }

@@ -2,7 +2,7 @@
     <ul>
         <#list feeds as item>
         <li>
-            <a href = "${statusPage}&action=show&feedname=${item}" target = "_self">${item}</a>
+            <a href = "${statusPage}&action=show&feedname=${item}&twitter=${twitter}" target = "_self">${item}</a>
             <a href = "${feedsPage}&action=edit&feedname=${item}" target="_blank">[edit]</a>
             <a href="${feedsPage}&action=delete&feedname=${item}" target="_blank">[delete]</a>
         </li>

@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 
 import com.appspot.twitteybot.cron.Scheduler;
 import com.appspot.twitteybot.datastore.TwitterAccount;
+import com.appspot.twitteybot.datastore.TwitterStatus;
+import com.appspot.twitteybot.datastore.helper.StatusHelper;
 import com.appspot.twitteybot.datastore.helper.TwitterDataHelper;
 
 public class TwitterCron extends Scheduler {
@@ -22,9 +24,15 @@ public class TwitterCron extends Scheduler {
     @Override
     protected void run(List<?> jobs) {
 	for (TwitterAccount job : (List<TwitterAccount>) jobs) {
-	    log.log(Level.FINE, "Updating status ", job.getUserName());
-	    TwitterFacade twitterFacade = new TwitterFacade(job.getUserName(), job.getPassword());
-	    twitterFacade.updateStatus("This is a sample status update");
+	    StatusHelper helper = new StatusHelper(this.getUser(), job.getTwitterName(), null);
+	    TwitterStatus lastStatus = helper.getLastStatus();
+	    TwitterFacade twitterFacade = new TwitterFacade(job.getTwitterName(), job.getPassword());
+	    if (lastStatus != null) {
+		log.log(Level.FINE, "Deleted status ", lastStatus.getStatus());
+		twitterFacade.updateStatus(lastStatus.getStatus());
+		helper.deleteStatus(lastStatus);
+	    }
+	    log.log(Level.FINE, "Updating status ", job.getTwitterName());
 	}
     }
 
