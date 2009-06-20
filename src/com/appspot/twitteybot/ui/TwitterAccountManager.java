@@ -68,6 +68,7 @@ public class TwitterAccountManager extends HttpServlet {
 	} else if (action.equals(Pages.ACTION_SHOW)) {
 	    Map<String, Object> props = new HashMap<String, Object>();
 	    List<String> twitterAccounts = new ArrayList<String>();
+	    
 	    for (TwitterAccount twitterAccount : twitterHelper.getAllTwitterAccounts()) {
 		twitterAccounts.add(twitterAccount.getTwitterName());
 	    }

@@ -50,8 +50,7 @@
         <url-pattern>/pages/status</url-pattern>
     </servlet-mapping>
 
-
-	 <servlet>
+	<servlet>
         <servlet-name>CronTrigger</servlet-name>
         <servlet-class>com.appspot.twitteybot.cron.CronTrigger</servlet-class>
     </servlet>

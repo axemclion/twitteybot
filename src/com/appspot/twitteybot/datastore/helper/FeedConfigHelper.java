@@ -26,6 +26,11 @@ public class FeedConfigHelper {
 	}
     }
 
+    public FeedConfigHelper(TwitterDataHelper twitterHelper2, String twitterName) {
+	this.twitterHelper = twitterHelper2;
+	this.twitterAccount = this.twitterHelper.getTwitterAccount(twitterName);
+    }
+
     public TwitterAccount getTwitterAccount() {
 	return this.twitterAccount;
     }
@@ -83,8 +88,11 @@ public class FeedConfigHelper {
      * @return
      */
     public boolean deleteFeedConfig(String feedName) {
-	// TODO Write code to delete feed
-	return false;
+	PersistenceManager pm = PMF.get().getPersistenceManager();
+	FeedConfiguration config = this.getFeed(feedName);
+	config = pm.getObjectById(FeedConfiguration.class, config.getKey());
+	pm.deletePersistent(config);
+	return true;
     }
 
     /**
@@ -106,7 +114,9 @@ public class FeedConfigHelper {
 	for (UserConfig config : userConfigs) {
 	    for (TwitterAccount twitterAccount : config.getTwitterAccounts()) {
 		for (FeedConfiguration feed : twitterAccount.getFeedUrls()) {
-		    result.add(feed);
+		    if (feed.getFeedUpdateInterval() > 0) {
+			result.add(feed);
+		    }
 		}
 	    }
 	}

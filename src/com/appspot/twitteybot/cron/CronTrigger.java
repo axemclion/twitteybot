@@ -27,10 +27,10 @@ public class CronTrigger extends HttpServlet {
 	    return;
 	}
 
-	String cronName = req.getParameter(Pages.PARAM_CRON_JOB);
+	String cronName = req.getPathInfo();
 
 	Scheduler scheduler = null;
-	if (cronName != null && cronName.equals(Pages.CRON_FEED)) {
+	if (cronName != null && cronName.contains(Pages.CRON_FEED)) {
 	    scheduler = Scheduler.getInstance(FeedCron.class);
 	} else {
 	    scheduler = Scheduler.getInstance(TwitterCron.class);
