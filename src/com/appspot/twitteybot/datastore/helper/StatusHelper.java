@@ -20,6 +20,11 @@ public class StatusHelper {
 
     }
 
+    public StatusHelper(FeedConfigHelper feedHelper2, String feedUrl) {
+	this.feedHelper = feedHelper2;
+	this.feedUrl = feedUrl;
+    }
+
     public List<TwitterStatus> getAllStatus() {
 	return this.getFeedConfig().getStatuses();
     }
