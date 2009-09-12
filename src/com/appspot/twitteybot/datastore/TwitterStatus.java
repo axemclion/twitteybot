@@ -14,45 +14,68 @@ import com.google.appengine.api.datastore.Key;
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class TwitterStatus implements Serializable {
 
-    private static final long serialVersionUID = -4714092218169447842L;
+	private static final long serialVersionUID = -9122716449061595598L;
 
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Key key;
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	private Key key;
 
-    @Persistent
-    private Date updatedTime;
+	@Persistent
+	private Date updatedTime;
 
-    @Persistent
-    private String status;
+	@Persistent
+	private String status;
 
-    public TwitterStatus(String status) {
-	this.updatedTime = new Date();
-	this.status = status;
-    }
+	@Persistent
+	private String twitterScreenName;
 
-    public Date getUpdatedTime() {
-	return updatedTime;
-    }
+	@Persistent
+	private String source;
 
-    public void setUpdatedTime(Date updatedTime) {
-	this.updatedTime = updatedTime;
-    }
+	public Key getKey() {
+		return key;
+	}
 
-    public String getStatus() {
-	return status;
-    }
+	public void setKey(Key key) {
+		this.key = key;
+	}
 
-    public void setStatus(String status) {
-	this.status = status;
-    }
+	public Date getUpdatedTime() {
+		return updatedTime;
+	}
 
-    public Key getKey() {
-	return key;
-    }
+	public void setUpdatedTime(Date updatedTime) {
+		this.updatedTime = updatedTime;
+	}
 
-    public void setKey(Key key) {
-	this.key = key;
-    }
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getTwitterScreenName() {
+		return twitterScreenName;
+	}
+
+	public void setTwitterScreenName(String twitterScreenName) {
+		this.twitterScreenName = twitterScreenName;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	@Override
+	public String toString() {
+		return "TwitterStatus [key=" + key + ", source=" + source + ", status=" + status
+				+ ", twitterScreenName=" + twitterScreenName + ", updatedTime=" + updatedTime + "]";
+	}
 
 }

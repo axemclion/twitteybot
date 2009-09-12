@@ -1,5 +1,5 @@
 <project default="compile">
-	<property name="sdk.dir" location="C:\PROGRA~1\Google\APPENG~1" />
+	<property name="sdk.dir" location="C:\PROGRA~1\google\APPENG~1" />
 	<property name="lib.dir" value="${basedir}/lib" />
 	<property name="web.dir" value="${basedir}/web" />
 	<property name="res.dir" value="${basedir}/res" />

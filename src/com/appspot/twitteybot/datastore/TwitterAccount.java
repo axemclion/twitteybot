@@ -1,7 +1,6 @@
 package com.appspot.twitteybot.datastore;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -10,6 +9,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 
 /**
  * Class holding the configuration settings on individual twitter accounts
@@ -17,62 +17,59 @@ import com.google.appengine.api.datastore.Key;
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class TwitterAccount implements Serializable {
 
-    private static final long serialVersionUID = -1625626597178446777L;
+	private static final long serialVersionUID = -4733522374852406699L;
 
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Key key;
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	private Key key;
 
-    @Persistent
-    private String twitterName;
+	@Persistent
+	private User user;
+	@Persistent
+	private String token;
+	@Persistent
+	private String secret;
+	@Persistent
+	private String twitterScreenName;
 
-    @Persistent
-    private String password;
+	public Key getKey() {
+		return key;
+	}
 
-    @Persistent
-    private int twitterInterval;
+	public void setKey(Key key) {
+		this.key = key;
+	}
 
-    @Persistent
-    private List<FeedConfiguration> feedUrls;
+	public User getUser() {
+		return user;
+	}
 
-    public String getPassword() {
-	return password;
-    }
+	public void setUser(User user) {
+		this.user = user;
+	}
 
-    public void setPassword(String password) {
-	this.password = password;
-    }
+	public String getToken() {
+		return token;
+	}
 
-    public int getTwitterInterval() {
-	return twitterInterval;
-    }
+	public void setToken(String token) {
+		this.token = token;
+	}
 
-    public void setTwitterInterval(int twitterInterval) {
-	this.twitterInterval = twitterInterval;
-    }
+	public String getSecret() {
+		return secret;
+	}
 
-    public List<FeedConfiguration> getFeedUrls() {
-	return feedUrls;
-    }
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
 
-    public void setFeedUrls(List<FeedConfiguration> feedUrl) {
-	this.feedUrls = feedUrl;
-    }
+	public String getTwitterScreenName() {
+		return twitterScreenName;
+	}
 
-    public Key getKey() {
-	return key;
-    }
-
-    public void setKey(Key key) {
-	this.key = key;
-    }
-
-    public String getTwitterName() {
-	return twitterName;
-    }
-
-    public void setTwitterName(String twitterName) {
-	this.twitterName = twitterName;
-    }
+	public void setTwitterScreenName(String twitterScreenName) {
+		this.twitterScreenName = twitterScreenName;
+	}
 
 }

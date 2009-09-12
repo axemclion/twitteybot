@@ -4,12 +4,19 @@
             <th>Status Message</th>
             <th>Updated Time</th>
         </tr>
-        <#list status as item>
+        <#list statuses as item>
         <tr>
+            <td>
+            	${item.twitterScreenName}
+            </td>
+            <td>
+            	${item.source}
+            </td>
+
             <td>
                 <textarea disabled = "true">${item.status}</textarea>
             </td>
-            <td>${item.updatedTime?datetime}</td>
+            
         </tr>
         </#list>
     </table>

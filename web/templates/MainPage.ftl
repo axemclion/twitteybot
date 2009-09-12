@@ -4,10 +4,24 @@
         <link rel="stylesheet" type=text/css href="/css/main.css"/>
     </head>
     <body>
-        <div class = "header">${username!""}</div>
+        <div class = "header">${username!""} | (<a href = "${logoutUrl}">logout</a>)</div>
         <div class = "content">
-        	<div class = "twitter-account-pane">
-        		<a href = "/pages/twitter?action=show" target="_self">View twitter accounts</a>
+			<div class = "twitter-accounts">
+			    <ul>
+			        <#list accounts as item>
+			        <li>
+			            ${item.twitterScreenName}<a href="/pages/manageTwitterAccount?action=delete&screenName=${item.twitterScreenName}">[delete]</a>
+			            |<a href = "#">Upload File</a>
+			            <form method = "POST" action = "/pages/upload?action=add&screenName=${item.twitterScreenName}" enctype='multipart/form-data'>
+			            	<input type = "file" name = "filename"/>
+			            	<input type = "submit"/>
+			            </form>
+			        </li>
+			        </#list>
+			    </ul>
+			</div>
+			<div id = "addTwitterAccount">
+			    <a href = "/pages/manageTwitterAccount?action=add" target = "_blank">Add a new account</a>
 			</div>
 		</div>
         <div class = "footer"></div>
