@@ -1,98 +1,105 @@
 package com.appspot.twitteybot.ui;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.http.AccessToken;
+import twitter4j.http.RequestToken;
+
+import com.appspot.twitteybot.datastore.PMF;
 import com.appspot.twitteybot.datastore.TwitterAccount;
-import com.appspot.twitteybot.datastore.helper.TwitterDataHelper;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-/**
- * Manages adding and deletion of Twitter accounts to the database
- */
 public class TwitterAccountManager extends HttpServlet {
-    private static final long serialVersionUID = 929636040366447125L;
 
-    private static final Logger log = Logger.getLogger(TwitterAccountManager.class.getName());
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final String consumerKey = "LJ2GIzMFLCuuXtjLUvXlJA";
+	private static final String consumerSecret = "JjFecOMdVXLClJo8TNy5J9KXGKpFQbk0eXHRw3PZC8c";
+	private static final String COOKIE_TOKEN = "token";
+	private static final String COOKIE_TOKEN_SECRET = "token_secret";
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	this.doGet(req, resp);
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-	UserService userService = UserServiceFactory.getUserService();
-	User user = userService.getCurrentUser();
-	if (user == null) {
-	    resp.sendError(HttpServletResponse.SC_FORBIDDEN, "You are not a registered user to perform this operation");
-	    return;
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+			IOException {
+		this.doGet(req, resp);
 	}
 
-	String action = req.getParameter(Pages.PARAM_ACTION);
-	TwitterDataHelper twitterHelper = new TwitterDataHelper(user);
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+			IOException {
+		String action = req.getParameter(Pages.PARAM_ACTION);
 
-	log.log(Level.FINE, "Action ", action);
+		if (action == null) {
+			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+			return;
+		}
 
-	if (action == null) {
-	    action = Pages.ACTION_EDIT;
+		Twitter twitter = new Twitter();
+		twitter.setOAuthConsumer(consumerKey, consumerSecret);
+		try {
+			if (action.equals(Pages.PARAM_ACTION_ADD)) {
+				RequestToken requestToken = twitter.getOAuthRequestToken();
+				resp.addCookie(new Cookie(COOKIE_TOKEN, requestToken.getToken()));
+				resp.addCookie(new Cookie(COOKIE_TOKEN_SECRET, requestToken.getTokenSecret()));
+				resp.sendRedirect(requestToken.getAuthorizationURL());
+			} else if (action.equals(Pages.PARAM_OAUTH)) {
+				String token = null, tokenSecret = null;
+				Cookie[] cookies = req.getCookies();
+				for (Cookie cookie : cookies) {
+					if (cookie.getName().equals(COOKIE_TOKEN)) {
+						token = cookie.getValue();
+					}
+					if (cookie.getName().equals(COOKIE_TOKEN_SECRET)) {
+						tokenSecret = cookie.getValue();
+					}
+				}
+				AccessToken accessToken = twitter.getOAuthAccessToken(token, tokenSecret);
+				this.saveToken(accessToken);
+				resp.getWriter().write("<script>window.close();</script>");
+			} else if (action.equals(Pages.PARAM_ACTION_DELETE)) {
+				this.deleteToken(req.getParameter(Pages.PARAM_SCREENNAME));
+				resp.getWriter().write("Delete Successful");
+			}
+		} catch (TwitterException e) {
+			e.printStackTrace(resp.getWriter());
+		}
 	}
 
-	if (action.equals(Pages.ACTION_ADD)) {
-	    String username = req.getParameter(Pages.PARAM_USER_NAME);
-	    String password = req.getParameter(Pages.PARAM_PASSWORD);
-	    int interval = Integer.parseInt(req.getParameter(Pages.PARAM_INTERVAL));
-	    if (!twitterHelper.setTwitterAccount(username, password, interval)) {
-		resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not add or update twitter account");
-		return;
-	    }
-	} else if (action.equals(Pages.ACTION_DELETE)) {
-	    String username = req.getParameter(Pages.PARAM_USER_NAME);
-	    if (!twitterHelper.deleteAccount(username)) {
-		resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not delete twitter account");
-		return;
-	    }
-	} else if (action.equals(Pages.ACTION_SHOW)) {
-	    Map<String, Object> props = new HashMap<String, Object>();
-	    List<String> twitterAccounts = new ArrayList<String>();
-	    
-	    for (TwitterAccount twitterAccount : twitterHelper.getAllTwitterAccounts()) {
-		twitterAccounts.add(twitterAccount.getTwitterName());
-	    }
-
-	    props.put(Pages.FTLVAR_TWITTER_ACCOUNTS, twitterAccounts);
-	    props.put(Pages.FTLVAR_PAGE_TWITTER, Pages.PAGE_TWITTER_ACCOUNTS);
-	    props.put(Pages.FTLVAR_PAGE_FEEDS, Pages.PAGE_FEEDS);
-
-	    FreeMarkerConfiguration.writeResponse(props, Pages.TEMPlATE_SHOW_ACCOUNT, resp.getWriter());
-
-	} else {
-	    Map<String, Object> props = new HashMap<String, Object>();
-	    props.put(Pages.PARAM_USER_NAME, Pages.PARAM_USER_NAME);
-	    props.put(Pages.PARAM_PASSWORD, Pages.PARAM_PASSWORD);
-	    props.put(Pages.PARAM_INTERVAL, Pages.PARAM_INTERVAL);
-	    TwitterAccount account = twitterHelper.getTwitterAccount(req.getParameter(Pages.PARAM_USER_NAME));
-	    if (account != null) {
-		props.put(Pages.FTLVAR_USERNAME_VALUE, account.getTwitterName());
-		props.put(Pages.FTLVAR_INTERVAL_VALUE, account.getTwitterInterval());
-	    }
-	    props.put(Pages.FTLVAR_TARGET_URL, Pages.PAGE_TWITTER_ACCOUNTS + Pages.PARAM_ACTION + "="
-		    + Pages.ACTION_ADD);
-	    FreeMarkerConfiguration.writeResponse(props, Pages.TEMPLATE_ADD_ACCOUNT, resp.getWriter());
+	private void saveToken(AccessToken token) {
+		TwitterAccount twitterAccount = new TwitterAccount();
+		twitterAccount.setUser(UserServiceFactory.getUserService().getCurrentUser());
+		twitterAccount.setToken(token.getToken());
+		twitterAccount.setToken(token.getTokenSecret());
+		twitterAccount.setTwitterScreenName(token.getScreenName());
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		pm.makePersistent(twitterAccount);
+		pm.close();
 	}
-	twitterHelper.commit();
-    }
+
+	private void deleteToken(String screenName) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query query = pm.newQuery(TwitterAccount.class);
+		query.setFilter("twitterScreenName == screenVar");
+		query.declareParameters("String screenVar");
+		@SuppressWarnings("unchecked")
+		List<TwitterAccount> twitterAccounts = (List<TwitterAccount>) query.execute(screenName);
+		for (TwitterAccount twitterAccount : twitterAccounts) {
+			pm.deletePersistent(twitterAccount);
+		}
+		query.closeAll();
+		pm.close();
+	}
 }
