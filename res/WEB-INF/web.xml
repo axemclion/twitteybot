@@ -32,14 +32,23 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>TwitterStatus</servlet-name>
+		<servlet-name>Cron</servlet-name>
 		<servlet-class>com.appspot.twitteybot.CronServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>TwitterStatus</servlet-name>
+		<servlet-name>Cron</servlet-name>
 		<url-pattern>/cron/status</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>TaskQueue</servlet-name>
+		<servlet-class>com.appspot.twitteybot.TaskServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TaskQueue</servlet-name>
+		<url-pattern>/task/status</url-pattern>
+	</servlet-mapping>
+	
 	<security-constraint>
 		<web-resource-collection>
 			<url-pattern>/pages/*</url-pattern>
