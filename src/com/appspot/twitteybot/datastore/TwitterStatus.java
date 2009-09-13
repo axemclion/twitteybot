@@ -47,7 +47,8 @@ public class TwitterStatus implements Serializable {
 		this.source = source;
 		this.state = State.SCHEDULED;
 		this.updatedTime = updateTime;
-		this.status = status;
+		this.status = status.substring(0, status.length() > 140 ? 140 : (status.length() == 0) ? 0 : status
+				.length() - 1);
 		this.canDelete = canDelete;
 	}
 
@@ -65,14 +66,6 @@ public class TwitterStatus implements Serializable {
 
 	public void setUpdatedTime(Date updatedTime) {
 		this.updatedTime = updatedTime;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public String getSource() {
@@ -115,4 +108,18 @@ public class TwitterStatus implements Serializable {
 		this.user = user;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	@Override
+	public String toString() {
+		return "TwitterStatus [canDelete=" + canDelete + ", key=" + key + ", source=" + source + ", state="
+				+ state + ", status=" + status + ", twitterScreenName=" + twitterScreenName
+				+ ", updatedTime=" + updatedTime + ", user=" + user + "]";
+	}
 }

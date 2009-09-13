@@ -3,6 +3,8 @@ package com.appspot.twitteybot.ui;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,7 +39,7 @@ public class StatusManager extends HttpServlet {
 
 	private static final Logger log = Logger.getLogger(StatusManager.class.getName());
 	private static final long serialVersionUID = 1551252388567429753L;
-	private static final int DEFAULT_TIME_INCREMENT = 10;
+	private static final int DEFAULT_TIME_INCREMENT = 1;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
@@ -65,14 +67,21 @@ public class StatusManager extends HttpServlet {
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		List<TwitterStatus> twitterStatuses = new ArrayList<TwitterStatus>();
+		SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy, hh:mm:ss a (zzz)");
 		for (int i = 0; i <= totalItems; i++) {
-			if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + totalItems), "on")) {
-				Date updateDate = new Date();// req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE)
+			if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + i), "on")) {
+				
+				Date updateDate = new Date();
+				try {
+					updateDate = df.parse(req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i));
+				} catch (ParseException e) {
+					log.log(Level.SEVERE, e.getMessage());
+				}
 				twitterStatuses.add(new TwitterStatus(user, req
-						.getParameter(Pages.PARAM_STATUS_TWITTER_SCREEN), req
-						.getParameter(Pages.PARAM_STATUS_SOURCE), updateDate, req
-						.getParameter(Pages.PARAM_STATUS_STATUS), this.getBoolFromParam(req
-						.getParameter(Pages.PARAM_STATUS_CAN_DELETE), "on")));
+						.getParameter(Pages.PARAM_STATUS_TWITTER_SCREEN + i), req
+						.getParameter(Pages.PARAM_STATUS_SOURCE + i), updateDate, req
+						.getParameter(Pages.PARAM_STATUS_STATUS + i), this.getBoolFromParam(req
+						.getParameter(Pages.PARAM_STATUS_CAN_DELETE + i), "on")));
 
 			}
 			pm.makePersistentAll(twitterStatuses);
@@ -120,10 +129,11 @@ public class StatusManager extends HttpServlet {
 						byteStream.write(buffer, 0, len);
 					}
 					String[] statusArray = byteStream.toString().split(separator);
+					int increment = 0;
 					for (String status : statusArray) {
 						Calendar cal = Calendar.getInstance();
 						cal.setTime(startDate);
-						cal.add(Calendar.MINUTE, DEFAULT_TIME_INCREMENT);
+						cal.add(Calendar.MINUTE, increment += DEFAULT_TIME_INCREMENT);
 						statuses.add(new TwitterStatus(UserServiceFactory.getUserService().getCurrentUser(),
 								twitterScreenName, item.getName(), cal.getTime(), status, true));
 					}
