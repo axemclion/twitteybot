@@ -22,7 +22,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 public class MainPage extends HttpServlet {
 
 	private static final long serialVersionUID = 9148447220528278458L;
-	private static final Logger log = Logger.getLogger(StatusFileUploader.class.getName());
+	private static final Logger log = Logger.getLogger(MainPage.class.getName());
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
