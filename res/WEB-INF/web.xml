@@ -14,12 +14,12 @@
     </servlet-mapping>
 
 	 <servlet>
-        <servlet-name>StatusFileUploader</servlet-name>
-        <servlet-class>com.appspot.twitteybot.ui.StatusFileUploader</servlet-class>
+        <servlet-name>StatusManager</servlet-name>
+        <servlet-class>com.appspot.twitteybot.ui.StatusManager</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>StatusFileUploader</servlet-name>
-        <url-pattern>/pages/upload</url-pattern>
+        <servlet-name>StatusManager</servlet-name>
+        <url-pattern>/pages/status</url-pattern>
     </servlet-mapping>
 	
 	<servlet>

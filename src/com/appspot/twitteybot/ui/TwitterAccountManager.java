@@ -96,9 +96,7 @@ public class TwitterAccountManager extends HttpServlet {
 		query.declareParameters("String screenVar");
 		@SuppressWarnings("unchecked")
 		List<TwitterAccount> twitterAccounts = (List<TwitterAccount>) query.execute(screenName);
-		for (TwitterAccount twitterAccount : twitterAccounts) {
-			pm.deletePersistent(twitterAccount);
-		}
+		pm.deletePersistentAll(twitterAccounts);
 		query.closeAll();
 		pm.close();
 	}

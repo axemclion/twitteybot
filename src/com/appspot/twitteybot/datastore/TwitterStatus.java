@@ -10,6 +10,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class TwitterStatus implements Serializable {
@@ -21,16 +22,34 @@ public class TwitterStatus implements Serializable {
 	private Key key;
 
 	@Persistent
+	private String twitterScreenName;
+	@Persistent
+	private User user;
+	@Persistent
 	private Date updatedTime;
-
 	@Persistent
 	private String status;
-
-	@Persistent
-	private String twitterScreenName;
-
 	@Persistent
 	private String source;
+	@Persistent
+	private State state;
+	@Persistent
+	private boolean canDelete;
+
+	enum State {
+		SCHEDULED, TO_DELETE, UPDATED
+	}
+
+	public TwitterStatus(User user, String twitterScreenName, String source, Date updateTime, String status,
+			boolean canDelete) {
+		this.user = user;
+		this.twitterScreenName = twitterScreenName;
+		this.source = source;
+		this.state = State.SCHEDULED;
+		this.updatedTime = updateTime;
+		this.status = status;
+		this.canDelete = canDelete;
+	}
 
 	public Key getKey() {
 		return key;
@@ -56,14 +75,6 @@ public class TwitterStatus implements Serializable {
 		this.status = status;
 	}
 
-	public String getTwitterScreenName() {
-		return twitterScreenName;
-	}
-
-	public void setTwitterScreenName(String twitterScreenName) {
-		this.twitterScreenName = twitterScreenName;
-	}
-
 	public String getSource() {
 		return source;
 	}
@@ -72,10 +83,36 @@ public class TwitterStatus implements Serializable {
 		this.source = source;
 	}
 
-	@Override
-	public String toString() {
-		return "TwitterStatus [key=" + key + ", source=" + source + ", status=" + status
-				+ ", twitterScreenName=" + twitterScreenName + ", updatedTime=" + updatedTime + "]";
+	public String getTwitterScreenName() {
+		return twitterScreenName;
+	}
+
+	public void setTwitterScreenName(String twitterScreenName) {
+		this.twitterScreenName = twitterScreenName;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	public boolean isCanDelete() {
+		return canDelete;
+	}
+
+	public void setCanDelete(boolean canDelete) {
+		this.canDelete = canDelete;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

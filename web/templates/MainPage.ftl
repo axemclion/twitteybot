@@ -11,8 +11,8 @@
 			        <#list accounts as item>
 			        <li>
 			            ${item.twitterScreenName}<a href="/pages/manageTwitterAccount?action=delete&screenName=${item.twitterScreenName}">[delete]</a>
-			            |<a href = "#">Upload File</a>
-			            <form method = "POST" action = "/pages/upload?action=add&screenName=${item.twitterScreenName}" enctype='multipart/form-data'>
+			            |<a href = "#">Upload File</a> | <a href = "/pages/status?action=show&screenName=${item.twitterScreenName}">Show</a>
+			            <form method = "POST" action = "/pages/status?action=upload&screenName=${item.twitterScreenName}" enctype='multipart/form-data'>
 			            	<input type = "file" name = "filename"/>
 			            	<input type = "submit"/>
 			            </form>
