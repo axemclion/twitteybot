@@ -4,44 +4,53 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
-	 <servlet>
-        <servlet-name>UserMainPage</servlet-name>
-        <servlet-class>com.appspot.twitteybot.ui.MainPage</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>UserMainPage</servlet-name>
-        <url-pattern>/pages/main</url-pattern>
-    </servlet-mapping>
-
-	 <servlet>
-        <servlet-name>StatusManager</servlet-name>
-        <servlet-class>com.appspot.twitteybot.ui.StatusManager</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>StatusManager</servlet-name>
-        <url-pattern>/pages/status</url-pattern>
-    </servlet-mapping>
-	
 	<servlet>
-        <servlet-name>TwitterAccountManager</servlet-name>
-        <servlet-class>com.appspot.twitteybot.ui.TwitterAccountManager</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TwitterAccountManager</servlet-name>
-        <url-pattern>/pages/manageTwitterAccount</url-pattern>
-    </servlet-mapping>
+		<servlet-name>UserMainPage</servlet-name>
+		<servlet-class>com.appspot.twitteybot.ui.MainPage</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UserMainPage</servlet-name>
+		<url-pattern>/pages/main</url-pattern>
+	</servlet-mapping>
 
-    <security-constraint>
-        <web-resource-collection>
-            <url-pattern>/pages/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>*</role-name>
-        </auth-constraint>
-    </security-constraint>
+	<servlet>
+		<servlet-name>StatusManager</servlet-name>
+		<servlet-class>com.appspot.twitteybot.ui.StatusManager</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StatusManager</servlet-name>
+		<url-pattern>/pages/status</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>TwitterAccountManager</servlet-name>
+		<servlet-class>com.appspot.twitteybot.ui.TwitterAccountManager</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TwitterAccountManager</servlet-name>
+		<url-pattern>/pages/manageTwitterAccount</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>TwitterStatus</servlet-name>
+		<servlet-class>com.appspot.twitteybot.CronServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TwitterStatus</servlet-name>
+		<url-pattern>/cron/status</url-pattern>
+	</servlet-mapping>
+
+	<security-constraint>
+		<web-resource-collection>
+			<url-pattern>/pages/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>*</role-name>
+		</auth-constraint>
+	</security-constraint>
 
 
-    <welcome-file-list>
-        <welcome-file>/index.html</welcome-file>
-    </welcome-file-list>
+	<welcome-file-list>
+		<welcome-file>/index.html</welcome-file>
+	</welcome-file-list>
 </web-app>

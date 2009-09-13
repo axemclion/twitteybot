@@ -27,7 +27,10 @@
 	                <textarea name = "status_${item_index}" >${item.status}</textarea>
 	            </td>
 	            <td>
-	            	<input type = "text" name = "updatedTime_${item_index}" value = "${item.updatedTime?datetime}" />  
+	            	<input type = "text" name = "updatedTime_${item_index}" value = "${item.updatedTime?string("EEEE, MMMM dd, yyyy, hh:mm:ss a '('zzz')'")}" />  
+	            </td>
+	            <td>
+	            	<input type = "checkbox" name = "canDelete_${item_index}" checked = "true" />
 	            </td>
 	        </tr>
 	        </#list>
