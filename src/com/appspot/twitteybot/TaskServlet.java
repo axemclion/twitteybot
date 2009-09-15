@@ -3,6 +3,7 @@ package com.appspot.twitteybot;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.cache.Cache;
 import javax.cache.CacheException;
@@ -16,30 +17,42 @@ import javax.servlet.http.HttpServletResponse;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.http.AccessToken;
 
 import com.appspot.twitteybot.datastore.PMF;
 import com.appspot.twitteybot.datastore.TwitterAccount;
+import com.appspot.twitteybot.ui.MainPage;
 import com.appspot.twitteybot.ui.Pages;
+import com.appspot.twitteybot.ui.TwitterAccountManager;
 
 public class TaskServlet extends HttpServlet {
 	private static final String TWITTER_ACCOUNT_CACHE = "twitterAccountCache";
+	private static final Logger log = Logger.getLogger(MainPage.class.getName());
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+			IOException {
+		doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
 			IOException {
 		String action = req.getParameter(Pages.PARAM_ACTION);
 		if (action == null) {
 			return;
 		} else if (action.equals(Pages.PARAM_ACTION_UPDATE)) {
 			String twitterScreenName = req.getParameter(Pages.PARAM_STATUS_TWITTER_SCREEN);
-			TwitterAccount twitterAccount = this.getTwitterAccount(req
-					.getParameter(Pages.PARAM_STATUS_STATUS));
+			TwitterAccount twitterAccount = this.getTwitterAccount(twitterScreenName);
 			if (twitterScreenName == null || twitterAccount == null) {
 				throw new ServletException("Error with input parameters");
 			}
+
 			Twitter twitter = new Twitter();
-			twitter.setOAuthAccessToken(twitterAccount.getToken(), twitterAccount.getSecret());
-			twitter.setSource("http://twitteybot.appspot.com");
+			twitter.setOAuthConsumer(TwitterAccountManager.consumerKey, TwitterAccountManager.consumerSecret);
+			twitter
+					.setOAuthAccessToken(new AccessToken(twitterAccount.getToken(), twitterAccount
+							.getSecret()));
 			try {
 				twitter.updateStatus(req.getParameter(Pages.PARAM_STATUS_STATUS));
 			} catch (TwitterException e) {
@@ -53,6 +66,7 @@ public class TaskServlet extends HttpServlet {
 		CacheManager cacheManager = CacheManager.getInstance();
 		Cache cache = cacheManager.getCache(TWITTER_ACCOUNT_CACHE);
 		if (cache == null) {
+			log.info("Twitter Cache not found, creating a new cache");
 			try {
 				cache = cacheManager.getCacheFactory().createCache(Collections.emptyMap());
 			} catch (CacheException e) {
@@ -66,9 +80,10 @@ public class TaskServlet extends HttpServlet {
 			result = (TwitterAccount) obj;
 		}
 		if (result == null) {
+			log.info("Screenname " + screenName + " not found in cache. Putting it in now");
 			PersistenceManager pm = PMF.get().getPersistenceManager();
-			Query query = pm.newQuery();
-			query.setFilter("twitterScreenName twitterScreenNameVar");
+			Query query = pm.newQuery(TwitterAccount.class);
+			query.setFilter("twitterScreenName == twitterScreenNameVar");
 			query.declareParameters("String twitterScreenNameVar");
 			List<TwitterAccount> twitterAccounts = (List<TwitterAccount>) query.execute(screenName);
 			if (twitterAccounts.size() == 0) {

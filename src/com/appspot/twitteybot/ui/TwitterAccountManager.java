@@ -26,8 +26,8 @@ public class TwitterAccountManager extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String consumerKey = "LJ2GIzMFLCuuXtjLUvXlJA";
-	private static final String consumerSecret = "JjFecOMdVXLClJo8TNy5J9KXGKpFQbk0eXHRw3PZC8c";
+	public static final String consumerKey = "LJ2GIzMFLCuuXtjLUvXlJA";
+	public static final String consumerSecret = "JjFecOMdVXLClJo8TNy5J9KXGKpFQbk0eXHRw3PZC8c";
 	private static final String COOKIE_TOKEN = "token";
 	private static final String COOKIE_TOKEN_SECRET = "token_secret";
 
@@ -82,7 +82,7 @@ public class TwitterAccountManager extends HttpServlet {
 		TwitterAccount twitterAccount = new TwitterAccount();
 		twitterAccount.setUser(UserServiceFactory.getUserService().getCurrentUser());
 		twitterAccount.setToken(token.getToken());
-		twitterAccount.setToken(token.getTokenSecret());
+		twitterAccount.setSecret(token.getTokenSecret());
 		twitterAccount.setTwitterScreenName(token.getScreenName());
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		pm.makePersistent(twitterAccount);
