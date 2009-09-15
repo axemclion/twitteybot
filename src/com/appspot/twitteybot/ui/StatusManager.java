@@ -59,6 +59,8 @@ public class StatusManager extends HttpServlet {
 			this.processAdd(req, resp);
 		} else if (action.equals(Pages.PARAM_ACTION_SHOW)) {
 			this.processShow(req, resp);
+		} else if (action.equals(Pages.PARAM_ACTION_FETCH)) {
+			//TODO Add method to fetch from remote URL
 		}
 	}
 
@@ -70,7 +72,7 @@ public class StatusManager extends HttpServlet {
 		SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy, hh:mm:ss a (zzz)");
 		for (int i = 0; i <= totalItems; i++) {
 			if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + i), "on")) {
-				
+
 				Date updateDate = new Date();
 				try {
 					updateDate = df.parse(req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i));

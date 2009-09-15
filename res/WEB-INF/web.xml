@@ -33,7 +33,7 @@
 
 	<servlet>
 		<servlet-name>Cron</servlet-name>
-		<servlet-class>com.appspot.twitteybot.CronServlet</servlet-class>
+		<servlet-class>com.appspot.twitteybot.cron.CronServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Cron</servlet-name>

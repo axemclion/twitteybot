@@ -36,8 +36,8 @@ public class TwitterStatus implements Serializable {
 	@Persistent
 	private boolean canDelete;
 
-	enum State {
-		SCHEDULED, TO_DELETE, UPDATED
+	public enum State {
+		SCHEDULED, TO_DELETE, QUEUED
 	}
 
 	public TwitterStatus(User user, String twitterScreenName, String source, Date updateTime, String status,

@@ -18,6 +18,8 @@ import twitter4j.http.RequestToken;
 
 import com.appspot.twitteybot.datastore.PMF;
 import com.appspot.twitteybot.datastore.TwitterAccount;
+import com.appspot.twitteybot.datastore.TwitterStatus;
+import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
 public class TwitterAccountManager extends HttpServlet {
@@ -48,6 +50,7 @@ public class TwitterAccountManager extends HttpServlet {
 		}
 
 		Twitter twitter = new Twitter();
+		// TODO Read these properties from a peroperties file
 		twitter.setOAuthConsumer(consumerKey, consumerSecret);
 		try {
 			if (action.equals(Pages.PARAM_ACTION_ADD)) {
@@ -90,13 +93,23 @@ public class TwitterAccountManager extends HttpServlet {
 	}
 
 	private void deleteToken(String screenName) {
+		User user = UserServiceFactory.getUserService().getCurrentUser();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query query = pm.newQuery(TwitterAccount.class);
-		query.setFilter("twitterScreenName == screenVar");
-		query.declareParameters("String screenVar");
+		query.setFilter("twitterScreenName == screenVar && user == userVar");
+		query.declareParameters("String screenVar,  com.google.appengine.api.users.User userVar");
 		@SuppressWarnings("unchecked")
-		List<TwitterAccount> twitterAccounts = (List<TwitterAccount>) query.execute(screenName);
+		List<TwitterAccount> twitterAccounts = (List<TwitterAccount>) query.execute(screenName, user);
 		pm.deletePersistentAll(twitterAccounts);
+		query.closeAll();
+
+		query = pm.newQuery(TwitterStatus.class);
+		query.setFilter("twitterScreenName == screenVar && user == userVar");
+		query.declareParameters("String screenVar,  com.google.appengine.api.users.User userVar");
+		@SuppressWarnings("unchecked")
+		List<TwitterStatus> twitterStatus = (List<TwitterStatus>) query.execute(screenName, user);
+		pm.deletePersistentAll(twitterStatus);
+
 		query.closeAll();
 		pm.close();
 	}
