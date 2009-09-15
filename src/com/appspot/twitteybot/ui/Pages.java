@@ -14,6 +14,7 @@ public class Pages {
 	public static final String PARAM_ACTION_UPDATE = "update";
 	public static final String PARAM_ACTION_SHOW = "show";
 	public static final String PARAM_ACTION_UPLOAD = "upload";
+	public static final String PARAM_ACTION_FETCH = "fetch";
 
 	public static final String PARAM_STATUS_CANADD = "item_";
 	public static final String PARAM_TOTAL_ITEMS = "totalItems";
@@ -30,12 +31,11 @@ public class Pages {
 
 	public static final String PAGE_HOME = "/?";
 	public static final String PAGE_MAIN = "/pages/main?";
-	public static final String PAGE_UPLOAD_STATUS = "/pages/upload?";
+	public static final String PAGE_TASK_QUEUE = "/task/status";
 
 	public static final String FTLVAR_TWITTER_STATUS = "statuses";
 	public static final String FTLVAR_TWITTER_ACCOUNTS = "accounts";
 	public static final String FTLVAR_USERNAME = "username";
 	public static final String FTLVAR_LOGOUT = "logoutUrl";
-
 
 }

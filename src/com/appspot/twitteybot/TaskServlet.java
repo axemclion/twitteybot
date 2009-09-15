@@ -2,7 +2,10 @@ package com.appspot.twitteybot;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.cache.Cache;
@@ -26,6 +29,9 @@ import com.appspot.twitteybot.ui.Pages;
 import com.appspot.twitteybot.ui.TwitterAccountManager;
 
 public class TaskServlet extends HttpServlet {
+
+	private static final long serialVersionUID = 2103613622996613432L;
+
 	private static final String TWITTER_ACCOUNT_CACHE = "twitterAccountCache";
 	private static final Logger log = Logger.getLogger(MainPage.class.getName());
 
@@ -42,22 +48,28 @@ public class TaskServlet extends HttpServlet {
 		if (action == null) {
 			return;
 		} else if (action.equals(Pages.PARAM_ACTION_UPDATE)) {
-			String twitterScreenName = req.getParameter(Pages.PARAM_STATUS_TWITTER_SCREEN);
-			TwitterAccount twitterAccount = this.getTwitterAccount(twitterScreenName);
-			if (twitterScreenName == null || twitterAccount == null) {
-				throw new ServletException("Error with input parameters");
+			int totalItems = Integer.parseInt(req.getParameter(Pages.PARAM_TOTAL_ITEMS));
+			for (int i = 0; i < totalItems; i++) {
+				this.updateMessage(req.getParameter(Pages.PARAM_STATUS_TWITTER_SCREEN + i), req
+						.getParameter(Pages.PARAM_STATUS_STATUS + i));
+				// TODO Catch DeadlineExceededException
 			}
+		}
+	}
 
-			Twitter twitter = new Twitter();
-			twitter.setOAuthConsumer(TwitterAccountManager.consumerKey, TwitterAccountManager.consumerSecret);
-			twitter
-					.setOAuthAccessToken(new AccessToken(twitterAccount.getToken(), twitterAccount
-							.getSecret()));
-			try {
-				twitter.updateStatus(req.getParameter(Pages.PARAM_STATUS_STATUS));
-			} catch (TwitterException e) {
-				throw new ServletException(e);
-			}
+	private void updateMessage(String twitterScreenName, String status) throws ServletException {
+		TwitterAccount twitterAccount = this.getTwitterAccount(twitterScreenName);
+		if (twitterScreenName == null || twitterAccount == null) {
+			throw new ServletException("Error with input parameters");
+		}
+
+		Twitter twitter = new Twitter();
+		twitter.setOAuthConsumer(TwitterAccountManager.consumerKey, TwitterAccountManager.consumerSecret);
+		twitter.setOAuthAccessToken(new AccessToken(twitterAccount.getToken(), twitterAccount.getSecret()));
+		try {
+			twitter.updateStatus(status);
+		} catch (TwitterException e) {
+			throw new ServletException(e);
 		}
 	}
 
