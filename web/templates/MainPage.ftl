@@ -57,9 +57,11 @@
                             </li>
                         </ul>
                         <div id = "uploadFileForm">
-                            <form action = "/pages/status" method = "POST" name = "uploadFile">
-                                <input type = "hidden" name = "action" type = "upload" />&nbsp;<input type = "hidden" name = "screenName" value = ""/>&nbsp;<input type = "file" name = "fileName" class = "button"/><input type = "submit" value = "Upload" class = "button"/><input type = "reset" value = "Cancel" class = "button"/>
+                            <form target = "uploadedFileFrame" action = "#" method = "POST" name = "uploadFile" encType="multipart/form-data">
+                                <input type = "file" name = "fileName" class = "button"/>&nbsp;<input type = "submit" value = "Upload" class = "button"/>&nbsp;<input type = "reset" value = "Cancel" class = "button"/>
                             </form>
+                            <iframe name = "uploadedFileFrame" style ="display:none">
+                            </iframe>
                         </div>
                         <div id = "deleteAccountForm">
                             <form action = "/pages/status" method = "POST">
@@ -70,24 +72,34 @@
                     <div class = "clear">
                     </div>
                 </div>
-                <div id = "toolbar">
-                    <div class = "left-pane">
-                        Select&nbsp;
-                        <ul class = "single-line-list">
-                            <li>
-                                <a href = "#" id = "selectAllStatus">All</a>, 
-                            </li>
-                            <li>
-                                <a href = "#" id = "selectNoneStatus">None</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class = "right-pane">
-                    </div>
-                    <div class = "clear">
-                    </div>
-                </div>
-                <div id = "twitterStatus">
+                <div id = "twitterContent">
+                    <form name = "updateForm" method = "POST" action = "/pages/status">
+                        <div id = "toolbar">
+                            <div class = "left-pane">
+                                Select&nbsp;
+                                <ul class = "single-line-list">
+                                    <li>
+                                        <a href = "#" id = "selectAllStatus">All</a>, 
+                                    </li>
+                                    <li>
+                                        <a href = "#" id = "selectNoneStatus">None</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class = "right-pane" style ="text-align : right">
+                                <div id = "otherButtons">
+                                	<input type = "Submit" name = "action" value = "update" class = "button"/>&nbsp;<input type = "submit" name = "action" value = "delete" class = "button"/>
+								</div>
+								<div id = "uploadButtons">
+									<input type = "Submit" name = "action" value = "add" class = "button">&nbsp;<input type = "reset" value = "cancel" class = "button"/>
+								</div>
+                            </div>
+                            <div class = "clear">
+                            </div>
+                        </div>
+                        <div id = "twitterStatus">
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
