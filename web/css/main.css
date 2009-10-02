@@ -2,7 +2,7 @@ body, table {
     background: #FFFFFF none repeat scroll 0 0;
     color: #000000;
     font-family: Arial, sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     margin: 0;
 }
 
@@ -51,7 +51,7 @@ form {
 
 .left-pane {
     float: left;
-    width: 20%;
+    width: 15%;
 }
 
 #twitterAccountList {
@@ -82,7 +82,7 @@ form {
 
 .right-pane {
     float: right;
-    width: 79%;
+    width: 84%;
 }
 
 #twitterAccount {
