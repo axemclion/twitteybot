@@ -1,8 +1,7 @@
-body {
+body, table {
     background: #FFFFFF none repeat scroll 0 0;
     color: #000000;
     font-family: Arial, sans-serif;
-    min-width: 950px;
     font-size: 12px;
     margin: 0;
 }
@@ -114,11 +113,21 @@ form {
     display: inline;
 }
 
-#toolbar {
-    padding: 0.3em;
+#twitterContent {
     border: SOLID 1px #3366CC;
-    border-bottom: none;
+}
+
+#toolbar {
     background-color: #E9E9E9;
+	padding : 0.3em;
+}
+
+#twitterStatus {
+    margin: 1em 0 0 0;
+}
+
+#twitterStatus table {
+    width: 100%;
 }
 
 .clear {

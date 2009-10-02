@@ -29,21 +29,47 @@ $(document).ready(function(){
                 $(".actionBar>.right-Pane>*").hide();
                 $(".actionBar>.right-Pane>ul").fadeIn();
             });
-            $("#twitterAccountList a").click(this.onClickScreenName);
+            $("#twitterAccountList a").click(function(event){
+                var screenName = $.urlParser(this.href).params["screenName"];
+                $("#twitterScreenName").html(screenName);
+                me.showTweets(screenName);
+                return false;
+            });
+            
+            $("#uploadFileForm form").submit(function(){
+                $(this).attr("action", "/pages/status?action=upload&screenName=" + $("#twitterScreenName").html());
+            });
+            $("#twitterContent :reset").click(this.showTweets);
             $("#twitterAccountList a:first").click();
+            $("#uploadFileForm iframe").load(function(){
+                $("#twitterStatus").html(this.contentDocument.body.innerHTML);
+                me.onTweetsLoaded();
+                $("#uploadButtons").show();
+                $("#otherButtons").hide();
+            });
+			$("#selectNoneStatus").click(function(){
+				$("#twitterStatus .item-index").attr("checked", false);
+				return false;
+			});
+			$("#selectAllStatus").click(function(){
+				$("#twitterStatus .item-index").attr("checked", true);
+				return false;
+			});
+
         },
         
-        onClickScreenName: function(event){
-            var screenName = $.urlParser(this.href).params["screenName"];
-            $("#twitterScreenName").html(screenName);
+        showTweets: function(){
+            var screenName = $("#twitterScreenName").html();
+            var me = this;
             $("#twitterStatus").load("/pages/status", {
                 "action": "show",
                 "screenName": screenName
-            }, this.onStatusLoaded);
-            return false;
+            }, me.onTweetsLoaded);
+            $("#uploadButtons").hide();
+            $("#otherButtons").show();
         },
         
-        onStatusLoaded: function(){
+        onTweetsLoaded: function(action){
         
         },
         
@@ -65,10 +91,6 @@ $(document).ready(function(){
                 }, 5000);
             }
         },
-        
-        onLoadStatus: function(){
-        
-        }
     };
     
     TwitteyBot.init();
