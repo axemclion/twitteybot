@@ -10,6 +10,10 @@ $(document).ready(function(){
     
     var TwitteyBot = {
         init: function(){
+            if ($("#twitterAccountList>li").size() == 0) {
+                $("#twitterAccount").hide();
+                this.showMessage("Add a twitter account to tweet scheduled messages to it", "warn", true);
+            }
             $(".actionBar>.right-Pane>div").hide();
             $("#actionList>li>a").click(function(event){
                 $(".actionBar>.right-Pane>*").hide();
@@ -19,6 +23,22 @@ $(document).ready(function(){
                 $(".actionBar>.right-Pane>*").hide();
                 $(".actionBar>.right-Pane>ul").fadeIn();
             });
+        },
+        
+        showMessage: function(message, level, dontFade){
+            var color = {
+                "info": "GREEN",
+                "error": "RED",
+                "warn": "YELLOW"
+            };
+            $("#message").html(message);
+            $("#message").css("backgroundColor", color[level]);
+            $("#message").fadeIn();
+            if (!dontFade) {
+                window.setTimeout(function(){
+                    $("#message").fadeOut();
+                }, 5000);
+            }
         },
         
         onClickAccount: function(){

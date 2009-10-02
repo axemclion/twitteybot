@@ -34,14 +34,14 @@ public class TwitterAccountManager extends HttpServlet {
 	private static final String COOKIE_TOKEN_SECRET = "token_secret";
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-			IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		this.doGet(req, resp);
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-			IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		String action = req.getParameter(Pages.PARAM_ACTION);
 
 		if (action == null) {
@@ -55,8 +55,11 @@ public class TwitterAccountManager extends HttpServlet {
 		try {
 			if (action.equals(Pages.PARAM_ACTION_ADD)) {
 				RequestToken requestToken = twitter.getOAuthRequestToken();
-				resp.addCookie(new Cookie(COOKIE_TOKEN, requestToken.getToken()));
-				resp.addCookie(new Cookie(COOKIE_TOKEN_SECRET, requestToken.getTokenSecret()));
+				resp
+						.addCookie(new Cookie(COOKIE_TOKEN, requestToken
+								.getToken()));
+				resp.addCookie(new Cookie(COOKIE_TOKEN_SECRET, requestToken
+						.getTokenSecret()));
 				resp.sendRedirect(requestToken.getAuthorizationURL());
 			} else if (action.equals(Pages.PARAM_OAUTH)) {
 				String token = null, tokenSecret = null;
@@ -69,9 +72,10 @@ public class TwitterAccountManager extends HttpServlet {
 						tokenSecret = cookie.getValue();
 					}
 				}
-				AccessToken accessToken = twitter.getOAuthAccessToken(token, tokenSecret);
+				AccessToken accessToken = twitter.getOAuthAccessToken(token,
+						tokenSecret);
 				this.saveToken(accessToken);
-				resp.getWriter().write("<script>window.close();</script>");
+				resp.sendRedirect(Pages.PAGE_MAIN);
 			} else if (action.equals(Pages.PARAM_ACTION_DELETE)) {
 				this.deleteToken(req.getParameter(Pages.PARAM_SCREENNAME));
 				resp.getWriter().write("Delete Successful");
@@ -83,7 +87,8 @@ public class TwitterAccountManager extends HttpServlet {
 
 	private void saveToken(AccessToken token) {
 		TwitterAccount twitterAccount = new TwitterAccount();
-		twitterAccount.setUser(UserServiceFactory.getUserService().getCurrentUser());
+		twitterAccount.setUser(UserServiceFactory.getUserService()
+				.getCurrentUser());
 		twitterAccount.setToken(token.getToken());
 		twitterAccount.setSecret(token.getTokenSecret());
 		twitterAccount.setTwitterScreenName(token.getScreenName());
@@ -97,17 +102,21 @@ public class TwitterAccountManager extends HttpServlet {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query query = pm.newQuery(TwitterAccount.class);
 		query.setFilter("twitterScreenName == screenVar && user == userVar");
-		query.declareParameters("String screenVar,  com.google.appengine.api.users.User userVar");
+		query
+				.declareParameters("String screenVar,  com.google.appengine.api.users.User userVar");
 		@SuppressWarnings("unchecked")
-		List<TwitterAccount> twitterAccounts = (List<TwitterAccount>) query.execute(screenName, user);
+		List<TwitterAccount> twitterAccounts = (List<TwitterAccount>) query
+				.execute(screenName, user);
 		pm.deletePersistentAll(twitterAccounts);
 		query.closeAll();
 
 		query = pm.newQuery(TwitterStatus.class);
 		query.setFilter("twitterScreenName == screenVar && user == userVar");
-		query.declareParameters("String screenVar,  com.google.appengine.api.users.User userVar");
+		query
+				.declareParameters("String screenVar,  com.google.appengine.api.users.User userVar");
 		@SuppressWarnings("unchecked")
-		List<TwitterStatus> twitterStatus = (List<TwitterStatus>) query.execute(screenName, user);
+		List<TwitterStatus> twitterStatus = (List<TwitterStatus>) query
+				.execute(screenName, user);
 		pm.deletePersistentAll(twitterStatus);
 
 		query.closeAll();
