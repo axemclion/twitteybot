@@ -74,10 +74,11 @@ form {
     display: block;
     font-weight: bold;
     margin-right: -1px;
+    text-decoration: none;
 }
 
 #twitterAccountList a:hover {
-	background-color : #FAFBFD;
+    background-color: #FAFBFD;
 }
 
 .right-pane {
@@ -88,6 +89,7 @@ form {
 #twitterAccount {
     margin: 0;
     padding: 0;
+    width: 99%;
 }
 
 .actionBar {
@@ -110,6 +112,13 @@ form {
 
 #actionList li {
     display: inline;
+}
+
+#toolbar {
+    padding: 0.3em;
+    border: SOLID 1px #3366CC;
+    border-bottom: none;
+    background-color: #E9E9E9;
 }
 
 .clear {
