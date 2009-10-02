@@ -30,7 +30,7 @@
         <div id = "addTwitterAccount">
             <a href = "/pages/manageTwitterAccount?action=add">Add a new account</a>
         </div>
-        <div class = "left-pane" style ="border-right : SOLID #E5ECF9 3px">
+        <div class = "left-pane" style ="border-right : SOLID #E5ECF9 3px;height : 80%;">
             <ul id = "twitterAccountList">
                 <#list accounts as item>
                 <li>
@@ -64,8 +64,8 @@
                             </iframe>
                         </div>
                         <div id = "deleteAccountForm">
-                            <form action = "/pages/status" method = "POST">
-                                Are you sure you want to delete this account ?<input type = "hidden" name = "action" value = "delete"/>&nbsp;<input type = "hidden" name = "screenName" value = ""/><input type = "submit" value = "Yes" class = "button"/><input type = "reset" value = "No" class = "button"/>
+                            <form action = "#/pages/manageTwitterAccount" method = "POST" name = "deleteTwitterAccount">
+                                Are you sure you want to delete this account ?<input type = "submit" value = "Yes" class = "button"/>&nbsp;<input type = "reset" value = "No" class = "button"/>
                             </form>
                         </div>
                     </div>
