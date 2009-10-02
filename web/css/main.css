@@ -2,8 +2,9 @@ body {
     background: #FFFFFF none repeat scroll 0 0;
     color: #000000;
     font-family: Arial, sans-serif;
-    font-size: 62.5%;
     min-width: 950px;
+    font-size: 12px;
+    margin: 0;
 }
 
 form {
@@ -41,9 +42,7 @@ form {
     border-top: 1px solid #3366CC;
     margin: 0 0 1.25em;
     padding: 0.25em 0.5em;
-    display: inline-block;
     vertical-align: top;
-    width: 100%;
     font-size: 130%;
 }
 
@@ -111,4 +110,11 @@ form {
 }
 
 #footer {
+}
+
+#message {
+    padding: 0.5em;
+    margin: 0.5em;
+	font-weight : bold;
+	text-align : center;
 }
