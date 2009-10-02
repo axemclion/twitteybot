@@ -84,6 +84,8 @@
                     </div>
                     <div class = "right-pane">
                     </div>
+                    <div class = "clear">
+                    </div>
                 </div>
                 <div id = "twitterStatus">
                 </div>
