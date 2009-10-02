@@ -37,5 +37,7 @@ public class Pages {
 	public static final String FTLVAR_TWITTER_ACCOUNTS = "accounts";
 	public static final String FTLVAR_USERNAME = "username";
 	public static final String FTLVAR_LOGOUT = "logoutUrl";
+	public static final String FTLVAR_MESSAGE = "message";
+	public static final String FTLVAR_LEVEL = "level";
 
 }

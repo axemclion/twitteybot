@@ -32,6 +32,7 @@ $(document).ready(function(){
             $("#twitterAccountList a").click(function(event){
                 var screenName = $.urlParser(this.href).params["screenName"];
                 $("#twitterScreenName").html(screenName);
+                $("#screenName").attr("value", screenName);
                 me.showTweets();
                 return false;
             });
@@ -57,9 +58,10 @@ $(document).ready(function(){
             
             $("#twitterContent :reset").click(this.showTweets);
             $("#twitterAccountList a:first").click();
-            $("#uploadFileForm iframe").load(function(){
+            $("#resultFrame").load(function(){
                 $("#twitterStatus").html(this.contentDocument.body.innerHTML);
                 me.onTweetsLoaded();
+                me.showMessage($("#responseMessage").html(), $("#responseMessage").attr("title"));
                 $("#uploadButtons").show();
                 $("#otherButtons").hide();
             });
@@ -70,6 +72,11 @@ $(document).ready(function(){
             $("#selectAllStatus").click(function(){
                 $("#twitterStatus .item-index").attr("checked", true);
                 return false;
+            });
+            
+            $("#twitterContent form").submit(function(){
+                console.log(this);
+                //return false;
             });
             
         },
@@ -90,7 +97,11 @@ $(document).ready(function(){
         },
         
         showMessage: function(message, level, dontFade){
-            if (!level) {
+            if (!message || message == "")
+			{
+				return;	
+			}
+			if (!level) {
                 level = "info";
             }
             var color = {
