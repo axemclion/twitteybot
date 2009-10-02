@@ -25,7 +25,7 @@ $(document).ready(function(){
                 $(".actionBar>.right-Pane>*").hide();
                 $(this.href.substring(this.href.indexOf("#"))).fadeIn();
             });
-            $(".actionBar :reset").click(function(){
+            $(".actionBar :reset, :submit").click(function(){
                 $(".actionBar>.right-Pane>*").hide();
                 $(".actionBar>.right-Pane>ul").fadeIn();
             });

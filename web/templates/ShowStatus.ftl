@@ -1,9 +1,8 @@
 <table cellpadding = "0" cellspacing = 0>
     <tr>
-        <th></th>
-        <th>Updated Time</th>
-        <th>Updated Time</th>
-        <th>Updated Time</th>
+        <th>&nbsp;</th>
+        <th>Time</th>
+        <th>Tweet</th>
     </tr>
     <#assign totalItems = "0">
     <#list statuses as item>
@@ -12,20 +11,11 @@
         <td>
         	<input type = "checkbox" name = "item_${item_index}" checked = "true" class = "item-index"/>
         </td>
-        <td>
-        	<input type = "text" name = "twitterScreenName_${item_index}" value = "${item.twitterScreenName}" />
+		<td>
+        	<input type = "text" name = "updatedTime_${item_index}" class = "text-box" value = "${item.updatedTime?string("EEEE, MMMM dd, yyyy, hh:mm:ss a '('zzz')'")}" />  
         </td>
         <td>
-        	<input type = "text" name = "source_${item_index}" value = "${item.source}" />
-        </td>
-        <td>
-            <textarea name = "status_${item_index}" >${item.status}</textarea>
-        </td>
-        <td>
-        	<input type = "text" name = "updatedTime_${item_index}" value = "${item.updatedTime?string("EEEE, MMMM dd, yyyy, hh:mm:ss a '('zzz')'")}" />  
-        </td>
-        <td>
-        	<input type = "checkbox" name = "canDelete_${item_index}" checked = "true" />
+            <textarea name = "status_${item_index}" class = "multiline-text">${item.status}</textarea>
         </td>
     </tr>
     </#list>
