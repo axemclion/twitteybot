@@ -1,5 +1,6 @@
 <project default="compile">
-	<property name="sdk.dir" location="/home/axe/workspace/appengine" />
+	<property file="build.properties"/>
+
 	<property name="lib.dir" value="${basedir}/lib" />
 	<property name="web.dir" value="${basedir}/web" />
 	<property name="res.dir" value="${basedir}/res" />
