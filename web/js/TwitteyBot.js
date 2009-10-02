@@ -23,6 +23,9 @@ $(document).ready(function(){
                 $(".actionBar>.right-Pane>*").hide();
                 $(".actionBar>.right-Pane>ul").fadeIn();
             });
+            $("#twitterAccountList a").click(function(e){
+            	
+			});
         },
         
         showMessage: function(message, level, dontFade){

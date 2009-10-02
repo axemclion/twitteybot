@@ -19,19 +19,23 @@ form {
 
 #header {
     width: 100%;
+    padding: 1em 0 1em 0;
 }
 
-#header ul {
+.single-line-list {
     text-align: right;
-    padding-bottom: 0;
-    padding-top: 5px;
+    padding: 0;
     white-space: nowrap;
+    margin: 0;
+    display: inline;
+    list-style-type: none;
 }
 
-#header li {
+.single-line-list > li {
     line-height: 1.5em;
     display: inline;
     padding: 0 0 0.5em;
+    margin: 0;
 }
 
 #content {
@@ -65,11 +69,15 @@ form {
 #twitterAccountList a {
     -moz-border-radius-bottomleft: 4px;
     -moz-border-radius-topleft: 4px;
-    background-color: #E5ECF9;
+    border: SOLID 1px #E5ECF9;
     padding: 0.5em 0 0.5em 2em;
     display: block;
     font-weight: bold;
     margin-right: -1px;
+}
+
+#twitterAccountList a:hover {
+	background-color : #FAFBFD;
 }
 
 .right-pane {
@@ -115,6 +123,6 @@ form {
 #message {
     padding: 0.5em;
     margin: 0.5em;
-	font-weight : bold;
-	text-align : center;
+    font-weight: bold;
+    text-align: center;
 }

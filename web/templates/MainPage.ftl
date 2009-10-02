@@ -8,7 +8,7 @@
         <div class = "left-pane">
         </div>
         <div class = "right-pane" style ="text-align:right">
-            <ul>
+            <ul class = "single-line-list">
                 <li>
                     <strong>${username!""}</strong>
                     | 
@@ -58,12 +58,12 @@
                         </ul>
                         <div id = "uploadFileForm">
                             <form action = "/pages/status" method = "POST" name = "uploadFile">
-                                <input type = "hidden" name = "action" type = "upload" /><input type = "hidden" name = "screenName" value = ""/><input type = "file" name = "fileName" class = "button"/><input type = "submit" value = "Upload" class = "button"/><input type = "reset" value = "Cancel" class = "button"/>
+                                <input type = "hidden" name = "action" type = "upload" />&nbsp;<input type = "hidden" name = "screenName" value = ""/>&nbsp;<input type = "file" name = "fileName" class = "button"/><input type = "submit" value = "Upload" class = "button"/><input type = "reset" value = "Cancel" class = "button"/>
                             </form>
                         </div>
                         <div id = "deleteAccountForm">
                             <form action = "/pages/status" method = "POST">
-                                Are you sure you want to delete this account ?<input type = "hidden" name = "action" value = "delete"/><input type = "hidden" name = "screenName" value = ""/><input type = "submit" value = "Yes" class = "button"/><input type = "reset" value = "No" class = "button"/>
+                                Are you sure you want to delete this account ?<input type = "hidden" name = "action" value = "delete"/>&nbsp;<input type = "hidden" name = "screenName" value = ""/><input type = "submit" value = "Yes" class = "button"/><input type = "reset" value = "No" class = "button"/>
                             </form>
                         </div>
                     </div>
@@ -72,7 +72,15 @@
                 </div>
                 <div id = "toolbar">
                     <div class = "left-pane">
-                        Select<a href = "#" id = "selectAllStatus">All</a>,<a href = "#" id = "selectNoneStatus">None</a>
+                        Select&nbsp;
+                        <ul class = "single-line-list">
+                            <li>
+                                <a href = "#" id = "selectAllStatus">All</a>, 
+                            </li>
+                            <li>
+                                <a href = "#" id = "selectNoneStatus">None</a>
+                            </li>
+                        </ul>
                     </div>
                     <div class = "right-pane">
                     </div>
