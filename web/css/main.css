@@ -1,0 +1,114 @@
+body {
+    background: #FFFFFF none repeat scroll 0 0;
+    color: #000000;
+    font-family: Arial, sans-serif;
+    font-size: 62.5%;
+    min-width: 950px;
+}
+
+form {
+    padding: 0em;
+    display: inline;
+    margin: 0em;
+}
+
+.button {
+    font-size: 100%;
+}
+
+#header {
+    width: 100%;
+}
+
+#header ul {
+    text-align: right;
+    padding-bottom: 0;
+    padding-top: 5px;
+    white-space: nowrap;
+}
+
+#header li {
+    line-height: 1.5em;
+    display: inline;
+    padding: 0 0 0.5em;
+}
+
+#content {
+}
+
+#addTwitterAccount {
+    background-color: #E5ECF9;
+    border-top: 1px solid #3366CC;
+    margin: 0 0 1.25em;
+    padding: 0.25em 0.5em;
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+    font-size: 130%;
+}
+
+.left-pane {
+    float: left;
+    width: 20%;
+}
+
+#twitterAccountList {
+    list-style-type: none;
+    margin: 0 0 0 1.5em;
+    padding: 1em 0;
+}
+
+#twitterAccountList li {
+    line-height: 1.5em;
+    padding: 0.5em 0 0 0.5em;
+}
+
+#twitterAccountList a {
+    -moz-border-radius-bottomleft: 4px;
+    -moz-border-radius-topleft: 4px;
+    background-color: #E5ECF9;
+    padding: 0.5em 0 0.5em 2em;
+    display: block;
+    font-weight: bold;
+    margin-right: -1px;
+}
+
+.right-pane {
+    float: right;
+    width: 79%;
+}
+
+#twitterAccount {
+    margin: 0;
+    padding: 0;
+}
+
+.actionBar {
+    border: #3366CC SOLID 1px;
+    line-height: 1.5em;
+    padding: 0.5em;
+    background-color: #E5ECF9;
+}
+
+#actionList {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    text-align: right;
+}
+
+.actionBar >.right-pane {
+    text-align: right
+}
+
+#actionList li {
+    display: inline;
+}
+
+.clear {
+    width: 100%;
+    clear: both;
+}
+
+#footer {
+}
