@@ -193,6 +193,7 @@ public class StatusManager extends HttpServlet {
 						statuses.add(new TwitterStatus(UserServiceFactory.getUserService().getCurrentUser(),
 								twitterScreenName, item.getName(), cal.getTime(), status, true));
 					}
+					log.log(Level.INFO, "Added " + statuses.size() + "tweets from " + item.getName());
 				}
 			}
 		} catch (FileUploadException e) {

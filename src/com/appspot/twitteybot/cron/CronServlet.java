@@ -52,7 +52,9 @@ public class CronServlet extends HttpServlet {
 			i++;
 		}
 		taskOption.param(Pages.PARAM_TOTAL_ITEMS, i + "");
-		queue.add(taskOption);
+		if (i > 0) {
+			queue.add(taskOption);
+		}
 		Map<String, Object> templateValues = new HashMap<String, Object>();
 		templateValues.put(Pages.FTLVAR_TWITTER_STATUS, twitterStatuses);
 		templateValues.put(Pages.PARAM_ACTION, Pages.PARAM_ACTION_SHOW);

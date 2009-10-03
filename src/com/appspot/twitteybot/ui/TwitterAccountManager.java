@@ -53,12 +53,12 @@ public class TwitterAccountManager extends HttpServlet {
 				.getApplicationProperty(ApplicationProperty.CONSUMER_SECRET));
 		log.info("Using consumer key " + Util.getApplicationProperty(ApplicationProperty.CONSUMER_KEY));
 		try {
-			if (action.equals(Pages.PARAM_ACTION_ADD)) {
+			if (action.equalsIgnoreCase(Pages.PARAM_ACTION_ADD)) {
 				RequestToken requestToken = twitter.getOAuthRequestToken();
 				resp.addCookie(new Cookie(COOKIE_TOKEN, requestToken.getToken()));
 				resp.addCookie(new Cookie(COOKIE_TOKEN_SECRET, requestToken.getTokenSecret()));
 				resp.sendRedirect(requestToken.getAuthorizationURL());
-			} else if (action.equals(Pages.PARAM_OAUTH)) {
+			} else if (action.equalsIgnoreCase(Pages.PARAM_OAUTH)) {
 				String token = null, tokenSecret = null;
 				Cookie[] cookies = req.getCookies();
 				for (Cookie cookie : cookies) {
@@ -72,9 +72,11 @@ public class TwitterAccountManager extends HttpServlet {
 				AccessToken accessToken = twitter.getOAuthAccessToken(token, tokenSecret);
 				this.saveToken(accessToken);
 				resp.sendRedirect(Pages.PAGE_MAIN);
-			} else if (action.equals(Pages.PARAM_ACTION_DELETE)) {
+			} else if (action.equalsIgnoreCase(Pages.PARAM_ACTION_DELETE)) {
 				this.deleteToken(req.getParameter(Pages.PARAM_SCREENNAME));
 				resp.getWriter().write("Delete Successful");
+			} else {
+				resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 			}
 		} catch (TwitterException e) {
 			e.printStackTrace(resp.getWriter());

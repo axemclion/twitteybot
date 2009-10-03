@@ -47,7 +47,20 @@ $(document).ready(function(){
                 $("#scheduler").hide();
                 this.showMessage("Add a twitter account to tweet scheduled messages to it", "warn", true);
             }
+            this.initTwitterAcccounts();
+            this.initTwitterStatusActions();
+            this.initScheduler();
+            
             $(".actionBar>.right-Pane>div").hide();
+            $("textarea,input[type=text]").bind("focus", function(){
+                this.select();
+            });
+            $("#twitterAccountList a:first").click();
+            
+        },
+        
+        initTwitterAcccounts: function(){
+            var me = this;
             $("#actionList>li>a").click(function(event){
                 $(".actionBar>.right-Pane>*").hide();
                 $(this.href.substring(this.href.indexOf("#"))).fadeIn();
@@ -57,7 +70,6 @@ $(document).ready(function(){
                 $(".actionBar>.right-Pane>*").hide();
                 $(".actionBar>.right-Pane>ul").fadeIn();
             });
-            
             $("#twitterAccountList a").click(function(event){
                 var screenName = $.urlParser(this.href).params["screenName"];
                 $("#twitterScreenName").html(screenName);
@@ -81,21 +93,16 @@ $(document).ready(function(){
                     }
                     else {
                         me.showMessage($("#twitterScreenName").html() + " deleted successfully. Refreshing accounts");
-                        window.location.reload();
+                        window.location = window.location.href;
                     }
                 });
                 return false;
             });
-            
-            $("#twitterAccountList a:first").click();
-            $("#twitterContent :reset").click(this.showTweets);
-            
-            $("#resultFrame").load(function(){
-                $("#twitterStatus").html(this.contentDocument.body.innerHTML);
-                me.onTweetsLoaded();
-                me.showMessage($("#responseMessage").html(), $("#responseMessage").attr("title"));
-            });
-            $("#selectNoneStatus").click(function(){
+        },
+        
+        initTwitterStatusActions: function(){
+            var me = this;
+			$("#selectNoneStatus").click(function(){
                 $("#twitterStatus .item-index").attr("checked", false);
                 return false;
             });
@@ -103,12 +110,27 @@ $(document).ready(function(){
                 $("#twitterStatus .item-index").attr("checked", true);
                 return false;
             });
+            $("#twitterContent :reset").click(this.showTweets);
+            
+            $("#resultFrame").load(function(){
+                $("#twitterStatus").html(this.contentDocument.body.innerHTML);
+                me.onTweetsLoaded();
+                me.showMessage($("#responseMessage").attr("value"), $("#responseMessage").attr("title"));
+            });
+            
             
             $("#twitterContent form").submit(function(){
                 $("#uploadButtons").hide();
                 $("#otherButtons").show();
             });
-            
+        },
+        
+        initScheduler: function(){
+            $("#scheduleStart a").click(function(){
+                $("#scheduleStart *").toggle();
+                $("#scheduleStart input[type=text]").focus();
+                return false;
+            });
             $("#scheduleStart input[type=text]").blur(function(){
                 var startDate = Date.parse(this.value);
                 if (startDate !== null) {
@@ -120,14 +142,15 @@ $(document).ready(function(){
                     $(this).css("border", "SOLID 1px RED");
                 }
             });
-            $("#scheduleStart a").click(function(){
-                $("#scheduleStart *").toggle();
-                $("#scheduleStart input[type=text]").focus();
-                return false;
-            });
             
-            $("textarea,input[type=text]").bind("focus", function(){
-                this.select();
+            $("#scheduler table input[type=text]").blur(function(){
+                var duration = $.parseInterval(this.value);
+                if (this.duration == 0) {
+                    $(this).css("border", "SOLID RED 1px");
+                }
+                else {
+                    $(this).attr("value", duration + " minutes").css("border", "")
+                }
             });
         },
         
