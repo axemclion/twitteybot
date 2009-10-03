@@ -24,11 +24,14 @@ $(document).ready(function(){
             $("#actionList>li>a").click(function(event){
                 $(".actionBar>.right-Pane>*").hide();
                 $(this.href.substring(this.href.indexOf("#"))).fadeIn();
+				return false;
             });
             $(".actionBar :reset, :submit").click(function(){
                 $(".actionBar>.right-Pane>*").hide();
                 $(".actionBar>.right-Pane>ul").fadeIn();
+				return false;
             });
+            
             $("#twitterAccountList a").click(function(event){
                 var screenName = $.urlParser(this.href).params["screenName"];
                 $("#twitterScreenName").html(screenName);
@@ -56,8 +59,9 @@ $(document).ready(function(){
                 return false;
             });
             
-            $("#twitterContent :reset").click(this.showTweets);
             $("#twitterAccountList a:first").click();
+            $("#twitterContent :reset").click(this.showTweets);
+            
             $("#resultFrame").load(function(){
                 $("#twitterStatus").html(this.contentDocument.body.innerHTML);
                 me.onTweetsLoaded();
@@ -75,10 +79,8 @@ $(document).ready(function(){
             });
             
             $("#twitterContent form").submit(function(){
-                console.log(this);
-                //return false;
-            });
             
+            });
         },
         
         showTweets: function(){
@@ -97,11 +99,10 @@ $(document).ready(function(){
         },
         
         showMessage: function(message, level, dontFade){
-            if (!message || message == "")
-			{
-				return;	
-			}
-			if (!level) {
+            if (!message || message == "") {
+                return;
+            }
+            if (!level) {
                 level = "info";
             }
             var color = {
