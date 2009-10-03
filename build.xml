@@ -25,7 +25,6 @@
 			<fileset dir="${res.dir}">
 				<exclude name="**/*.svn" />
 			</fileset>
-
 		</copy>
 	</target>
 

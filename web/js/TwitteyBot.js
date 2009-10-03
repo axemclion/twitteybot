@@ -10,7 +10,33 @@ $(document).ready(function(){
             return {
                 "params": params
             };
-        }
+        },
+        parseInterval: function(interval){
+            var u = {};
+            u["minute"] = 1;
+            u["hour"] = 60 * u["minute"];
+            u["day"] = 24 * u["hour"];
+            u["week"] = 7 * u["day"];
+            u["month"] = 30 * u["day"];
+            u["quarter"] = 3 * u["month"];
+            u["year"] = 365 * u["day"];
+            
+            var numbers = interval.match(/[0-9]+/g);
+            var words = interval.split(/[0-9]+/g);
+            var result = 0;
+            for (var i = 1; i < words.length; i++) {
+                for (unit in u) {
+                    if (words[i].indexOf(unit) !== -1) {
+                        var num = parseInt(numbers[i - 1]) * u[unit];
+                        if (!isNaN(num)) {
+                            result += num;
+                        }
+                    }
+                }
+            }
+            return result;
+        },
+    
     });
     
     var TwitteyBot = {
@@ -18,6 +44,7 @@ $(document).ready(function(){
             var me = this;
             if ($("#twitterAccountList>li").size() == 0) {
                 $("#twitterAccount").hide();
+                $("#scheduler").hide();
                 this.showMessage("Add a twitter account to tweet scheduled messages to it", "warn", true);
             }
             $(".actionBar>.right-Pane>div").hide();
@@ -80,6 +107,27 @@ $(document).ready(function(){
             $("#twitterContent form").submit(function(){
                 $("#uploadButtons").hide();
                 $("#otherButtons").show();
+            });
+            
+            $("#scheduleStart input[type=text]").blur(function(){
+                var startDate = Date.parse(this.value);
+                if (startDate !== null) {
+                    $("#scheduleStart *").toggle();
+                    $("#scheduleStart a").html(startDate.toString("dddd, MMMM dd, yyyy, hh:mm:ss tt (" + startDate.getTimezoneOffset() + ")"));
+                    $(this).css("border", "");
+                }
+                else {
+                    $(this).css("border", "SOLID 1px RED");
+                }
+            });
+            $("#scheduleStart a").click(function(){
+                $("#scheduleStart *").toggle();
+                $("#scheduleStart input[type=text]").focus();
+                return false;
+            });
+            
+            $("textarea,input[type=text]").bind("focus", function(){
+                this.select();
             });
         },
         

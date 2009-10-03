@@ -3,8 +3,6 @@ package com.appspot.twitteybot.ui;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -85,7 +83,6 @@ public class StatusManager extends HttpServlet {
 		List<TwitterStatus> twitterStatuses = new ArrayList<TwitterStatus>();
 		String message = null;
 		String level = "info";
-		SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy, hh:mm:ss a (zzz)");
 		for (int i = 0; i <= totalItems; i++) {
 			if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + i), "on")) {
 				String id = req.getParameter(Pages.PARAM_STATUS_KEY + i);
@@ -94,17 +91,15 @@ public class StatusManager extends HttpServlet {
 				TwitterStatus twitterStatus = pm.getObjectById(TwitterStatus.class, key);
 				if (twitterStatus != null && user.getEmail().equals(twitterStatus.getUser().getEmail())) {
 					if (!delete) {
-						Date updatedTime = null;
 						try {
-							updatedTime = df.parse(req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i));
-						} catch (ParseException e) {
+							twitterStatus.setTime(req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i));
+						} catch (RuntimeException e) {
 							message = "There were errors parsing the time for tweets. Some tweets were not updated.";
 							level = "warn";
 							continue;
 						}
 						twitterStatus.setSource(req.getParameter(Pages.PARAM_STATUS_SOURCE + i));
 						twitterStatus.setStatus(req.getParameter(Pages.PARAM_STATUS_STATUS + i));
-						twitterStatus.setUpdatedTime(updatedTime);
 					}
 					twitterStatuses.add(twitterStatus);
 				}
@@ -142,14 +137,16 @@ public class StatusManager extends HttpServlet {
 			log.log(Level.SEVERE, "ScerenName supplied was null");
 		} else {
 			List<TwitterStatus> twitterStatuses = new ArrayList<TwitterStatus>();
-			SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy, hh:mm:ss a (zzz)");
 			int failedTweetCount = 0;
 			for (int i = 0; i <= totalItems; i++) {
 				if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + i), "on")) {
-					Date updateDate = new Date();
 					try {
-						updateDate = df.parse(req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i));
-					} catch (ParseException e) {
+						twitterStatuses.add(new TwitterStatus(user, screenName, req
+								.getParameter(Pages.PARAM_STATUS_SOURCE + i), req
+								.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i), req
+								.getParameter(Pages.PARAM_STATUS_STATUS + i), this.getBoolFromParam(req
+								.getParameter(Pages.PARAM_STATUS_CAN_DELETE + i), "on")));
+					} catch (RuntimeException e) {
 						message = "There were errors parsing the time for tweets." + (++failedTweetCount)
 								+ " tweets were not added.";
 						level = "warn";
@@ -157,12 +154,7 @@ public class StatusManager extends HttpServlet {
 								.log(Level.WARNING, "Could not add "
 										+ req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i)
 										+ " as parsing failed");
-						continue;
 					}
-					twitterStatuses.add(new TwitterStatus(user, screenName, req
-							.getParameter(Pages.PARAM_STATUS_SOURCE + i), updateDate, req
-							.getParameter(Pages.PARAM_STATUS_STATUS + i), this.getBoolFromParam(req
-							.getParameter(Pages.PARAM_STATUS_CAN_DELETE + i), "on")));
 				}
 			}
 			if (message == null) {

@@ -31,7 +31,7 @@
                 <div class = "left-pane">
                     <a href = "/pages/manageTwitterAccount?action=Add">Link a Twitter account</a>
                 </div>
-                <div class = "right-pane" style = "text-align:center">
+                <div class = "right-pane" style ="text-align:center">
                     <span id = "message"></span>
                 </div>
                 <div class = "clear">
@@ -46,6 +46,35 @@
                     </#list>
                 </ul>
                 <div id = "scheduler">
+                    <div>
+                        Tweet Scheduler
+                    </div>
+                    <form>
+                        Start at&nbsp;<span id = "scheduleStart"><a href= "#" display : none></a><input type = "text" style ="width : 10em"/></span>&nbsp;and
+                        <table>
+                            <tr>
+                                <td>
+                                    <input type = "radio" name = "betweenOptions" value = "interval	"/>
+                                </td>
+                                <td>
+                                    send tweets in intervals of <input type = "text" id = "scheduleInterval" style ="width:90%"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type = "radio" name = "betweenOptions" value = "span"/>
+                                </td>
+                                <td>
+                                    send all tweets within a time limit of 
+                                    <br/>
+                                    <input id = "scheduleSpan" style ="width:90%" type = "text"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <center>
+                            <input type = "Submit" value = "Schedule Tweets" />
+                        </center>
+                    </form>
                 </div>
             </div>
             <div class = "right-pane">
@@ -124,7 +153,8 @@
     </body>
     <script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type = "text/javascript">
     </script>
-    <script src="/js/TwitteyBot.js" type="text/javascript">
+    <script src = "/js/date.js" type = "text/javascript">
     </script>
+    <script src="/js/TwitteyBot.js" type="text/javascript">
     </script>
 </html>

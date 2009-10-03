@@ -1,6 +1,8 @@
 package com.appspot.twitteybot.datastore;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.jdo.annotations.Extension;
@@ -16,6 +18,7 @@ import com.google.appengine.api.users.User;
 public class TwitterStatus implements Serializable {
 
 	private static final long serialVersionUID = -9122716449061595598L;
+	public static final String DATE_FORMAT_STRING = "yyyy-mm-dd,hh:mm:ss a (Z)";
 
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -32,6 +35,7 @@ public class TwitterStatus implements Serializable {
 	private User user;
 	@Persistent
 	private Date updatedTime;
+
 	@Persistent
 	private String status;
 	@Persistent
@@ -52,6 +56,18 @@ public class TwitterStatus implements Serializable {
 		this.source = source;
 		this.state = State.SCHEDULED;
 		this.updatedTime = updateTime;
+		this.status = status.substring(0, status.length() > 140 ? 140 : (status.length() == 0) ? 0 : status
+				.length() - 1);
+		this.canDelete = canDelete;
+	}
+
+	public TwitterStatus(User user, String twitterScreenName, String source, String updateTime,
+			String status, boolean canDelete) {
+		this.user = user;
+		this.twitterScreenName = twitterScreenName;
+		this.source = source;
+		this.state = State.SCHEDULED;
+		this.setTime(updateTime);
 		this.status = status.substring(0, status.length() > 140 ? 140 : (status.length() == 0) ? 0 : status
 				.length() - 1);
 		this.canDelete = canDelete;
@@ -129,6 +145,26 @@ public class TwitterStatus implements Serializable {
 		this.keyId = keyId;
 	}
 
+	public String getTime() {
+		if (this.updatedTime == null) {
+			return null;
+		} else {
+			SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT_STRING);
+			return df.format(this.updatedTime);
+		}
+	}
+
+	public void setTime(String time) {
+		SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT_STRING);
+		Date date = null;
+		try {
+			date = df.parse(time);
+		} catch (ParseException e) {
+			throw new RuntimeException("Could not parse date", e);
+		}
+		this.setUpdatedTime(date);
+	}
+
 	@Override
 	public String toString() {
 		return "TwitterStatus [canDelete=" + canDelete + ", encodedKey=" + encodedKey + ", keyId=" + keyId
@@ -136,5 +172,4 @@ public class TwitterStatus implements Serializable {
 				+ twitterScreenName + ", updatedTime=" + updatedTime + ", user=" + user + "]";
 	}
 
-	
 }
