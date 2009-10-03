@@ -22,7 +22,6 @@ public class Util {
 
 	@SuppressWarnings("unchecked")
 	public static String getApplicationProperty(String key) {
-		log.warning(key);
 		CacheManager cacheManager = CacheManager.getInstance();
 		Cache cache = cacheManager.getCache(APPLICATION_PROPERTIES);
 		if (cache == null) {
