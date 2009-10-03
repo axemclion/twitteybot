@@ -1,8 +1,6 @@
 package com.appspot.twitteybot.datastore;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.jdo.annotations.Extension;
@@ -149,19 +147,13 @@ public class TwitterStatus implements Serializable {
 		if (this.updatedTime == null) {
 			return null;
 		} else {
-			SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT_STRING);
-			return df.format(this.updatedTime);
+			return Long.toString(this.updatedTime.getTime());
 		}
 	}
 
 	public void setTime(String time) {
-		SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT_STRING);
-		Date date = null;
-		try {
-			date = df.parse(time);
-		} catch (ParseException e) {
-			throw new RuntimeException("Could not parse date", e);
-		}
+		Date date = new Date();
+		date.setTime(Long.parseLong(time));
 		this.setUpdatedTime(date);
 	}
 

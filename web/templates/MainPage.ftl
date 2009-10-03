@@ -54,7 +54,7 @@
                         <table>
                             <tr>
                                 <td>
-                                    <input type = "radio" name = "betweenOptions" value = "interval	"/>
+                                    <input checked = "true" type = "radio" name = "betweenOptions" value = "scheduleInterval"/>
                                 </td>
                                 <td>
                                     send tweets in intervals of <input type = "text" id = "scheduleInterval" style ="width:90%"/>
@@ -62,7 +62,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type = "radio" name = "betweenOptions" value = "span"/>
+                                    <input type = "radio" name = "betweenOptions" value = "scheduleSpan"/>
                                 </td>
                                 <td>
                                     send all tweets within a time limit of 
