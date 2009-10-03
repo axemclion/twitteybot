@@ -16,7 +16,7 @@
             <input type = "checkbox" name = "item_${item_index}" checked = "true" class = "item-index" value = "on"/><input type = "hidden" name = "key_${item_index}" value = "${item.keyId!""}"/><input type = "hidden" name = "source_${item_index}" value = "${item.source}"/>
         </td>
         <td>
-            <input type = "text" name = "updatedTime_${item_index}" class = "text-box" value = "${item.updatedTime?string("EEEE,  MMMM dd,  yyyy,  hh:mm:ss a '('zzz')'")}" />
+            <input type = "text" name = "updatedTime_${item_index}" class = "text-box" value = "${item.updatedTime?string("EEEE, MMMM dd, yyyy, hh:mm:ss a '('zzz')'")}" />
         </td>
         <td>
             <textarea name = "status_${item_index}" class = "multiline-text">

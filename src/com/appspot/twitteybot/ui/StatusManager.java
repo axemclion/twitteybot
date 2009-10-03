@@ -60,7 +60,9 @@ public class StatusManager extends HttpServlet {
 		} else if (action.equals(Pages.PARAM_ACTION_ADD)) {
 			this.processAdd(req, resp);
 		} else if (action.equals(Pages.PARAM_ACTION_DELETE)) {
-			this.processDelete(req, resp);
+			this.processUpdate(req, resp, true);
+		} else if (action.equals(Pages.PARAM_ACTION_UPDATE)) {
+			this.processUpdate(req, resp, false);
 		} else {
 			this.processShow(req, resp);
 		}
@@ -73,24 +75,52 @@ public class StatusManager extends HttpServlet {
 		pm.close();
 	}
 
-	private void processDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	private void processUpdate(HttpServletRequest req, HttpServletResponse resp, boolean delete)
+			throws IOException {
 		int totalItems = Integer.parseInt(req.getParameter(Pages.PARAM_TOTAL_ITEMS));
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		List<TwitterStatus> twitterStatuses = new ArrayList<TwitterStatus>();
+		String message = null;
+		String level = "info";
+		SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy, hh:mm:ss a (zzz)");
 		for (int i = 0; i <= totalItems; i++) {
 			if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + i), "on")) {
 				String id = req.getParameter(Pages.PARAM_STATUS_KEY + i);
-				Key k = KeyFactory.createKey(TwitterStatus.class.getSimpleName(), Long.parseLong(id));
-				TwitterStatus twitterStatus = pm.getObjectById(TwitterStatus.class, k);
-				if (user.getEmail().equals(twitterStatus.getUser().getEmail())) {
+				Key key = KeyFactory.createKey(TwitterStatus.class.getSimpleName(), Long.parseLong(id));
+				TwitterStatus twitterStatus = pm.getObjectById(TwitterStatus.class, key);
+				if (twitterStatus != null && user.getEmail().equals(twitterStatus.getUser().getEmail())) {
+					if (!delete) {
+						Date updatedTime = null;
+						try {
+							updatedTime = df.parse(req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i));
+						} catch (ParseException e) {
+							message = "There were errors parsing the time for tweets. Some tweets were not updated.";
+							level = "warn";
+							continue;
+						}
+						twitterStatus.setSource(req.getParameter(Pages.PARAM_STATUS_SOURCE + i));
+						twitterStatus.setStatus(req.getParameter(Pages.PARAM_STATUS_STATUS + i));
+						twitterStatus.setUpdatedTime(updatedTime);
+					}
 					twitterStatuses.add(twitterStatus);
 				}
 			}
 		}
-		pm.deletePersistentAll(twitterStatuses);
-		this.constructResponse(this.getTwitterStatus(req.getParameter(Pages.PARAM_SCREENNAME), pm),
-				twitterStatuses.size() + " Tweets successfully deleted", "info", resp);
+		if (delete) {
+			message = twitterStatuses.size() + " Tweets successfully deleted";
+			pm.deletePersistentAll(twitterStatuses);
+		} else {
+			if (message == null) {
+				message = twitterStatuses.size() + " Tweets successfully updated";
+			}
+		}
+
+		pm.close();
+		pm = PMF.get().getPersistenceManager();
+		this.constructResponse(this.getTwitterStatus(req.getParameter(Pages.PARAM_SCREENNAME), pm), message,
+				level, resp);
+
 		pm.close();
 	}
 
@@ -100,7 +130,7 @@ public class StatusManager extends HttpServlet {
 		String screenName = req.getParameter(Pages.PARAM_SCREENNAME);
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 
-		String message = "Tweets Successfully added to this account.";
+		String message = null;
 		String level = "info";
 
 		if (screenName == null || screenName == "") {
@@ -110,14 +140,21 @@ public class StatusManager extends HttpServlet {
 		} else {
 			List<TwitterStatus> twitterStatuses = new ArrayList<TwitterStatus>();
 			SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy, hh:mm:ss a (zzz)");
+			int failedTweetCount = 0;
 			for (int i = 0; i <= totalItems; i++) {
 				if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + i), "on")) {
 					Date updateDate = new Date();
 					try {
 						updateDate = df.parse(req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i));
 					} catch (ParseException e) {
-						message = "There were errors parsing the time for tweets. Some tweets were not added.";
+						message = "There were errors parsing the time for tweets." + (++failedTweetCount)
+								+ " tweets were not added.";
 						level = "warn";
+						log
+								.log(Level.WARNING, "Could not add "
+										+ req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i)
+										+ " as parsing failed");
+						continue;
 					}
 					twitterStatuses.add(new TwitterStatus(user, screenName, req
 							.getParameter(Pages.PARAM_STATUS_SOURCE + i), updateDate, req
@@ -125,7 +162,9 @@ public class StatusManager extends HttpServlet {
 							.getParameter(Pages.PARAM_STATUS_CAN_DELETE + i), "on")));
 				}
 			}
-			message = twitterStatuses.size() + " Tweets Successfully added to this account.";
+			if (message == null) {
+				message = twitterStatuses.size() + " Tweets Successfully added to this account.";
+			}
 			pm.makePersistentAll(twitterStatuses);
 		}
 		this.constructResponse(this.getTwitterStatus(screenName, pm), message, level, resp);

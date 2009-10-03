@@ -129,4 +129,12 @@ public class TwitterStatus implements Serializable {
 		this.keyId = keyId;
 	}
 
+	@Override
+	public String toString() {
+		return "TwitterStatus [canDelete=" + canDelete + ", encodedKey=" + encodedKey + ", keyId=" + keyId
+				+ ", source=" + source + ", state=" + state + ", status=" + status + ", twitterScreenName="
+				+ twitterScreenName + ", updatedTime=" + updatedTime + ", user=" + user + "]";
+	}
+
+	
 }
