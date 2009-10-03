@@ -40,7 +40,7 @@ $(document).ready(function(){
             });
             
             $("#uploadFileForm form").submit(function(){
-                $(this).attr("action", "/pages/status?action=upload&screenName=" + $("#twitterScreenName").html());
+                $(this).attr("action", "/pages/status?action=Upload&screenName=" + $("#twitterScreenName").html());
                 $("#uploadButtons").show();
                 $("#otherButtons").hide();
             });
@@ -78,7 +78,8 @@ $(document).ready(function(){
             });
             
             $("#twitterContent form").submit(function(){
-            
+                $("#uploadButtons").hide();
+                $("#otherButtons").show();
             });
         },
         
@@ -93,12 +94,19 @@ $(document).ready(function(){
             $("#otherButtons").show();
         },
         
-        onTweetsLoaded: function(action){
-        
+        onTweetsLoaded: function(){
+            if ($("#twitterContent .tweetLine").size() === 0) {
+                $("#twitterContent").hide();
+                $("#noTweets").show();
+            }
+            else {
+                $("#noTweets").hide();
+                $("#twitterContent").show();
+            }
         },
         
         showMessage: function(message, level, dontFade){
-            if (!message || message == "") {
+            if (!message || message.trim() == "") {
                 return;
             }
             if (!level) {

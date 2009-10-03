@@ -1,4 +1,4 @@
-package com.appspot.twitteybot;
+package com.appspot.twitteybot.task;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -19,11 +19,12 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.http.AccessToken;
 
+import com.appspot.twitteybot.Util;
+import com.appspot.twitteybot.datastore.ApplicationProperty;
 import com.appspot.twitteybot.datastore.PMF;
 import com.appspot.twitteybot.datastore.TwitterAccount;
 import com.appspot.twitteybot.ui.MainPage;
 import com.appspot.twitteybot.ui.Pages;
-import com.appspot.twitteybot.ui.TwitterAccountManager;
 
 public class TaskServlet extends HttpServlet {
 
@@ -61,7 +62,8 @@ public class TaskServlet extends HttpServlet {
 		}
 
 		Twitter twitter = new Twitter();
-		twitter.setOAuthConsumer(TwitterAccountManager.consumerKey, TwitterAccountManager.consumerSecret);
+		twitter.setOAuthConsumer(Util.getApplicationProperty(ApplicationProperty.CONSUMER_KEY), Util
+				.getApplicationProperty(ApplicationProperty.CONSUMER_SECRET));
 		twitter.setOAuthAccessToken(new AccessToken(twitterAccount.getToken(), twitterAccount.getSecret()));
 		try {
 			twitter.updateStatus(status);
