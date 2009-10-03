@@ -24,12 +24,11 @@ $(document).ready(function(){
             $("#actionList>li>a").click(function(event){
                 $(".actionBar>.right-Pane>*").hide();
                 $(this.href.substring(this.href.indexOf("#"))).fadeIn();
-				return false;
+                return false;
             });
             $(".actionBar :reset, :submit").click(function(){
                 $(".actionBar>.right-Pane>*").hide();
                 $(".actionBar>.right-Pane>ul").fadeIn();
-				return false;
             });
             
             $("#twitterAccountList a").click(function(event){
@@ -42,6 +41,8 @@ $(document).ready(function(){
             
             $("#uploadFileForm form").submit(function(){
                 $(this).attr("action", "/pages/status?action=upload&screenName=" + $("#twitterScreenName").html());
+                $("#uploadButtons").show();
+                $("#otherButtons").hide();
             });
             $("#deleteAccountForm form").submit(function(){
                 $.get("/pages/manageTwitterAccount", {
@@ -66,8 +67,6 @@ $(document).ready(function(){
                 $("#twitterStatus").html(this.contentDocument.body.innerHTML);
                 me.onTweetsLoaded();
                 me.showMessage($("#responseMessage").html(), $("#responseMessage").attr("title"));
-                $("#uploadButtons").show();
-                $("#otherButtons").hide();
             });
             $("#selectNoneStatus").click(function(){
                 $("#twitterStatus .item-index").attr("checked", false);

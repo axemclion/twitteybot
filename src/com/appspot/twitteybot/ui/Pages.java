@@ -23,6 +23,7 @@ public class Pages {
 	public static final String PARAM_STATUS_CAN_DELETE = "canDelete_";
 	public static final String PARAM_STATUS_STATUS = "status_";
 	public static final String PARAM_STATUS_TWITTER_SCREEN = "twitterScreenName_";
+	public static final String PARAM_STATUS_KEY = "key_";
 
 	public static final String PARAM_OAUTH = "oauth";
 	public static final String PARAM_OAUTH_TOKEN = "oauth_token";
@@ -39,5 +40,4 @@ public class Pages {
 	public static final String FTLVAR_LOGOUT = "logoutUrl";
 	public static final String FTLVAR_MESSAGE = "message";
 	public static final String FTLVAR_LEVEL = "level";
-
 }

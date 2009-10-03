@@ -28,6 +28,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.appspot.twitteybot.datastore.PMF;
 import com.appspot.twitteybot.datastore.TwitterStatus;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
@@ -66,65 +68,68 @@ public class StatusManager extends HttpServlet {
 
 	private void processShow(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Map<String, Object> templateValues = new HashMap<String, Object>();
-		templateValues.put(Pages.FTLVAR_TWITTER_STATUS, this.getTwitterStatus(req
-				.getParameter(Pages.PARAM_SCREENNAME), pm));
-		FreeMarkerConfiguration.writeResponse(templateValues, Pages.TEMPLATE_STATUSPAGE, resp.getWriter());
+		this.constructResponse(this.getTwitterStatus(req.getParameter(Pages.PARAM_SCREENNAME), pm), "", "",
+				resp);
 		pm.close();
 	}
 
-	private void processDelete(HttpServletRequest req, HttpServletResponse resp) {
-		// TODO Auto-generated method stub
+	private void processDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		int totalItems = Integer.parseInt(req.getParameter(Pages.PARAM_TOTAL_ITEMS));
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		List<TwitterStatus> twitterStatuses = new ArrayList<TwitterStatus>();
+		for (int i = 0; i <= totalItems; i++) {
+			if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + i), "on")) {
+				String id = req.getParameter(Pages.PARAM_STATUS_KEY + i);
+				Key k = KeyFactory.createKey(TwitterStatus.class.getSimpleName(), Long.parseLong(id));
+				TwitterStatus twitterStatus = pm.getObjectById(TwitterStatus.class, k);
+				if (user.getEmail().equals(twitterStatus.getUser().getEmail())) {
+					twitterStatuses.add(twitterStatus);
+				}
+			}
+		}
+		pm.deletePersistentAll(twitterStatuses);
+		this.constructResponse(this.getTwitterStatus(req.getParameter(Pages.PARAM_SCREENNAME), pm),
+				twitterStatuses.size() + " Tweets successfully deleted", "info", resp);
+		pm.close();
 	}
 
 	private void processAdd(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		int totalItems = Integer.parseInt(req.getParameter(Pages.PARAM_TOTAL_ITEMS));
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		String screenName = req.getParameter(Pages.PARAM_SCREENNAME);
-		Map<String, Object> templateValues = new HashMap<String, Object>();
 		User user = UserServiceFactory.getUserService().getCurrentUser();
+
+		String message = "Tweets Successfully added to this account.";
+		String level = "info";
+
 		if (screenName == null || screenName == "") {
-			templateValues.put(Pages.FTLVAR_TWITTER_STATUS, this.getTwitterStatus(screenName, pm));
-			templateValues.put(Pages.FTLVAR_MESSAGE, Messages
-					.get("Twitter Screen Name was null and hence, could not add tweets"));
-			templateValues.put(Pages.FTLVAR_LEVEL, "error");
+			message = "Twitter Screen Name was null and hence, could not add tweets";
+			level = "error";
 			log.log(Level.SEVERE, "ScerenName supplied was null");
 		} else {
 			List<TwitterStatus> twitterStatuses = new ArrayList<TwitterStatus>();
 			SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy, hh:mm:ss a (zzz)");
-			List<String> dateParseErrors = new ArrayList<String>();
 			for (int i = 0; i <= totalItems; i++) {
 				if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + i), "on")) {
 					Date updateDate = new Date();
 					try {
 						updateDate = df.parse(req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i));
 					} catch (ParseException e) {
-						dateParseErrors.add(req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i));
+						message = "There were errors parsing the time for tweets. Some tweets were not added.";
+						level = "warn";
 					}
 					twitterStatuses.add(new TwitterStatus(user, screenName, req
 							.getParameter(Pages.PARAM_STATUS_SOURCE + i), updateDate, req
 							.getParameter(Pages.PARAM_STATUS_STATUS + i), this.getBoolFromParam(req
 							.getParameter(Pages.PARAM_STATUS_CAN_DELETE + i), "on")));
-
 				}
 			}
+			message = twitterStatuses.size() + " Tweets Successfully added to this account.";
 			pm.makePersistentAll(twitterStatuses);
-			templateValues.put(Pages.FTLVAR_TWITTER_STATUS, this.getTwitterStatus(screenName, pm));
-			templateValues.put(Pages.FTLVAR_LEVEL, "info");
-			templateValues.put(Pages.FTLVAR_MESSAGE, Messages.get("All messages successfully added"));
 		}
-		FreeMarkerConfiguration.writeResponse(templateValues, Pages.TEMPLATE_STATUSPAGE, resp.getWriter());
+		this.constructResponse(this.getTwitterStatus(screenName, pm), message, level, resp);
 		pm.close();
-	}
-
-	private List<TwitterStatus> getTwitterStatus(String screenName, PersistenceManager pm) {
-		Query query = pm.newQuery(TwitterStatus.class);
-		query.setFilter("twitterScreenName == twitterScreenNameVar && user == userVar");
-		query.declareParameters("String twitterScreenNameVar, com.google.appengine.api.users.User userVar");
-		@SuppressWarnings("unchecked")
-		List<TwitterStatus> twitterStatuses = (List<TwitterStatus>) query.execute(screenName,
-				UserServiceFactory.getUserService().getCurrentUser());
-		return twitterStatuses;
 	}
 
 	private void processUpload(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -160,10 +165,28 @@ public class StatusManager extends HttpServlet {
 			log.log(Level.SEVERE, "", e);
 			e.printStackTrace(resp.getWriter());
 		}
+		this.constructResponse(statuses,
+				"Please select the tweets that you would like to schedule and then click on Add", "info",
+				resp);
+	}
+
+	private void constructResponse(List<TwitterStatus> list, String message, String level,
+			HttpServletResponse resp) throws IOException {
 		Map<String, Object> templateValues = new HashMap<String, Object>();
-		templateValues.put(Pages.FTLVAR_TWITTER_STATUS, statuses);
-		templateValues.put(Pages.PARAM_ACTION, Pages.PARAM_ACTION_ADD);
+		templateValues.put(Pages.FTLVAR_TWITTER_STATUS, list);
+		templateValues.put(Pages.FTLVAR_LEVEL, level);
+		templateValues.put(Pages.FTLVAR_MESSAGE, message);
 		FreeMarkerConfiguration.writeResponse(templateValues, Pages.TEMPLATE_STATUSPAGE, resp.getWriter());
+	}
+
+	private List<TwitterStatus> getTwitterStatus(String screenName, PersistenceManager pm) {
+		Query query = pm.newQuery(TwitterStatus.class);
+		query.setFilter("twitterScreenName == twitterScreenNameVar && user == userVar");
+		query.declareParameters("String twitterScreenNameVar, com.google.appengine.api.users.User userVar");
+		@SuppressWarnings("unchecked")
+		List<TwitterStatus> twitterStatuses = (List<TwitterStatus>) query.execute(screenName,
+				UserServiceFactory.getUserService().getCurrentUser());
+		return twitterStatuses;
 	}
 
 	private boolean getBoolFromParam(String param, String trueValue) {

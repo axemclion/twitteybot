@@ -3,13 +3,13 @@ package com.appspot.twitteybot.datastore;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
@@ -19,7 +19,12 @@ public class TwitterStatus implements Serializable {
 
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Key key;
+	@Extension(vendorName = "datanucleus", key = "gae.encoded-pk", value = "true")
+	private String encodedKey;
+
+	@Persistent
+	@Extension(vendorName = "datanucleus", key = "gae.pk-id", value = "true")
+	private Long keyId;
 
 	@Persistent
 	private String twitterScreenName;
@@ -50,14 +55,6 @@ public class TwitterStatus implements Serializable {
 		this.status = status.substring(0, status.length() > 140 ? 140 : (status.length() == 0) ? 0 : status
 				.length() - 1);
 		this.canDelete = canDelete;
-	}
-
-	public Key getKey() {
-		return key;
-	}
-
-	public void setKey(Key key) {
-		this.key = key;
 	}
 
 	public String getTwitterScreenName() {
@@ -114,6 +111,22 @@ public class TwitterStatus implements Serializable {
 
 	public void setCanDelete(boolean canDelete) {
 		this.canDelete = canDelete;
+	}
+
+	public String getEncodedKey() {
+		return encodedKey;
+	}
+
+	public void setEncodedKey(String encodedKey) {
+		this.encodedKey = encodedKey;
+	}
+
+	public Long getKeyId() {
+		return keyId;
+	}
+
+	public void setKeyId(Long keyId) {
+		this.keyId = keyId;
 	}
 
 }
