@@ -87,7 +87,8 @@ public class StatusManager extends HttpServlet {
 		for (int i = 0; i <= totalItems; i++) {
 			if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + i), "on")) {
 				String id = req.getParameter(Pages.PARAM_STATUS_KEY + i);
-				Key key = KeyFactory.createKey(TwitterStatus.class.getSimpleName(), Long.parseLong(id.replace(",", "")));
+				Key key = KeyFactory.createKey(TwitterStatus.class.getSimpleName(), Long.parseLong(id
+						.replace(",", "")));
 				TwitterStatus twitterStatus = pm.getObjectById(TwitterStatus.class, key);
 				if (twitterStatus != null && user.getEmail().equals(twitterStatus.getUser().getEmail())) {
 					if (!delete) {

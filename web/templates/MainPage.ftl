@@ -38,6 +38,9 @@
                     </li>
                     </#list>
                 </ul>
+				<div id = "scheduler">
+					
+				</div>
             </div>
             <div class = "right-pane">
                 <div id = "message">
