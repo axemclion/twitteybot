@@ -11,7 +11,7 @@
         </th>
     </tr>
     <#assign totalItems = "0"><#list statuses as item><#assign totalItems = item_index>
-    <tr>
+    <tr class = "tweetLine">
         <td>
             <input type = "checkbox" name = "item_${item_index}" checked = "true" class = "item-index" value = "on"/><input type = "hidden" name = "key_${item_index}" value = "${item.keyId!""}"/><input type = "hidden" name = "source_${item_index}" value = "${item.source}"/>
         </td>

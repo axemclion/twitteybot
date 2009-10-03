@@ -1,5 +1,5 @@
 <project default="compile">
-	<property file="build.properties"/>
+	<property file="build.properties" />
 
 	<property name="lib.dir" value="${basedir}/lib" />
 	<property name="web.dir" value="${basedir}/web" />
@@ -88,5 +88,4 @@
 	<target name="cleanall">
 		<delete dir="${basedir}/war" />
 	</target>
-
 </project>

@@ -5,15 +5,16 @@ public class Pages {
 	public static final String TEMPLATE_STATUSPAGE = "ShowStatus.ftl";
 
 	public static final String PARAM_SEPARATOR = "separator";
-
+	public static final String PARAM_KEY = "key";
+	public static final String PARAM_VALUE = "value";
 	public static final String PARAM_TWITTER_NAME = "twitterAccount";
 
 	public static final String PARAM_ACTION = "action";
-	public static final String PARAM_ACTION_DELETE = "delete";
-	public static final String PARAM_ACTION_ADD = "add";
-	public static final String PARAM_ACTION_UPDATE = "update";
-	public static final String PARAM_ACTION_SHOW = "show";
-	public static final String PARAM_ACTION_UPLOAD = "upload";
+	public static final String PARAM_ACTION_DELETE = "Delete";
+	public static final String PARAM_ACTION_ADD = "Add";
+	public static final String PARAM_ACTION_UPDATE = "Update";
+	public static final String PARAM_ACTION_SHOW = "Show";
+	public static final String PARAM_ACTION_UPLOAD = "Upload";
 	public static final String PARAM_ACTION_FETCH = "fetch";
 
 	public static final String PARAM_STATUS_CANADD = "item_";
@@ -40,4 +41,5 @@ public class Pages {
 	public static final String FTLVAR_LOGOUT = "logoutUrl";
 	public static final String FTLVAR_MESSAGE = "message";
 	public static final String FTLVAR_LEVEL = "level";
+
 }

@@ -55,16 +55,18 @@ public class StatusManager extends HttpServlet {
 		String action = req.getParameter(Pages.PARAM_ACTION);
 		if (action == null) {
 			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-		} else if (action.equals(Pages.PARAM_ACTION_UPLOAD)) {
+		} else if (action.equalsIgnoreCase(Pages.PARAM_ACTION_UPLOAD)) {
 			this.processUpload(req, resp);
-		} else if (action.equals(Pages.PARAM_ACTION_ADD)) {
+		} else if (action.equalsIgnoreCase(Pages.PARAM_ACTION_ADD)) {
 			this.processAdd(req, resp);
-		} else if (action.equals(Pages.PARAM_ACTION_DELETE)) {
+		} else if (action.equalsIgnoreCase(Pages.PARAM_ACTION_DELETE)) {
 			this.processUpdate(req, resp, true);
-		} else if (action.equals(Pages.PARAM_ACTION_UPDATE)) {
+		} else if (action.equalsIgnoreCase(Pages.PARAM_ACTION_UPDATE)) {
 			this.processUpdate(req, resp, false);
-		} else {
+		} else if (action.equalsIgnoreCase(Pages.PARAM_ACTION_SHOW)) {
 			this.processShow(req, resp);
+		} else {
+			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 		}
 	}
 

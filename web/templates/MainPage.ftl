@@ -28,7 +28,14 @@
         </div>
         <div id = "content">
             <div id = "addTwitterAccount">
-                <a href = "/pages/manageTwitterAccount?action=add">Add a new account</a>
+                <div class = "left-pane">
+                    <a href = "/pages/manageTwitterAccount?action=Add">Link a Twitter account</a>
+                </div>
+                <div class = "right-pane" style = "text-align:center">
+                    <span id = "message"></span>
+                </div>
+                <div class = "clear">
+                </div>
             </div>
             <div class = "left-pane" style ="border-right : SOLID #E5ECF9 3px;height : 80%;">
                 <ul id = "twitterAccountList">
@@ -38,13 +45,10 @@
                     </li>
                     </#list>
                 </ul>
-				<div id = "scheduler">
-					
-				</div>
+                <div id = "scheduler">
+                </div>
             </div>
             <div class = "right-pane">
-                <div id = "message">
-                </div>
                 <div id = "twitterAccount">
                     <div class = "actionBar">
                         <div class = "left-pane">
@@ -73,7 +77,7 @@
                         <div class = "clear">
                         </div>
                     </div>
-                    <div id = "twitterContent">
+                    <div id = "twitterContent" class = "content-window">
                         <form name = "updateForm" method = "POST" action = "/pages/status" target = "resultFrame">
                             <input name = "screenName" type = "hidden" id = "screenName"/>
                             <div id = "toolbar">
@@ -90,10 +94,10 @@
                                 </div>
                                 <div class = "right-pane" style ="text-align : right">
                                     <div id = "otherButtons">
-                                        <input type = "Submit" name = "action" value = "update" class = "button"/>&nbsp;<input type = "submit" name = "action" value = "delete" class = "button"/>
+                                        <input type = "Submit" name = "action" value = "Update" class = "button"/>&nbsp;<input type = "submit" name = "action" value = "Delete" class = "button"/>
                                     </div>
                                     <div id = "uploadButtons">
-                                        <input type = "Submit" name = "action" value = "add" class = "button">&nbsp;<input type = "reset" value = "cancel" class = "button"/>
+                                        <input type = "Submit" name = "action" value = "Add" class = "button">&nbsp;<input type = "reset" value = "Cancel" class = "button"/>
                                     </div>
                                 </div>
                                 <div class = "clear">
@@ -102,6 +106,11 @@
                             <div id = "twitterStatus">
                             </div>
                         </form>
+                    </div>
+                    <div id = "noTweets" class = "content-window">
+                        To schedule tweeting to this account, please upload a text file. 
+                        <br/>
+                        Every line in the file will be sent as a tweet at the scheduled time. 
                     </div>
                 </div>
             </div>

@@ -113,7 +113,7 @@ form {
     display: inline;
 }
 
-#twitterContent {
+.content-window {
     border: SOLID 1px #3366CC;
 }
 
@@ -140,7 +140,6 @@ form {
 
 #message {
     padding: 0.5em;
-    margin: 0.5em;
     font-weight: bold;
     text-align: center;
 }
@@ -155,4 +154,11 @@ form {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 0.8em;
     width: 100%;
+}
+
+#noTweets{
+	text-align : center;
+	font-size : 1.2em;	
+	padding : 3em;
+	display : none;
 }
