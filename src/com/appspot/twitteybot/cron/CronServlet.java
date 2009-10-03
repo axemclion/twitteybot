@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -26,6 +28,7 @@ import com.google.appengine.api.labs.taskqueue.TaskOptions.Builder;
 public class CronServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -7767523786982743018L;
+	private static final Logger log = Logger.getLogger(CronServlet.class.getName());
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
@@ -54,6 +57,7 @@ public class CronServlet extends HttpServlet {
 		taskOption.param(Pages.PARAM_TOTAL_ITEMS, i + "");
 		if (i > 0) {
 			queue.add(taskOption);
+			log.log(Level.INFO, "Sending " + i + " tweets to task for updating at " + maxTime.getTime());
 		}
 		Map<String, Object> templateValues = new HashMap<String, Object>();
 		templateValues.put(Pages.FTLVAR_TWITTER_STATUS, twitterStatuses);
@@ -63,6 +67,5 @@ public class CronServlet extends HttpServlet {
 		query.closeAll();
 		pm.makePersistentAll(twitterStatuses);
 		pm.close();
-
 	}
 }

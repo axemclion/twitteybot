@@ -3,6 +3,7 @@ package com.appspot.twitteybot.task;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.cache.Cache;
@@ -23,7 +24,6 @@ import com.appspot.twitteybot.Util;
 import com.appspot.twitteybot.datastore.ApplicationProperty;
 import com.appspot.twitteybot.datastore.PMF;
 import com.appspot.twitteybot.datastore.TwitterAccount;
-import com.appspot.twitteybot.ui.MainPage;
 import com.appspot.twitteybot.ui.Pages;
 
 public class TaskServlet extends HttpServlet {
@@ -31,7 +31,7 @@ public class TaskServlet extends HttpServlet {
 	private static final long serialVersionUID = 2103613622996613432L;
 
 	private static final String TWITTER_ACCOUNT_CACHE = "twitterAccountCache";
-	private static final Logger log = Logger.getLogger(MainPage.class.getName());
+	private static final Logger log = Logger.getLogger(TaskServlet.class.getName());
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
@@ -70,6 +70,7 @@ public class TaskServlet extends HttpServlet {
 		} catch (TwitterException e) {
 			throw new ServletException(e);
 		}
+		log.log(Level.INFO, "Upadte " + twitterAccount.getTwitterScreenName() + " : " + status);
 	}
 
 	@SuppressWarnings("unchecked")
