@@ -27,19 +27,23 @@ $(document).ready(function(){
             for (var i = 1; i < words.length; i++) {
                 for (unit in u) {
                     if (words[i].indexOf(unit) !== -1) {
-                        var num = parseInt(numbers[i - 1]) * u[unit];
+                        var num = parseInt(numbers[i - 1], 10) * u[unit];
                         if (!isNaN(num)) {
                             result += num;
                         }
                     }
                 }
             }
-            return result;
+            if (result == 0) {
+                result = parseInt(interval, 10);
+            }
+            return isNaN(result) ? 0 : result;
         },
     
     });
     
     var TwitteyBot = {
+        dateFormat: "dddd, MMMM dd, yyyy, hh:mm:ss tt",
         init: function(){
             var me = this;
             if ($("#twitterAccountList>li").size() == 0) {
@@ -56,7 +60,7 @@ $(document).ready(function(){
                 this.select();
             });
             $("#twitterAccountList a:first").click();
-            
+            window.setTimeout(this.updateVisibleTimes, 2000);
         },
         
         initTwitterAcccounts: function(){
@@ -102,7 +106,7 @@ $(document).ready(function(){
         
         initTwitterStatusActions: function(){
             var me = this;
-			$("#selectNoneStatus").click(function(){
+            $("#selectNoneStatus").click(function(){
                 $("#twitterStatus .item-index").attr("checked", false);
                 return false;
             });
@@ -126,6 +130,7 @@ $(document).ready(function(){
         },
         
         initScheduler: function(){
+            var me = this;
             $("#scheduleStart a").click(function(){
                 $("#scheduleStart *").toggle();
                 $("#scheduleStart input[type=text]").focus();
@@ -135,7 +140,7 @@ $(document).ready(function(){
                 var startDate = Date.parse(this.value);
                 if (startDate !== null) {
                     $("#scheduleStart *").toggle();
-                    $("#scheduleStart a").html(startDate.toString("dddd, MMMM dd, yyyy, hh:mm:ss tt (" + startDate.getTimezoneOffset() + ")"));
+                    $("#scheduleStart a").html(startDate.toString(TwitteyBot.dateFormat));
                     $(this).css("border", "");
                 }
                 else {
@@ -151,6 +156,46 @@ $(document).ready(function(){
                 else {
                     $(this).attr("value", duration + " minutes").css("border", "")
                 }
+            });
+            
+            $("#scheduler form").submit(function(){
+                $("#scheduler input[type=text]").blur();
+                var total = parseInt($("#totalItems").val(), 10) + 1;
+                var interval = 0;
+                if (nextTime === null) {
+                    me.showMessage("Starting time is incorrect", "error");
+                    return;
+                }
+                
+                if ($("#scheduler input:checked").val() === "scheduleInterval") {
+                    interval = parseInt($("#scheduleInterval").val());
+                }
+                else {
+                    interval = parseInt($("#scheduleSpan").val(), 10) / (total);
+                }
+                
+                var nextTime = Date.parse($("#scheduleStart input[type=text]").val());
+                nextTime.addMinutes(-1 * nextTime.getTimezoneOffset());
+                
+                for (var i = 0; i < total; i++) {
+                    if ($("#item_" + i).val() === "on") {
+                        $("#updatedTime_" + i).val(nextTime.getTime());
+                        nextTime.addMinutes(interval);
+                    }
+                }
+                me.updateVisibleTimes()
+                return false;
+            });
+        },
+        
+        updateVisibleTimes: function(){
+            $("#twitterStatus .actual-time").each(function(){
+                var date = new Date();
+                date.setTime($(this).val());
+                date.addMinutes(date.getTimezoneOffset());
+                var identifier = $(this).attr("id").split("_")[1];
+                $("#date_" + identifier).val(date.toString("dddd, MMMM dd, yyyy"));
+                $("#time_" + identifier).val(date.toString("hh:mm:ss tt"));
             });
         },
         
