@@ -60,6 +60,22 @@ public class TwitterStatus implements Serializable {
 		this.key = key;
 	}
 
+	public String getTwitterScreenName() {
+		return twitterScreenName;
+	}
+
+	public void setTwitterScreenName(String twitterScreenName) {
+		this.twitterScreenName = twitterScreenName;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public Date getUpdatedTime() {
 		return updatedTime;
 	}
@@ -68,20 +84,20 @@ public class TwitterStatus implements Serializable {
 		this.updatedTime = updatedTime;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public String getSource() {
 		return source;
 	}
 
 	public void setSource(String source) {
 		this.source = source;
-	}
-
-	public String getTwitterScreenName() {
-		return twitterScreenName;
-	}
-
-	public void setTwitterScreenName(String twitterScreenName) {
-		this.twitterScreenName = twitterScreenName;
 	}
 
 	public State getState() {
@@ -100,26 +116,4 @@ public class TwitterStatus implements Serializable {
 		this.canDelete = canDelete;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	@Override
-	public String toString() {
-		return "TwitterStatus [canDelete=" + canDelete + ", key=" + key + ", source=" + source + ", state="
-				+ state + ", status=" + status + ", twitterScreenName=" + twitterScreenName
-				+ ", updatedTime=" + updatedTime + ", user=" + user + "]";
-	}
 }
