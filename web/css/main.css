@@ -3,11 +3,6 @@ body, table {
     font-family: Arial, sans-serif;
     font-size: 14px;
     margin: 0;
-    color : #FFFFFF;
-	<!--[if IE] >
-	color: #000000;
-    <![endif]-->
-
 }
 
 .logo-text {
@@ -17,6 +12,10 @@ body, table {
     text-shadow: 0px 0px 15px #000000;
 	font-family : Georgia, Times, Serif;
 	font-weight : bold;
+	  color : #FFFFFF;
+	<!--[if IE] >
+	color: #000000;
+    <![endif]-->
 }
 
 form {
