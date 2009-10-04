@@ -85,11 +85,13 @@ var TwitteyBot = {
         });
         
         $("#uploadFileForm form").submit(function(){
+            me.showLoading();
             $(this).attr("action", "/pages/status?action=Upload&screenName=" + $("#twitterScreenName").html());
             $("#uploadButtons").show();
             $("#otherButtons").hide();
         });
         $("#deleteAccountForm form").submit(function(){
+            me.showLoading();
             $.get("/pages/manageTwitterAccount", {
                 "action": "delete",
                 "screenName": $("#twitterScreenName").html()
@@ -125,6 +127,7 @@ var TwitteyBot = {
         });
         
         $("#twitterContent form").submit(function(){
+            me.showLoading();
             $("#uploadButtons").hide();
             $("#otherButtons").show();
         });
@@ -185,6 +188,12 @@ var TwitteyBot = {
             return false;
         });
     },
+    showLoading: function(){
+        $("#showLoading").show();
+        $("#twitterContent").hide();
+        $("#noTweets").hide();
+    },
+    
     
     updateVisibleTimes: function(){
         var me = this;
@@ -203,6 +212,7 @@ var TwitteyBot = {
     showTweets: function(){
         var screenName = $("#twitterScreenName").html();
         var me = this;
+        TwitteyBot.showLoading();
         $("#twitterStatus").load("/pages/status", {
             "action": "show",
             "screenName": screenName
@@ -213,6 +223,7 @@ var TwitteyBot = {
     
     onTweetsLoaded: function(caller){
         var me = TwitteyBot;
+        $("#showLoading").hide();
         if ($("#twitterContent .tweetLine").size() === 0) {
             $("#twitterContent").hide();
             $("#noTweets").show();

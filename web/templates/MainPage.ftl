@@ -7,11 +7,11 @@
         <div id = "header">
             <div class = "left-pane" style ="margin-left : 2em; width : auto; background:url('/images/logo.png') no-repeat">
                 <span class = "logo-text">TwitteyBot</span>
-                <sup>
+                <sup style ="margin-left : -3px;margin-top : -3px ;-webkit-transform: rotate(-9deg); -moz-transform: rotate(-9deg);">
                     alpha
                 </sup>
             </div>
-            <div class = "right-pane" style ="text-align:right; margin-top : 25px">
+            <div class = "right-pane" style ="width : 70%;text-align:right; margin-top : 25px">
                 <ul class = "single-line-list">
                     <li>
                         <strong>${username!""}</strong>
@@ -154,6 +154,14 @@
                             <div id = "twitterStatus">
                             </div>
                         </form>
+                    </div>
+                    <div id = "showLoading" style ="display:none" class ="content-window">
+                        <div style ="text-align:center; padding : 3em">
+                            <span style ="font-weight : bold; font-size : 3em; color : white; text-shadow : 0px 0px 20px  #000000">Loading</span>
+                            <br/>
+                            <br/>
+                            <img src = "/images/loading.gif"/>
+                        </div>
                     </div>
                     <div id = "noTweets" class = "content-window">
                         To schedule tweeting to this account, please upload a text file. 

@@ -14,6 +14,10 @@
         </center>
     </body>
     <script type = "text/javascript">
+    	if (window.location.pathname == "/")
+		{
+			window.location = "/index.html"
+		}
         window.setTimeout(redirect, 10000);
         function redirect(){
             if (top.location != window.location) {
