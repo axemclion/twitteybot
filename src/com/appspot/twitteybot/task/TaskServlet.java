@@ -65,6 +65,8 @@ public class TaskServlet extends HttpServlet {
 		twitter.setOAuthConsumer(Util.getApplicationProperty(ApplicationProperty.CONSUMER_KEY), Util
 				.getApplicationProperty(ApplicationProperty.CONSUMER_SECRET));
 		twitter.setOAuthAccessToken(new AccessToken(twitterAccount.getToken(), twitterAccount.getSecret()));
+		status = status.substring(0, status.length() > 500 ? 500 : (status.length() == 0) ? 0 : status
+				.length() - 1);
 		try {
 			twitter.updateStatus(status);
 		} catch (TwitterException e) {
