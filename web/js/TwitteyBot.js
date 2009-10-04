@@ -38,8 +38,7 @@ $(document).ready(function(){
                 result = parseInt(interval, 10);
             }
             return isNaN(result) ? 0 : result;
-        },
-    
+        }
     });
     
     TwitteyBot.init();
@@ -49,7 +48,7 @@ var TwitteyBot = {
     dateFormat: "dddd, MMMM dd, yyyy, hh:mm:ss tt",
     init: function(){
         var me = this;
-        if ($("#twitterAccountList>li").size() == 0) {
+        if ($("#twitterAccountList li").size() == 0) {
             $("#twitterAccount").hide();
             $("#scheduler").hide();
             this.showMessage("Add a twitter account to tweet scheduled messages to it", "warn", true);
@@ -58,7 +57,7 @@ var TwitteyBot = {
         this.initTwitterStatusActions();
         this.initScheduler();
         
-        $(".actionBar>.right-Pane>div").hide();
+        $(".actionBar>.right-pane>div").hide();
         $("textarea,input[type=text]").bind("focus", function(){
             this.select();
         });
@@ -68,13 +67,16 @@ var TwitteyBot = {
     initTwitterAcccounts: function(){
         var me = this;
         $("#actionList>li>a").click(function(event){
-            $(".actionBar>.right-Pane>*").hide();
+			$("#uploadFileForm").hide();
+			$("#deleteAccountForm").hide();
+            $("#actionList").hide();
             $(this.href.substring(this.href.indexOf("#"))).fadeIn();
             return false;
         });
         $(".actionBar :reset, :submit").click(function(){
-            $(".actionBar>.right-Pane>*").hide();
-            $(".actionBar>.right-Pane>ul").fadeIn();
+            $("#uploadFileForm").hide();
+			$("#deleteAccountForm").hide();
+            $("#actionList").fadeIn();
         });
         $("#twitterAccountList a").click(function(event){
             var screenName = $.urlParser(this.href).params["screenName"];
@@ -120,11 +122,11 @@ var TwitteyBot = {
         });
         $("#twitterContent :reset").click(this.showTweets);
         
-        $("#resultFrame").load(function(){
-            $("#twitterStatus").html(this.contentDocument.body.innerHTML);
+        window.onIFrameLoad = function(content){
+            $("#twitterStatus").html(content);
             me.onTweetsLoaded(true);
             me.showMessage($("#responseMessage").attr("value"), $("#responseMessage").attr("title"));
-        });
+        };
         
         $("#twitterContent form").submit(function(){
             me.showLoading();
@@ -201,11 +203,8 @@ var TwitteyBot = {
             var date = new Date();
             date.setTime($(this).val());
             var identifier = $(this).attr("id").split("_")[1];
+			$("#status_" + identifier).keypress();
             $("#time_" + identifier).val(date.toString(TwitteyBot.dateFormat));
-        });
-        
-        $(".tweetline textarea").each(function(){
-            me.updateCharCount(this);
         });
     },
     
@@ -232,7 +231,7 @@ var TwitteyBot = {
             $("#noTweets").hide();
             $("#twitterContent").show();
         }
-        
+		
         $(".tweetLine textarea").keypress(function(){
             me.updateCharCount(this);
         }).blur(function(){
@@ -280,7 +279,7 @@ var TwitteyBot = {
     },
     
     showMessage: function(message, level, dontFade){
-        if (!message || message.trim() == "") {
+        if (!message || message == "") {
             return;
         }
         if (!level) {
@@ -299,5 +298,5 @@ var TwitteyBot = {
                 $("#message").fadeOut();
             }, 5000);
         }
-    },
+    }
 };

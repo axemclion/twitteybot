@@ -12,20 +12,20 @@
                 </sup>
             </div>
             <div class = "right-pane" style ="width : 70%;text-align:right; margin-top : 25px">
-                <ul class = "single-line-list">
-                    <li>
+                <div class = "single-line-list">
+                    <span>
                         <strong>${username!""}</strong>
                         | 
-                    </li>
-                    <li>
+                    </span>
+                    <span>
                         <a href = "/help.html">Help</a>
                         | 
-                    </li>
-                    <li>
+                    </span>
+                    <span>
                         <a href = "${logoutUrl}">Sign Out</a>
                         | 
-                    </li>
-                </ul>
+                    </span>
+                </div>
             </div>
             <div class = "clear">
             </div>
@@ -127,14 +127,14 @@
                             <div id = "toolbar">
                                 <div class = "left-pane">
                                     Select&nbsp;
-                                    <ul class = "single-line-list">
-                                        <li>
+                                    <div class = "single-line-list" style = "text-align:left">
+                                        <span>
                                             <a href = "#" id = "selectAllStatus">All</a>, 
-                                        </li>
-                                        <li>
+                                        </span>
+                                        <span>
                                             <a href = "#" id = "selectNoneStatus">None</a>
-                                        </li>
-                                    </ul>
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class = "right-pane" style ="text-align : right">
                                     <div id = "otherButtons">
@@ -175,7 +175,7 @@
         </div>
         <div id = "footer">
         </div>
-        <iframe id = "resultFrame" name = "resultFrame" style ="display:none">
+        <iframe id = "resultFrame" name = "resultFrame" style ="width : 100%; display:none">
         </iframe>
     </body>
     <script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type = "text/javascript">
