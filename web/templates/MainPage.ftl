@@ -5,9 +5,13 @@
     </head>
     <body>
         <div id = "header">
-            <div class = "left-pane">
+            <div class = "left-pane" style ="margin-left : 2em; width : auto; background:url('/images/logo.png') no-repeat">
+                <span class = "logo-text">TwitteyBot</span>
+                <sup>
+                    alpha
+                </sup>
             </div>
-            <div class = "right-pane" style ="text-align:right">
+            <div class = "right-pane" style ="text-align:right; margin-top : 25px">
                 <ul class = "single-line-list">
                     <li>
                         <strong>${username!""}</strong>
