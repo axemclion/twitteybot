@@ -50,14 +50,18 @@
                         Tweet Scheduler
                     </div>
                     <form>
-                        Start at&nbsp;<span id = "scheduleStart"><a href= "#" display : none></a><input type = "text" style ="width : 10em"/></span>&nbsp;and
+                        Start at&nbsp;<span id = "scheduleStart"><a href= "#" display : none></a>
+                            <input type = "text" style ="width : 10em"/>
+                        </span>
+                        &nbsp;and
                         <table>
                             <tr>
                                 <td>
                                     <input checked = "true" type = "radio" name = "betweenOptions" value = "scheduleInterval"/>
                                 </td>
                                 <td>
-                                    send tweets in intervals of <input type = "text" id = "scheduleInterval" style ="width:90%"/>
+                                    send tweets in intervals of 
+                                    <input type = "text" id = "scheduleInterval" style ="width:90%"/>
                                 </td>
                             </tr>
                             <tr>
@@ -86,20 +90,27 @@
                         <div class = "right-pane">
                             <ul id = "actionList">
                                 <li>
-                                    <a href = "#deleteAccountForm">Delete Account </a>| 
+                                    <a href = "#uploadFileForm">Upload File </a>
                                 </li>
                                 <li>
-                                    <a href = "#uploadFileForm">Upload File </a>
+                                    | <a href = "#deleteAccountForm">Delete Account </a>
                                 </li>
                             </ul>
                             <div id = "uploadFileForm">
                                 <form target = "resultFrame" action = "#" method = "POST" name = "uploadFile" encType="multipart/form-data">
-                                    <input type = "file" name = "fileName" class = "button"/>&nbsp;<input type = "submit" value = "Upload" class = "button"/>&nbsp;<input type = "reset" value = "Cancel" class = "button"/>
+                                    <input type = "file" name = "fileName" class = "button"/>
+                                    &nbsp;
+                                    <input type = "submit" value = "Upload" class = "button"/>
+                                    &nbsp;
+                                    <input type = "reset" value = "Cancel" class = "button"/>
                                 </form>
                             </div>
                             <div id = "deleteAccountForm">
                                 <form action = "#/pages/manageTwitterAccount" method = "POST" name = "deleteTwitterAccount">
-                                    Are you sure you want to delete this account ?<input type = "submit" value = "Yes" class = "button"/>&nbsp;<input type = "reset" value = "No" class = "button"/>
+                                    Are you sure you want to delete this account ?
+                                    <input type = "submit" value = "Yes" class = "button"/>
+                                    &nbsp;
+                                    <input type = "reset" value = "No" class = "button"/>
                                 </form>
                             </div>
                         </div>
@@ -123,10 +134,14 @@
                                 </div>
                                 <div class = "right-pane" style ="text-align : right">
                                     <div id = "otherButtons">
-                                        <input type = "Submit" name = "action" value = "Update" class = "button"/>&nbsp;<input type = "submit" name = "action" value = "Delete" class = "button"/>
+                                        <input type = "Submit" name = "action" value = "Update" class = "button"/>
+                                        &nbsp;
+                                        <input type = "submit" name = "action" value = "Delete" class = "button"/>
                                     </div>
                                     <div id = "uploadButtons">
-                                        <input type = "Submit" name = "action" value = "Add" class = "button">&nbsp;<input type = "reset" value = "Cancel" class = "button"/>
+                                        <input type = "Submit" name = "action" value = "Add" class = "button">
+                                        &nbsp;
+                                        <input type = "reset" value = "Cancel" class = "button"/>
                                     </div>
                                 </div>
                                 <div class = "clear">

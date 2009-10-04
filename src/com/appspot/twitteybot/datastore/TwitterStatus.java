@@ -54,7 +54,7 @@ public class TwitterStatus implements Serializable {
 		this.source = source;
 		this.state = State.SCHEDULED;
 		this.updatedTime = updateTime;
-		this.status = status.substring(0, status.length() > 140 ? 140 : (status.length() == 0) ? 0 : status
+		this.status = status.substring(0, status.length() > 500 ? 500 : (status.length() == 0) ? 0 : status
 				.length() - 1);
 		this.canDelete = canDelete;
 	}

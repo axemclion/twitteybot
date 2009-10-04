@@ -187,11 +187,16 @@ var TwitteyBot = {
     },
     
     updateVisibleTimes: function(){
+        var me = this;
         $("#twitterStatus .actual-time").each(function(){
             var date = new Date();
             date.setTime($(this).val());
             var identifier = $(this).attr("id").split("_")[1];
             $("#time_" + identifier).val(date.toString(TwitteyBot.dateFormat));
+        });
+        
+        $(".tweetline textarea").each(function(){
+            me.updateCharCount(this);
         });
     },
     
@@ -207,6 +212,7 @@ var TwitteyBot = {
     },
     
     onTweetsLoaded: function(caller){
+        var me = TwitteyBot;
         if ($("#twitterContent .tweetLine").size() === 0) {
             $("#twitterContent").hide();
             $("#noTweets").show();
@@ -216,13 +222,15 @@ var TwitteyBot = {
             $("#twitterContent").show();
         }
         
-        $(".tweetLine textarea").blur(function(){
+        $(".tweetLine textarea").keypress(function(){
+            me.updateCharCount(this);
+        }).blur(function(){
             var identifier = $(this).attr("id").split("_")[1];
             $("#item_" + identifier).attr("checked", true);
             $(this).removeClass("focus-time");
         }).focus(function(){
             $(this).addClass("focus-time");
-        });
+        })
         
         $(".tweetLine .time").blur(function(){
             var date = Date.parse($(this).val());
@@ -241,7 +249,23 @@ var TwitteyBot = {
             $(this).select();
         });
         
-        TwitteyBot.updateVisibleTimes();
+        me.updateVisibleTimes();
+    },
+    
+    updateCharCount: function(elem){
+        var identifier = $(elem).attr("id").split("_")[1];
+        var length = $(elem).val().length;
+        if (length > 140) {
+            $("#length_" + identifier).css("color", "#B93C0A");
+        }
+        else 
+            if (length > 135) {
+                $("#length_" + identifier).css("color", "#C1C23B");
+            }
+            else {
+                $("#length_" + identifier).css("color", "#12B90A");
+            }
+        $("#length_" + identifier).html(length);
     },
     
     showMessage: function(message, level, dontFade){
@@ -252,9 +276,9 @@ var TwitteyBot = {
             level = "info";
         }
         var color = {
-            "info": "GREEN",
-            "error": "RED",
-            "warn": "YELLOW"
+            "info": "#97F098",
+            "error": "#F09797",
+            "warn": "#EDF097"
         };
         $("#message").html(message);
         $("#message").css("backgroundColor", color[level]);

@@ -24,14 +24,16 @@
                 <input title = "click to edit" class = "time" id = "time_${item_index}">
                 </input>
             </li>
-            <div class = "left-pane">
-            </div>
         </ul>
+        <div class = "right-pane length" style ="width : 30%; text-align : right; padding : 0.5em; color:#3366CC">
+            <span id = "length_${item_index}"></span>
+            characters
+        </div>
         <div class = "clear">
-            <span class = "length" id = "length_${item_index}"/>
         </div>
     </div>
-</div><!--</#list>-->
+</div>
+<!--</#list>-->
 <br/>
 <input type = "hidden" name = "totalItems" id = "totalItems" value = "${totalItems}" />
 <input id = "responseMessage" title = "${level!""}" style = "display:none" value ='${message!""}'/>
