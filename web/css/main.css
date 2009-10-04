@@ -40,9 +40,10 @@ form {
     margin: 0;
     display: inline;
     list-style-type: none;
+	width : 99%
 }
 
-.single-line-list > li {
+.single-line-list span {
     line-height: 1.5em;
     display: inline;
     padding: 0 0 0.5em;
@@ -120,7 +121,7 @@ form {
     text-align: right;
 }
 
-.actionBar >.right-pane {
+.actionBar .right-pane {
     text-align: right
 }
 
@@ -142,7 +143,6 @@ form {
 }
 
 .clear {
-    width: 100%;
     clear: both;
 }
 
@@ -179,7 +179,7 @@ form {
     -moz-border-radius: 5px;
 }
 
-#scheduler > div {
+#scheduler div {
     background-color: #3366CC;
     line-height: 1.5em;
     text-align: center;
@@ -207,11 +207,11 @@ form {
     -moz-border-radius: 5px;
 }
 
-.tweetLine > .bottom-line {
+.tweetLine .bottom-line {
     background-color: #F3F5FC;
 }
 
-.tweetLine > .bottom-line > ul {
+.tweetLine .bottom-line div {
     margin: 0;
     padding: 0.2em 1em;
     color: #3366CC;

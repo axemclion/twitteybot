@@ -1,3 +1,4 @@
+<div id = "results">
 <!--<#assign totalItems = "0"><#list statuses as item><#assign totalItems = item_index>-->
 <div class = "tweetLine">
     <div class = "hidden-fields" style ="display:none">
@@ -12,19 +13,19 @@
         <textarea id = "status_${item_index}" name = "status_${item_index}" class = "multiline-text">${item.status}</textarea>
     </div>
     <div class = "clear bottom-line">
-        <ul class = "left-pane single-line-list">
-            <li class = "screenName" id = "screenName_${item_index}">
+        <div class = "left-pane single-line-list" style = "right; padding : 0.5em;">
+            <span class = "screenName" id = "screenName_${item_index}">
                 ${item.twitterScreenName}
-            </li>
-            <li class = "source" id = "source_${item_index}">
+            </span>
+            <span class = "source" id = "source_${item_index}">
                 <span style ="color : #000000">| </span>
                 ${item.source} <span style ="color : #000000">| </span>
-            </li>
-            <li>
+            </span>
+            <span>
                 <input title = "click to edit" class = "time" id = "time_${item_index}">
                 </input>
-            </li>
-        </ul>
+            </span>
+        </div>
         <div class = "right-pane length" style ="width : 30%; text-align : right; padding : 0.5em; color:#3366CC">
             <span id = "length_${item_index}"></span>
             characters
@@ -37,3 +38,7 @@
 <br/>
 <input type = "hidden" name = "totalItems" id = "totalItems" value = "${totalItems}" />
 <input id = "responseMessage" title = "${level!""}" style = "display:none" value ='${message!""}'/>
+</div>
+<script>
+	top.onIFrameLoad(document.getElementById("results").innerHTML);
+</script>
