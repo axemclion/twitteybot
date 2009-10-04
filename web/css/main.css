@@ -129,10 +129,6 @@ form {
     margin: 1em 0 0 0;
 }
 
-#twitterStatus table {
-    width: 100%;
-}
-
 .clear {
     width: 100%;
     clear: both;
@@ -155,6 +151,7 @@ form {
 .multiline-text {
     font-family: Arial, Helvetica, sans-serif;
     width: 100%;
+    border: none;
 }
 
 #noTweets {
@@ -188,5 +185,38 @@ form {
     list-style-type: none;
     margin: 1em 0 0 1em;
     padding: 0;
+}
+
+.tweetLine {
+    width: 98%;
+    border: SOLID 2px #CBCBCB;
+    padding: 0;
+    margin: 1%;
+    -moz-border-radius: 5px;
+}
+
+.tweetLine > .bottom-line {
+    background-color: #F3F5FC;
+}
+
+.tweetLine > .bottom-line > ul {
+    margin: 0;
+    padding: 0.2em 1em;
+    color: #3366CC;
+}
+
+.tweetLine .time {
+    border: none;
+    background-color: #F3F5FC;
+    width: 23em;
+    color: #3366CC;
+	cursor : pointer;
+}
+
+.tweetLine .focus-time {
+    cursor: auto;
+    border: Solid 1px black;
+    background-color: #FFFFFF;
+    text-decoration: none;
 }
 
