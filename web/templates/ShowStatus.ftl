@@ -20,7 +20,7 @@
             <br/>
             <input type = "text" class = "update-time" id = "time_${item_index}" value = "${item.updatedTime?string("hh:mm:ss a")}"/>
             <br/>
-            <input type = "hidden" class = "actual-time" id = "updatedTime_${item_index}" name = "updatedTime_${item_index}" class = "text-box" value = "${item.time}"/>
+            <input type = "text" class = "actual-time" id = "updatedTime_${item_index}" name = "updatedTime_${item_index}" class = "text-box" value = "${item.time}"/>
         </td>
         <td>
             <textarea id = "status_${item_index}" name = "status_${item_index}" class = "multiline-text">${item.status}</textarea>

@@ -175,7 +175,7 @@ $(document).ready(function(){
                 }
                 
                 var nextTime = Date.parse($("#scheduleStart input[type=text]").val());
-                nextTime.addMinutes(-1 * nextTime.getTimezoneOffset());
+                //nextTime.addMinutes(-1 * nextTime.getTimezoneOffset());
                 
                 for (var i = 0; i < total; i++) {
                     if ($("#item_" + i).val() === "on") {
@@ -192,7 +192,7 @@ $(document).ready(function(){
             $("#twitterStatus .actual-time").each(function(){
                 var date = new Date();
                 date.setTime($(this).val());
-                date.addMinutes(date.getTimezoneOffset());
+                //date.addMinutes(date.getTimezoneOffset());
                 var identifier = $(this).attr("id").split("_")[1];
                 $("#date_" + identifier).val(date.toString("dddd, MMMM dd, yyyy"));
                 $("#time_" + identifier).val(date.toString("hh:mm:ss tt"));
@@ -218,6 +218,7 @@ $(document).ready(function(){
             else {
                 $("#noTweets").hide();
                 $("#twitterContent").show();
+				this.updateVisibleTimes();
             }
         },
         
