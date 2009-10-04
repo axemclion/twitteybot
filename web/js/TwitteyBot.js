@@ -216,6 +216,14 @@ var TwitteyBot = {
             $("#twitterContent").show();
         }
         
+        $(".tweetLine textarea").blur(function(){
+            var identifier = $(this).attr("id").split("_")[1];
+            $("#item_" + identifier).attr("checked", true);
+            $(this).removeClass("focus-time");
+        }).focus(function(){
+            $(this).addClass("focus-time");
+        });
+        
         $(".tweetLine .time").blur(function(){
             var date = Date.parse($(this).val());
             if (date !== null) {
