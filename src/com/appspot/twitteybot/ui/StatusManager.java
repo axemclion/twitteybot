@@ -39,7 +39,7 @@ public class StatusManager extends HttpServlet {
 
 	private static final Logger log = Logger.getLogger(StatusManager.class.getName());
 	private static final long serialVersionUID = 1551252388567429753L;
-	private static final int DEFAULT_TIME_INCREMENT = 1;
+	private static final int DEFAULT_TIME_INCREMENT = 60;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
