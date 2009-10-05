@@ -4,20 +4,22 @@
         <title>Page Not Found</title>
     </head>
     <body>
+        <script type="text/javascript">
+            if (window.location.pathname == "/") {
+                window.location = "/index.html"
+            }
+        </script>
         <center>
             <H1>The page you tried to access does not exist</H1>
             <br/>
             <h2>
-            You are being redirected to the <A href= "/index.html">home page</A>. 
+            You are being redirected to the <A href="/index.html">home
+                page</A>. 
             </a>
         </h2>
         </center>
     </body>
-    <script type = "text/javascript">
-    	if (window.location.pathname == "/")
-		{
-			window.location = "/index.html"
-		}
+    <script type="text/javascript">
         window.setTimeout(redirect, 10000);
         function redirect(){
             if (top.location != window.location) {

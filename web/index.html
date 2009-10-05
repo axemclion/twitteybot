@@ -25,97 +25,92 @@
     </style>
     <body>
         <script type = "text/javascript">
-            var cookies = document.cookie.split(";")
-            var cookieFound = false;
-            for (var i = 0; i < cookies.length; i++) {
-                cookie = cookies[i];
-                if (cookie.indexOf("firstRunCookie") !== -1) {
-                    window.location = "/pages/main";
-                    cookieFound = true;
-                    break;
-                }
-            }
-            if (!cookieFound) {
-                date = new Date();
-                date.addDays(1);
-                document.cookie = "firstRunCookie=done; expires = " + date.toGMTString();
-            }
+            /*var cookies = document.cookie.split(";")
+             var cookieFound = false;
+             for (var i = 0; i < cookies.length; i++) {
+             cookie = cookies[i];
+             if (cookie.indexOf("firstRunCookie") !== -1) {
+             window.location = "/pages/main";
+             cookieFound = true;
+             break;
+             }
+             }
+             if (!cookieFound) {
+             date = new Date();
+             date.addDays(1);
+             document.cookie = "firstRunCookie=done; expires = " + date.toGMTString();
+             }*/
         </script>
         <div style ="width : 80%; margin:2em 10% 0 10% ">
-            <div class = "left-pane" style ="margin-left : 2em; width : 25%; background:url('/images/logo.png') no-repeat">
-                <span class = "logo-text">TwitteyBot</span>
-                <sup style ="margin-left : -3px;margin-top : -3px ;-webkit-transform: rotate(-9deg); -moz-transform: rotate(-9deg);">
-                    alpha
-                </sup>
+        <div class = "left-pane" style ="margin-left : 2em; width : 25%; background:url('/images/logo.png') no-repeat">
+            <span class = "logo-text">TwitteyBot</span>
+            <sup style ="margin-left : -3px;margin-top : -3px ;-webkit-transform: rotate(-9deg); -moz-transform: rotate(-9deg);">
+                alpha
+            </sup>
+        </div>
+        <div class = "right-pane" style ="width : 70%;background-color : #C3D9FF; margin-top : 1em; padding-left : 1em; line-height : 2em; -moz-border-radius : 10px 0 0 10px">
+            Schedule your tweets
+        </div>
+        <div class = "clear">
+        </div>
+        <div class = "left-pane" style ="width: 65%; padding : 2%">
+            <div style ="padding : 1%; font-size  : 1.5em; font-weight : bold;">
+                Three simple steps to schedule your tweets
             </div>
-            <div class = "right-pane" style ="width : 70%;background-color : #C3D9FF; margin-top : 1em; padding-left : 1em; line-height : 2em; -moz-border-radius : 10px 0 0 10px">
-                Schedule your tweets
-            </div>
-            <div class = "clear">
-            </div>
-            <div class = "left-pane" style ="width: 65%; padding : 2%">
-                <div style ="padding : 1%; font-size  : 1.5em; font-weight : bold;">
-                    Three simple steps to schedule your tweets
-                </div>
-                <ol style ="margin-left : 2em">
-                    <li>
-                        <div class = "title">
-                            Link Twitter Account
-                        </div>
-                        <div class = "details">
-                            Authorize this site with twitter for sending tweets.
-                        </div>
-                    </li>
-                    <li>
-                        <div class = "title">
-                            Upload Text File
-                        </div>
-                        <div class = "details">
-                            One tweet per line, upload a text file.
-                        </div>
-                    </li>
-                    <li>
-                        <div class = "title">
-                            Schedule your tweets
-                        </div>
-                        <div class = "details">
-                            Use the scheduler to mark the to tweet the lines
-                        </div>
-                    </li>
-                </ol>
-                <br/>
-                <br/>
-                <div style ="text-align : center">
-                    <div>
-                        <a href= "/pages/main">Sign up Now</a>
-                        or 
+            <ol style ="margin-left : 2em">
+                <li>
+                    <div class = "title">
+                        Link Twitter Account
                     </div>
-                    <br/>
-                    <a href = "/pages/main" style ="font-weight : bold; text-decoration : none; padding : 0.5em 4em; background-color : #6158B6; color : white">Sign In</a>
-                </div>
+                    <div class = "details">
+                        Authorize this site with twitter for sending tweets.
+                    </div>
+                </li>
+                <li>
+                    <div class = "title">
+                        Upload Text File
+                    </div>
+                    <div class = "details">
+                        One tweet per line, upload a text file.
+                    </div>
+                </li>
+                <li>
+                    <div class = "title">
+                        Schedule your tweets
+                    </div>
+                    <div class = "details">
+                        Use the scheduler to mark the to tweet the lines
+                    </div>
+                </li>
+            </ol>
+            <br/>
+            <br/>
+            <div style ="text-align : center">
+                <div style = "font-size : 1.1em">
+                    You can use your Google Account to log into the site.
+                </div> <br/><br/>
+                <span>
+                    <a href= "/pages/main">Sign up Now</a>
+                    or 
+                </span>
+                &nbsp;&nbsp;&nbsp;
+                <a href = "/pages/main" style ="font-weight : bold; text-decoration : none; padding : 0.5em 4em; background-color : #6158B6; color : white">Sign In</a>
             </div>
-            <div class = "right-pane" style ="width: 30%; text-align : center">
-                <br/>
-                <br/>
-                <img src = "/images/logo-big.png"/>
-            </div>
-            <div class = "clear">
-            </div>
-            <div style ="background-color : #C3D9FF; width : 100%; text-align: center">
-                <ul class = "single-line-list">
-                    <li>
-                        <a href = "">About</a>
-                        &nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;
-                    </li>
-                    <li>
-                        <a href = "">Blog</a>
-                        &nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;
-                    </li>
-                    <li>
-                        <a href = "">Help</a>
-                    </li>
-                </ul>
-            </div>
+        </div>
+        <div class = "right-pane" style ="width: 30%; text-align : center">
+            <br/>
+            <br/>
+            <img src = "/images/logo-big.png"/>
+        </div>
+        <div class = "clear">
+        </div>
+        <div style ="background-color : #C3D9FF; width : 100%; text-align: center">
+            <div class = "single-line-list">
+            <span><a href = "">About</a> &nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;</span>
+            <span><a href = "http://dy-verse.blogspot.com">Blog</a> &nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;</span>
+            <span><a href = "">Help</a></span>
+            </span>
+        </div>
         </div>
     </body>
 </html>
