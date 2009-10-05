@@ -89,17 +89,30 @@
                 <div id = "twitterAccount">
                     <div class = "actionBar">
                         <div class = "left-pane">
-                            <strong><span id = "twitterScreenName">Not Loaded</span></strong>
+                            <strong><span id = "twitterScreenName">Not Loaded</span></strong>|&nbsp;&nbsp;
+                            <a href = "#deleteAccountForm">Delete Account </a>
                         </div>
                         <div class = "right-pane">
                             <ul id = "actionList">
                                 <li>
-                                    <a href = "#uploadFileForm">Upload File </a>
+			                        Upload Tweets from a file on
                                 </li>
                                 <li>
-                                    | <a href = "#deleteAccountForm">Delete Account </a>
+                                    <a href = "#uploadFileForm"> your computer </a>
+                                </li>
+                                <li>
+									<a href = "#fetchFileForm"> the internet </a>
                                 </li>
                             </ul>
+                            <div id = "fetchFileForm">
+                                <form target = "resultFrame" action = "#" method = "POST" name = "uploadFile">
+                                    <input type = "text" name = "source_" class = "button"/>
+                                    &nbsp;
+                                    <input type = "submit" value = "Upload" class = "button"/>
+                                    &nbsp;
+                                    <input type = "reset" value = "Cancel" class = "button"/>
+                                </form>
+                            </div>
                             <div id = "uploadFileForm">
                                 <form target = "resultFrame" action = "#" method = "POST" name = "uploadFile" encType="multipart/form-data">
                                     <input type = "file" name = "fileName" class = "button"/>

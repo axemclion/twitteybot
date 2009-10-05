@@ -1,8 +1,12 @@
 package com.appspot.twitteybot.ui;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,6 +59,8 @@ public class StatusManager extends HttpServlet {
 			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 		} else if (action.equalsIgnoreCase(Pages.PARAM_ACTION_UPLOAD)) {
 			this.processUpload(req, resp);
+		} else if (action.equalsIgnoreCase(Pages.PARAM_ACTION_FETCH)) {
+			this.processFetch(req, resp);
 		} else if (action.equalsIgnoreCase(Pages.PARAM_ACTION_ADD)) {
 			this.processAdd(req, resp);
 		} else if (action.equalsIgnoreCase(Pages.PARAM_ACTION_DELETE)) {
@@ -166,11 +172,49 @@ public class StatusManager extends HttpServlet {
 		pm.close();
 	}
 
+	private void processFetch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String twitterScreenName = req.getParameter(Pages.PARAM_SCREENNAME);
+		String fileLocation = req.getParameter(Pages.PARAM_STATUS_SOURCE);
+		String message = null;
+		String level = "info";
+		User user = UserServiceFactory.getUserService().getCurrentUser();
+		Date startDate = new Date();
+		List<TwitterStatus> statuses = new ArrayList<TwitterStatus>();
+		try {
+			URL url = new URL(fileLocation);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+			String line;
+			int increment = 0;
+			while ((line = reader.readLine()) != null) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(startDate);
+				cal.add(Calendar.MINUTE, increment += DEFAULT_TIME_INCREMENT);
+				statuses.add(new TwitterStatus(user, twitterScreenName, fileLocation, cal.getTime(), line,
+						true));
+			}
+			reader.close();
+		} catch (MalformedURLException e) {
+			message = "Invalid File location";
+			level = "error";
+			log.log(Level.SEVERE, "Invalid URL " + fileLocation);
+		} catch (IOException e) {
+			message = "Could not fetch contents from " + fileLocation;
+			level = "error";
+			log.log(Level.SEVERE, "Reading Error from location  " + fileLocation);
+		}
+		if (message != null) {
+			message = "Please select the tweets that you would like to schedule and then click on Add";
+		}
+		this.constructResponse(statuses, message, level, resp);
+	}
+
 	private void processUpload(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String twitterScreenName = req.getParameter(Pages.PARAM_SCREENNAME);
 		ServletFileUpload upload = new ServletFileUpload();
 		String separator = "\n";
+		User user = UserServiceFactory.getUserService().getCurrentUser();
 		Date startDate = new Date();
+		String message = null, level = "info";
 		List<TwitterStatus> statuses = new ArrayList<TwitterStatus>();
 		try {
 			FileItemIterator iterator = upload.getItemIterator(req);
@@ -190,8 +234,8 @@ public class StatusManager extends HttpServlet {
 						Calendar cal = Calendar.getInstance();
 						cal.setTime(startDate);
 						cal.add(Calendar.MINUTE, increment += DEFAULT_TIME_INCREMENT);
-						statuses.add(new TwitterStatus(UserServiceFactory.getUserService().getCurrentUser(),
-								twitterScreenName, item.getName(), cal.getTime(), status, true));
+						statuses.add(new TwitterStatus(user, twitterScreenName, item.getName(),
+								cal.getTime(), status, true));
 					}
 					log.log(Level.INFO, "Added " + statuses.size() + "tweets from " + item.getName());
 				}
@@ -199,10 +243,13 @@ public class StatusManager extends HttpServlet {
 		} catch (FileUploadException e) {
 			log.log(Level.SEVERE, "", e);
 			e.printStackTrace(resp.getWriter());
+			message = "There was a problem in uploading the file";
+			level = "error";
 		}
-		this.constructResponse(statuses,
-				"Please select the tweets that you would like to schedule and then click on Add", "info",
-				resp);
+		if (message == null) {
+			message = "Please select the tweets that you would like to schedule and then click on Add";
+		}
+		this.constructResponse(statuses, message, level, resp);
 	}
 
 	private void constructResponse(List<TwitterStatus> list, String message, String level,

@@ -68,6 +68,7 @@ var TwitteyBot = {
         var me = this;
         $("#actionList>li>a").click(function(event){
 			$("#uploadFileForm").hide();
+			$("#fetchFileForm").hide()
 			$("#deleteAccountForm").hide();
             $("#actionList").hide();
             $(this.href.substring(this.href.indexOf("#"))).fadeIn();
@@ -75,6 +76,7 @@ var TwitteyBot = {
         });
         $(".actionBar :reset, :submit").click(function(){
             $("#uploadFileForm").hide();
+            $("#fetchFileForm").hide();
 			$("#deleteAccountForm").hide();
             $("#actionList").fadeIn();
         });
@@ -86,12 +88,21 @@ var TwitteyBot = {
             return false;
         });
         
+        $("#fetchFileForm form").submit(function(){
+            me.showLoading();
+            $(this).attr("action", "/pages/status?action=fetch&screenName=" + $("#twitterScreenName").html());
+            $("#uploadButtons").show();
+            $("#otherButtons").hide();
+        });
+
         $("#uploadFileForm form").submit(function(){
             me.showLoading();
             $(this).attr("action", "/pages/status?action=Upload&screenName=" + $("#twitterScreenName").html());
             $("#uploadButtons").show();
             $("#otherButtons").hide();
         });
+
+        
         $("#deleteAccountForm form").submit(function(){
             me.showLoading();
             $.get("/pages/manageTwitterAccount", {
