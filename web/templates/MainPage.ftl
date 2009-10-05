@@ -6,25 +6,14 @@
     <body>
         <div id = "header">
             <div class = "left-pane" style ="margin-left : 2em; width : auto; background:url('/images/logo.png') no-repeat">
-                <span class = "logo-text">TwitteyBot</span>
-                <sup style ="margin-left : -3px;margin-top : -3px ;-webkit-transform: rotate(-9deg); -moz-transform: rotate(-9deg);">
-                    alpha
-                </sup>
+                <img class = "logo-text" src = "/images/twitter-logo.png" alt = "TweetLater">
+                </img>
             </div>
             <div class = "right-pane" style ="width : 70%;text-align:right; margin-top : 25px">
                 <div class = "single-line-list">
-                    <span>
-                        <strong>${username!""}</strong>
-                        | 
-                    </span>
-                    <span>
-                        <a href = "/help.html">Help</a>
-                        | 
-                    </span>
-                    <span>
-                        <a href = "${logoutUrl}">Sign Out</a>
-                        | 
-                    </span>
+                    <span><strong>${username!""}</strong> | </span>
+                    <span><a href = "/help.html">Help</a> | </span>
+                    <span><a href = "${logoutUrl}">Sign Out</a> | </span>
                 </div>
             </div>
             <div class = "clear">
@@ -33,7 +22,7 @@
         <div id = "content">
             <div id = "addTwitterAccount">
                 <div class = "left-pane">
-                    <a href = "/pages/manageTwitterAccount?action=Add">Link a Twitter account</a>
+                    <a href = "/pages/manageTwitterAccount?action=Add">Manage a new twitter account</a>
                 </div>
                 <div class = "right-pane" style ="text-align:center">
                     <span id = "message"></span>
@@ -88,20 +77,19 @@
             <div class = "right-pane">
                 <div id = "twitterAccount">
                     <div class = "actionBar">
-                        <div class = "left-pane">
-                            <strong><span id = "twitterScreenName">Not Loaded</span></strong>|&nbsp;&nbsp;
-                            <a href = "#deleteAccountForm">Delete Account </a>
+                        <div class = "left-pane" style ="width : 35%">
+                            <strong><span id = "twitterScreenName">Not Loaded</span></strong>&nbsp;|&nbsp;<a href = "#deleteAccountForm" id = "deleteAccountButton">Un-manage Account </a>
                         </div>
-                        <div class = "right-pane">
+                        <div class = "right-pane" style ="width : 64%">
                             <ul id = "actionList">
                                 <li>
-			                        Upload Tweets from a file on
+                                    Upload Tweets from a file on
                                 </li>
                                 <li>
-                                    <a href = "#uploadFileForm"> your computer </a>
+                                    <a href = "#fetchFileForm">the internet </a>
                                 </li>
                                 <li>
-									<a href = "#fetchFileForm"> the internet </a>
+                                    &nbsp;|&nbsp;<a href = "#uploadFileForm"> your computer </a>
                                 </li>
                             </ul>
                             <div id = "fetchFileForm">
@@ -124,7 +112,7 @@
                             </div>
                             <div id = "deleteAccountForm">
                                 <form action = "#/pages/manageTwitterAccount" method = "POST" name = "deleteTwitterAccount">
-                                    Are you sure you want to delete this account ?
+                                    Are you sure you want to unlink this account ?
                                     <input type = "submit" value = "Yes" class = "button"/>
                                     &nbsp;
                                     <input type = "reset" value = "No" class = "button"/>
@@ -140,13 +128,9 @@
                             <div id = "toolbar">
                                 <div class = "left-pane">
                                     Select&nbsp;
-                                    <div class = "single-line-list" style = "text-align:left">
-                                        <span>
-                                            <a href = "#" id = "selectAllStatus">All</a>, 
-                                        </span>
-                                        <span>
-                                            <a href = "#" id = "selectNoneStatus">None</a>
-                                        </span>
+                                    <div class = "single-line-list" style ="text-align:left">
+                                        <span><a href = "#" id = "selectAllStatus">All</a>, </span>
+                                        <span><a href = "#" id = "selectNoneStatus">None</a></span>
                                     </div>
                                 </div>
                                 <div class = "right-pane" style ="text-align : right">
@@ -177,9 +161,16 @@
                         </div>
                     </div>
                     <div id = "noTweets" class = "content-window">
-                        To schedule tweeting to this account, please upload a text file. 
+                        To start scheduling tweets, please upload a file. Use the links above.
                         <br/>
-                        Every line in the file will be sent as a tweet at the scheduled time. 
+                        <sub>
+                            Every line in the file is a tweet.
+                        </sub>
+                        <br/>
+                        <br/>
+                        Or
+                        <br/>
+                        <a style ="display : block; font-size : 1.3em; padding : 0.3em; background-color : #EEEEEE; -moz-border-radius : 5px" href = "#" id = "sampleTweets">Show me some sample tweets.</a>
                     </div>
                 </div>
             </div>
