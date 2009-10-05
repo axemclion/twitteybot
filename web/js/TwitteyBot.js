@@ -52,7 +52,7 @@ var TwitteyBot = {
         if ($("#twitterAccountList li").size() == 0) {
             $("#twitterAccount").hide();
             $("#scheduler").hide();
-            this.showMessage("Add a twitter account to tweet scheduled messages to it", "warn", true);
+            this.showMessage("<a href = '/pages/manageTwitterAccount?action=Add'>Manage</a> a twitter account and schedule tweets to it", "warn", true);
         }
         this.initTwitterAcccounts();
         this.initTwitterStatusActions();
@@ -63,11 +63,13 @@ var TwitteyBot = {
             this.select();
         });
         $("#twitterAccountList a:first").click();
+        
+        
     },
     
     initTwitterAcccounts: function(){
         var me = this;
-        $("#actionList>li>a").click(function(event){
+        $("#actionList>li>a , #deleteAccountButton").click(function(event){
             $("#uploadFileForm").hide();
             $("#fetchFileForm").hide()
             $("#deleteAccountForm").hide();
@@ -89,18 +91,26 @@ var TwitteyBot = {
             return false;
         });
         
-        $("#fetchFileForm form").submit(function(){
+        $("#sampleTweets").click(function(){
+            $("#resultFrame").attr("src", "/pages/status?action=fetch&source_=http://twitteybot.appspot.com/tweets.txt&screenName=" + $("#twitterScreenName").html());
             me.showLoading();
             me.selectAllByDefault = true;
+            $("#uploadButtons").show();
+            $("#otherButtons").hide();
+        });
+        
+        $("#fetchFileForm form").submit(function(){
             $(this).attr("action", "/pages/status?action=fetch&screenName=" + $("#twitterScreenName").html());
+            me.showLoading();
+            me.selectAllByDefault = true;
             $("#uploadButtons").show();
             $("#otherButtons").hide();
         });
         
         $("#uploadFileForm form").submit(function(){
+            $(this).attr("action", "/pages/status?action=Upload&screenName=" + $("#twitterScreenName").html());
             me.selectAllByDefault = true;
             me.showLoading();
-            $(this).attr("action", "/pages/status?action=Upload&screenName=" + $("#twitterScreenName").html());
             $("#uploadButtons").show();
             $("#otherButtons").hide();
         });
@@ -272,9 +282,9 @@ var TwitteyBot = {
             $(this).addClass("focus-time");
             $(this).select();
         });
-		if (me.selectAllByDefault == true){
-			$(".item-index").attr("checked", true);
-		}
+        if (me.selectAllByDefault == true) {
+            $(".item-index").attr("checked", true);
+        }
         me.selectAllByDefault = false;
         me.updateVisibleTimes();
     },
