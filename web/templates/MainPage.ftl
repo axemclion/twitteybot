@@ -55,7 +55,7 @@
                     </div>
                     <form>
                         Start at&nbsp;<span id = "scheduleStart"><a href= "#" display : none></a>
-                            <input type = "text" style ="width : 10em"/>
+                            <input type = "text" style ="width : 10em" value = "today at 10:10"/>
                         </span>
                         &nbsp;and
                         <table>
@@ -65,7 +65,7 @@
                                 </td>
                                 <td>
                                     send tweets in intervals of 
-                                    <input type = "text" id = "scheduleInterval" style ="width:90%"/>
+                                    <input type = "text" id = "scheduleInterval" style ="width:90%" value = "1 hour and 10 minutes"/>
                                 </td>
                             </tr>
                             <tr>
@@ -75,7 +75,7 @@
                                 <td>
                                     send all tweets within a time limit of 
                                     <br/>
-                                    <input id = "scheduleSpan" style ="width:90%" type = "text"/>
+                                    <input id = "scheduleSpan" style ="width:90%" type = "text" value = "1 day, 10 hours"/>
                                 </td>
                             </tr>
                         </table>
@@ -106,7 +106,7 @@
                             </ul>
                             <div id = "fetchFileForm">
                                 <form target = "resultFrame" action = "#" method = "POST" name = "uploadFile">
-                                    <input type = "text" name = "source_" class = "button"/>
+                                    <input type = "text" name = "source_" class = "button" value = "http://twitteybot.appspot.com/tweets.txt"/>
                                     &nbsp;
                                     <input type = "submit" value = "Upload" class = "button"/>
                                     &nbsp;
