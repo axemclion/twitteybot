@@ -54,8 +54,10 @@ public class TwitterStatus implements Serializable {
 		this.source = source;
 		this.state = State.SCHEDULED;
 		this.updatedTime = updateTime;
-		this.status = status.substring(0, status.length() > 500 ? 500 : (status.length() == 0) ? 0 : status
-				.length() - 1);
+		if (status.length() > 500) {
+			status = status.substring(0, 499);
+		}
+		this.status = status;
 		this.canDelete = canDelete;
 	}
 
@@ -66,9 +68,11 @@ public class TwitterStatus implements Serializable {
 		this.source = source;
 		this.state = State.SCHEDULED;
 		this.setTime(updateTime);
-		this.status = status.substring(0, status.length() > 140 ? 140 : (status.length() == 0) ? 0 : status
-				.length() - 1);
 		this.canDelete = canDelete;
+		if (status.length() > 500) {
+			status = status.substring(0, 499);
+		}
+		this.status = status;
 	}
 
 	public String getTwitterScreenName() {

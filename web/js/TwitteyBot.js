@@ -269,6 +269,7 @@ var TwitteyBot = {
         $(".tweetLine .time").blur(function(){
             var date = Date.parse($(this).val());
             if (date !== null) {
+                $(this).css("color", "#3366CC");
                 $(this).val(date.toString(TwitteyBot.dateFormat));
                 $(this).removeClass("focus-time");
                 var identifier = $(this).attr("id").split("_")[1];

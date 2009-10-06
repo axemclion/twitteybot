@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>TwitteyBot :: Managing twitter bots made easy</title>
+        <title>Time2Tweet :: Schedule your tweets</title>
         <link rel="stylesheet" type=text/css href="/css/main.css"/>
     </head>
     <body>
@@ -94,7 +94,7 @@
                             </ul>
                             <div id = "fetchFileForm">
                                 <form target = "resultFrame" action = "#" method = "POST" name = "uploadFile">
-                                    <input type = "text" name = "source_" class = "button" value = "http://twitteybot.appspot.com/tweets.txt"/>
+                                    <input type = "text" name = "source_" class = "button" value = "http://time2tweet.appspot.com/tweets.txt"/>
                                     &nbsp;
                                     <input type = "submit" value = "Upload" class = "button"/>
                                     &nbsp;
