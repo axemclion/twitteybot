@@ -265,6 +265,7 @@ public class StatusManager extends HttpServlet {
 		Query query = pm.newQuery(TwitterStatus.class);
 		query.setFilter("twitterScreenName == twitterScreenNameVar && user == userVar");
 		query.declareParameters("String twitterScreenNameVar, com.google.appengine.api.users.User userVar");
+		query.setOrdering("updatedTime asc");
 		@SuppressWarnings("unchecked")
 		List<TwitterStatus> twitterStatuses = (List<TwitterStatus>) query.execute(screenName,
 				UserServiceFactory.getUserService().getCurrentUser());
