@@ -1,0 +1,8 @@
+<!-- Indices written at Mon, 12 Oct 2009 14:23:27 UTC -->
+
+<datastore-indexes autoGenerate="true">
+    <datastore-index kind="TwitterStatus" ancestor="false">
+        <property name="state" direction="asc"/>
+        <property name="updatedTime" direction="asc"/>
+    </datastore-index>
+</datastore-indexes>

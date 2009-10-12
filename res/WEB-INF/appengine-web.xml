@@ -1,6 +1,6 @@
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
-	<application>twitteybot</application>
-	<version>beta</version>
+	<application>time2tweet</application>
+	<version>1</version>
 	<system-properties>
         <property name="java.util.logging.config.file" value="logging.properties" />
     </system-properties>
