@@ -10,11 +10,12 @@ body, table {
     margin-left: 50px;
     line-height: 48px;
     text-shadow: 0px 0px 15px #000000;
-	font-family : Verdana;
-	font-weight : bold;
-	  color : #FFFFFF;
-	<!--[if IE] >
-	color: #000000;
+    font-family: Verdana;
+    font-weight: bold;
+    color: #FFFFFF;
+    <!--[if IE] >
+
+color: #000000;
     <![endif]-->
 }
 
@@ -173,13 +174,13 @@ form {
     display: none;
 }
 
-#scheduler {
+.side-window {
     margin: 0.8em;
     border: SOLID 3px #3366CC;
     -moz-border-radius: 5px;
 }
 
-#scheduler div {
+.side-window div {
     background-color: #3366CC;
     line-height: 1.5em;
     text-align: center;
@@ -187,7 +188,7 @@ form {
     color: #E5ECF9;
 }
 
-#scheduler > form {
+.side-window > form {
     display: block;
     padding: 0.5em;
 }
@@ -197,6 +198,10 @@ form {
     list-style-type: none;
     margin: 1em 0 0 1em;
     padding: 0;
+}
+
+#shrinker input{
+	margin : 0.6em 0 0.6em 0;	
 }
 
 .tweetLine {

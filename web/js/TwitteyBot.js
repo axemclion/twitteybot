@@ -2,7 +2,8 @@ $(document).ready(function(){
     $.extend({
         urlParser: function(url){
             var params = {};
-            var separatorIndex = (url.lastIndexOf("?") > url.lastIndexOf("#")) ? url.lastIndexOf("?") : url.lastIndexOf("#");
+            var separatorIndex = (url.lastIndexOf("?") >
+            url.lastIndexOf("#")) ? url.lastIndexOf("?") : url.lastIndexOf("#");
             $.each(url.substring(separatorIndex + 1).split("&"), function(){
                 var splitArray = this.split("=");
                 params[splitArray[0]] = splitArray.slice(1).join("=");
@@ -27,7 +28,8 @@ $(document).ready(function(){
             for (var i = 1; i < words.length; i++) {
                 for (unit in u) {
                     if (words[i].indexOf(unit) !== -1) {
-                        var num = parseInt(numbers[i - 1], 10) * u[unit];
+                        var num = parseInt(numbers[i - 1], 10) *
+                        u[unit];
                         if (!isNaN(num)) {
                             result += num;
                         }
@@ -45,6 +47,7 @@ $(document).ready(function(){
 });
 
 var TwitteyBot = {
+    tweetLength: 140,
     dateFormat: "dddd, MMMM dd, yyyy, hh:mm:ss tt",
     selectAllByDefault: false,
     init: function(){
@@ -52,18 +55,19 @@ var TwitteyBot = {
         if ($("#twitterAccountList li").size() == 0) {
             $("#twitterAccount").hide();
             $("#scheduler").hide();
+            $("#shrinker").hide();
             this.showMessage("<a href = '/pages/manageTwitterAccount?action=Add'>Manage</a> a twitter account and schedule tweets to it", "warn", true);
         }
         this.initTwitterAcccounts();
         this.initTwitterStatusActions();
         this.initScheduler();
+        this.initShrinker();
         
         $(".actionBar>.right-pane>div").hide();
         $("textarea,input[type=text]").bind("focus", function(){
             this.select();
         });
         $("#twitterAccountList a:first").click();
-        
         
     },
     
@@ -92,7 +96,8 @@ var TwitteyBot = {
         });
         
         $("#sampleTweets").click(function(){
-            $("#resultFrame").attr("src", "/pages/status?action=fetch&source_=http://twitteybot.appspot.com/tweets.txt&screenName=" + $("#twitterScreenName").html());
+            $("#resultFrame").attr("src", "/pages/status?action=fetch&source_=http://twitteybot.appspot.com/tweets.txt&screenName=" +
+            $("#twitterScreenName").html());
             me.showLoading();
             me.selectAllByDefault = true;
             $("#uploadButtons").show();
@@ -100,7 +105,8 @@ var TwitteyBot = {
         });
         
         $("#fetchFileForm form").submit(function(){
-            $(this).attr("action", "/pages/status?action=fetch&screenName=" + $("#twitterScreenName").html());
+            $(this).attr("action", "/pages/status?action=fetch&screenName=" +
+            $("#twitterScreenName").html());
             me.showLoading();
             me.selectAllByDefault = true;
             $("#uploadButtons").show();
@@ -108,13 +114,13 @@ var TwitteyBot = {
         });
         
         $("#uploadFileForm form").submit(function(){
-            $(this).attr("action", "/pages/status?action=Upload&screenName=" + $("#twitterScreenName").html());
+            $(this).attr("action", "/pages/status?action=Upload&screenName=" +
+            $("#twitterScreenName").html());
             me.selectAllByDefault = true;
             me.showLoading();
             $("#uploadButtons").show();
             $("#otherButtons").hide();
         });
-        
         
         $("#deleteAccountForm form").submit(function(){
             me.showLoading();
@@ -123,10 +129,12 @@ var TwitteyBot = {
                 "screenName": $("#twitterScreenName").html()
             }, function(data, status){
                 if (status !== "success") {
-                    me.showMessage("Could not delete account " + $("#twitterScreenName").html(), "error");
+                    me.showMessage("Could not delete account " +
+                    $("#twitterScreenName").html(), "error");
                 }
                 else {
-                    me.showMessage($("#twitterScreenName").html() + " deleted successfully. Refreshing accounts");
+                    me.showMessage($("#twitterScreenName").html() +
+                    " deleted successfully. Refreshing accounts");
                     window.location = window.location.href;
                 }
             });
@@ -156,6 +164,15 @@ var TwitteyBot = {
             me.showLoading();
             $("#uploadButtons").hide();
             $("#otherButtons").show();
+        });
+    },
+    
+    initShrinker: function(){
+        $("#shrinker-removeVowels").click(function(){
+            ShrinkTweets("removeVowels");
+        });
+        $("#shrinker-wrapTweet").click(function(){
+            ShrinkTweets("wrapTweet");
         });
     },
     
@@ -200,7 +217,8 @@ var TwitteyBot = {
                 interval = parseInt($("#scheduleInterval").val());
             }
             else {
-                interval = parseInt($("#scheduleSpan").val(), 10) / (total);
+                interval = parseInt($("#scheduleSpan").val(), 10) /
+                (total);
             }
             
             var nextTime = Date.parse($("#scheduleStart input[type=text]").val());
@@ -219,7 +237,6 @@ var TwitteyBot = {
         $("#twitterContent").hide();
         $("#noTweets").hide();
     },
-    
     
     updateVisibleTimes: function(){
         var me = this;
@@ -262,6 +279,7 @@ var TwitteyBot = {
             var identifier = $(this).attr("id").split("_")[1];
             $("#item_" + identifier).attr("checked", true);
             $(this).removeClass("focus-time");
+            me.updateCharCount(this);
         }).focus(function(){
             $(this).addClass("focus-time");
         })
@@ -293,7 +311,7 @@ var TwitteyBot = {
     updateCharCount: function(elem){
         var identifier = $(elem).attr("id").split("_")[1];
         var length = $(elem).val().length;
-        if (length > 140) {
+        if (length > TwitteyBot.tweetLength) {
             $("#length_" + identifier).css("color", "#B93C0A");
         }
         else 
@@ -326,5 +344,75 @@ var TwitteyBot = {
                 $("#message").fadeOut();
             }, 5000);
         }
+    },
+    
+    addTweetLine: function(){
+        var changeAttr = function(elem, attrib, num){
+            $(elem).attr(attrib, $(elem).attr(attrib).split("_")[0] + "_" + num);
+        }
+        
+        var result = $(".tweetLine:first").clone(true);
+        var nextNum = parseInt($("#totalItems").val()) + 1;
+        result.find("input, textarea").each(function(){
+            changeAttr(this, "name", nextNum);
+            changeAttr(this, "id", nextNum);
+        });
+        
+        changeAttr(result.find(".screenName"), "id", nextNum);
+        changeAttr(result.find(".source"), "id", nextNum);
+        changeAttr(result.find(".length"), "id", nextNum);
+        result.find("input[type=checkbox]").attr("checked", true);
+        result.find(".tweet-key").val("");
+        $("#totalItems").val(nextNum);
+        return result;
     }
+};
+
+var ShrinkTweets = function(type){
+    var tweetLength = TwitteyBot.tweetLength;
+    var shrinkMethods = {
+        "removeVowels": function(field){
+            var vowelList = [/o/g, /u/g, /i/g, /a/g, /e/g];
+            var tweetText = $(field).val();
+            for (var i = 0; i < vowelList.length; i++) {
+                if (tweetText.length > tweetLength) {
+                    tweetText = tweetText.replace(vowelList[i], "");
+                }
+            }
+            $(field).val(tweetText);
+            return tweetText.length;
+        },
+        
+        "wrapTweet": function(field){
+            var tweetLine = $(field).parent().parent();
+            var tweetText = $(field).val();
+            var tweetFrags = [];
+            while (tweetText.length > 0) {
+                var frag = tweetText.substring(0, tweetLength);
+                if (frag.lastIndexOf(" ") !== -1 && frag.length >= tweetLength) {
+                    frag = frag.substring(0, frag.lastIndexOf(" "));
+                }
+                tweetFrags.push(frag);
+                tweetText = tweetText.substring(frag.length);
+            }
+            
+            $(field).val(tweetFrags[0]);
+            for (var i = 1; i < tweetFrags.length; i++) {
+                var newTweetLine = TwitteyBot.addTweetLine();
+                tweetLine.after(newTweetLine);
+                newTweetLine.find(".tweetText").val(tweetFrags[tweetFrags.length - i]);
+                TwitteyBot.updateCharCount(newTweetLine.find(".tweetText"));
+            }
+        }
+    };
+    if (!type || typeof(shrinkMethods[type]) !== "function") {
+        type = "removeVowels";
+    }
+    var me = this;
+    $(".tweetText").each(function(){
+        if ($(this).val().length > tweetLength) {
+            var length = shrinkMethods[type].call(me, $(this));
+            TwitteyBot.updateCharCount(this);
+        }
+    });
 };

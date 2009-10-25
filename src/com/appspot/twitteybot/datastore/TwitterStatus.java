@@ -47,6 +47,9 @@ public class TwitterStatus implements Serializable {
 		SCHEDULED, TO_DELETE, QUEUED
 	}
 
+	public TwitterStatus() {
+	}
+
 	public TwitterStatus(User user, String twitterScreenName, String source, Date updateTime, String status,
 			boolean canDelete) {
 		this.user = user;
@@ -54,7 +57,7 @@ public class TwitterStatus implements Serializable {
 		this.source = source;
 		this.state = State.SCHEDULED;
 		this.updatedTime = updateTime;
-		if (status.length() > 500) {
+		if (status.length() >= 500) {
 			status = status.substring(0, 499);
 		}
 		this.status = status;

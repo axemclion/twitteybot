@@ -11,9 +11,18 @@
             </div>
             <div class = "right-pane" style ="width : 70%;text-align:right; margin-top : 25px">
                 <div class = "single-line-list">
-                    <span><strong>${username!""}</strong> | </span>
-                    <span><a href = "/help.html">Help</a> | </span>
-                    <span><a href = "${logoutUrl}">Sign Out</a> | </span>
+                    <span>
+                        <strong>${username!""}</strong>
+                        | 
+                    </span>
+                    <span>
+                        <a href = "/help.html">Help</a>
+                        | 
+                    </span>
+                    <span>
+                        <a href = "${logoutUrl}">Sign Out</a>
+                        | 
+                    </span>
                 </div>
             </div>
             <div class = "clear">
@@ -25,7 +34,8 @@
                     <a href = "/pages/manageTwitterAccount?action=Add">Manage a new twitter account</a>
                 </div>
                 <div class = "right-pane" style ="text-align:center">
-                    <span id = "message"></span>
+                    <span id = "message">
+                    </span>
                 </div>
                 <div class = "clear">
                 </div>
@@ -38,12 +48,14 @@
                     </li>
                     </#list>
                 </ul>
-                <div id = "scheduler">
+                <div id = "scheduler" class = "side-window">
                     <div>
                         Tweet Scheduler
                     </div>
                     <form>
-                        Start at&nbsp;<span id = "scheduleStart"><a href= "#" display : none></a>
+                        Start at&nbsp;
+                        <span id = "scheduleStart">
+                            <a href= "#" display : none></a>
                             <input type = "text" style ="width : 10em" value = "today at 10:10"/>
                         </span>
                         &nbsp;and
@@ -73,12 +85,26 @@
                         </center>
                     </form>
                 </div>
+                <div id = "shrinker" class = "side-window">
+                    <div>
+                        Tweet Shrinker
+                    </div>
+                    For tweets that are greater than 140 characters, 
+                    <center>
+                        <input type = "button" value = "Remove Vowels" id = "shrinker-removeVowels" style ="width : 80%"/>
+                        <input type = "button" value = "Break into more Tweets" id = "shrinker-wrapTweet" style ="width:80%"/>
+                    </center>
+                </div>
             </div>
             <div class = "right-pane">
                 <div id = "twitterAccount">
                     <div class = "actionBar">
                         <div class = "left-pane" style ="width : 35%">
-                            <strong><span id = "twitterScreenName">Not Loaded</span></strong>&nbsp;|&nbsp;<a href = "#deleteAccountForm" id = "deleteAccountButton">Un-manage Account </a>
+                            <strong>
+                                <span id = "twitterScreenName">
+                                    Not Loaded
+                                </span>
+                            </strong>&nbsp;|&nbsp;<a href = "#deleteAccountForm" id = "deleteAccountButton">Un-manage Account </a>
                         </div>
                         <div class = "right-pane" style ="width : 64%">
                             <ul id = "actionList">
@@ -129,8 +155,12 @@
                                 <div class = "left-pane">
                                     Select&nbsp;
                                     <div class = "single-line-list" style ="text-align:left">
-                                        <span><a href = "#" id = "selectAllStatus">All</a>, </span>
-                                        <span><a href = "#" id = "selectNoneStatus">None</a></span>
+                                        <span>
+                                            <a href = "#" id = "selectAllStatus">All</a>, 
+                                        </span>
+                                        <span>
+                                            <a href = "#" id = "selectNoneStatus">None</a>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class = "right-pane" style ="text-align : right">
@@ -154,7 +184,9 @@
                     </div>
                     <div id = "showLoading" style ="display:none" class ="content-window">
                         <div style ="text-align:center; padding : 3em">
-                            <span style ="font-weight : bold; font-size : 3em; color : white; text-shadow : 0px 0px 20px  #000000">Loading</span>
+                            <span style ="font-weight : bold; font-size : 3em; color : white; text-shadow : 0px 0px 20px  #000000">
+                                Loading
+                            </span>
                             <br/>
                             <br/>
                             <img src = "/images/loading.gif"/>

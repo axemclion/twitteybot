@@ -87,14 +87,26 @@ public class StatusManager extends HttpServlet {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		List<TwitterStatus> twitterStatuses = new ArrayList<TwitterStatus>();
+		List<TwitterStatus> toAddStatuses = new ArrayList<TwitterStatus>();
 		String message = null;
 		String level = "info";
 		for (int i = 0; i <= totalItems; i++) {
 			if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + i), "on")) {
 				String id = req.getParameter(Pages.PARAM_STATUS_KEY + i);
-				Key key = KeyFactory.createKey(TwitterStatus.class.getSimpleName(), Long.parseLong(id
-						.replace(",", "")));
-				TwitterStatus twitterStatus = pm.getObjectById(TwitterStatus.class, key);
+				TwitterStatus twitterStatus = null;
+				if (id.equals("")) {
+					twitterStatus = new TwitterStatus();
+					twitterStatus.setUser(UserServiceFactory.getUserService().getCurrentUser());
+					twitterStatus.setCanDelete(true);
+					twitterStatus.setTwitterScreenName(req.getParameter(Pages.PARAM_SCREENNAME));
+					twitterStatus.setState(TwitterStatus.State.SCHEDULED);
+					toAddStatuses.add(twitterStatus);
+				} else {
+					Key key = KeyFactory.createKey(TwitterStatus.class.getSimpleName(), Long.parseLong(id
+							.replace(",", "")));
+					twitterStatus = pm.getObjectById(TwitterStatus.class, key);
+					twitterStatuses.add(twitterStatus);
+				}
 				if (twitterStatus != null && user.getEmail().equals(twitterStatus.getUser().getEmail())) {
 					if (!delete) {
 						try {
@@ -107,16 +119,20 @@ public class StatusManager extends HttpServlet {
 						twitterStatus.setSource(req.getParameter(Pages.PARAM_STATUS_SOURCE + i));
 						twitterStatus.setStatus(req.getParameter(Pages.PARAM_STATUS_STATUS + i));
 					}
-					twitterStatuses.add(twitterStatus);
 				}
 			}
 		}
+
+		pm.makePersistentAll(toAddStatuses);
 		if (delete) {
 			message = twitterStatuses.size() + " Tweets successfully deleted";
 			pm.deletePersistentAll(twitterStatuses);
 		} else {
 			if (message == null) {
 				message = twitterStatuses.size() + " Tweets successfully updated";
+				if (toAddStatuses.size() > 0) {
+					message += ", " + toAddStatuses.size() + " Tweets added.";
+				}
 			}
 		}
 
