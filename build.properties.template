@@ -1,1 +1,4 @@
 sdk.dir=C:/Program Files/google/appengine-java
+consumer.key=jb67d2WpoHuwBaun059A
+consumer.secret=a6rYFuRHGHuUgEnE7D26rJb1Uz5Ykd947ueBi8zsQ
+deploy.base=http://localhost:8080/
