@@ -97,4 +97,10 @@
 			${deploy.base}admin?action=add&amp;key=consumer_secret&amp;value=${consumer.secret}
 		</echo>
 	</target>
+
+	<target name="launch" depends="compile, enhance, init_datastore">
+		<echo>
+			${deploy.base}pages/main
+		</echo>
+	</target>
 </project>
