@@ -413,6 +413,7 @@ var ShrinkTweets = function(type){
         if ($(this).val().length > tweetLength) {
             var length = shrinkMethods[type].call(me, $(this));
             TwitteyBot.updateCharCount(this);
+            $(this).parent().parent().find("input[type=checkbox]").attr("checked", true);
         }
     });
 };
