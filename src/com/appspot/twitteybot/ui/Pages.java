@@ -31,6 +31,9 @@ public class Pages {
 	public static final String PARAM_TOKEN = "token";
 	public static final String PARAM_SCREENNAME = "screenName";
 
+	public static final String PARAM_START = "start";
+	public static final String PARAM_END = "end";
+
 	public static final String PAGE_HOME = "/?";
 	public static final String PAGE_MAIN = "/pages/main?";
 	public static final String PAGE_TASK_QUEUE = "/task/status";
@@ -41,5 +44,6 @@ public class Pages {
 	public static final String FTLVAR_LOGOUT = "logoutUrl";
 	public static final String FTLVAR_MESSAGE = "message";
 	public static final String FTLVAR_LEVEL = "level";
-
+	public static final String FTLVAR_START = "start";
+	public static final String FTLVAR_END = "end";
 }
