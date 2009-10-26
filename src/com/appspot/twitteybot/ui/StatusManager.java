@@ -45,6 +45,11 @@ public class StatusManager extends HttpServlet {
 	private static final long serialVersionUID = 1551252388567429753L;
 	private static final int DEFAULT_TIME_INCREMENT = 60;
 
+	private static final String LEVEL_INFO = "info";
+	private static final String LEVEL_ERROR = "error";
+	private static final String LEVEL_WARN = "warn";
+	private static final long PAGE_SIZE = 30;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
 			IOException {
@@ -76,8 +81,19 @@ public class StatusManager extends HttpServlet {
 
 	private void processShow(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		this.constructResponse(this.getTwitterStatus(req.getParameter(Pages.PARAM_SCREENNAME), pm), "", "",
-				resp);
+		long start = 0;
+		long end = PAGE_SIZE;
+		try {
+			start = Long.parseLong(req.getParameter(Pages.PARAM_START));
+		} catch (NumberFormatException e) {
+		}
+		try {
+			end = Long.parseLong(req.getParameter(Pages.PARAM_END));
+		} catch (NumberFormatException e) {
+		}
+		this.constructResponse(this
+				.getTwitterStatus(req.getParameter(Pages.PARAM_SCREENNAME), pm, start, end), "Showing "
+				+ (end - start) + " tweets", LEVEL_INFO, resp, start, end);
 		pm.close();
 	}
 
@@ -89,7 +105,7 @@ public class StatusManager extends HttpServlet {
 		List<TwitterStatus> twitterStatuses = new ArrayList<TwitterStatus>();
 		List<TwitterStatus> toAddStatuses = new ArrayList<TwitterStatus>();
 		String message = null;
-		String level = "info";
+		String level = LEVEL_INFO;
 		for (int i = 0; i <= totalItems; i++) {
 			if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + i), "on")) {
 				String id = req.getParameter(Pages.PARAM_STATUS_KEY + i);
@@ -113,7 +129,7 @@ public class StatusManager extends HttpServlet {
 							twitterStatus.setTime(req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i));
 						} catch (RuntimeException e) {
 							message = "There were errors parsing the time for tweets. Some tweets were not updated.";
-							level = "warn";
+							level = LEVEL_WARN;
 							continue;
 						}
 						twitterStatus.setSource(req.getParameter(Pages.PARAM_STATUS_SOURCE + i));
@@ -151,11 +167,11 @@ public class StatusManager extends HttpServlet {
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 
 		String message = null;
-		String level = "info";
+		String level = LEVEL_INFO;
 
 		if (screenName == null || screenName == "") {
 			message = "Twitter Screen Name was null and hence, could not add tweets";
-			level = "error";
+			level = LEVEL_ERROR;
 			log.log(Level.SEVERE, "ScerenName supplied was null");
 		} else {
 			List<TwitterStatus> twitterStatuses = new ArrayList<TwitterStatus>();
@@ -171,7 +187,7 @@ public class StatusManager extends HttpServlet {
 					} catch (RuntimeException e) {
 						message = "There were errors parsing the time for tweets." + (++failedTweetCount)
 								+ " tweets were not added.";
-						level = "warn";
+						level = LEVEL_WARN;
 						log
 								.log(Level.WARNING, "Could not add "
 										+ req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i)
@@ -192,7 +208,7 @@ public class StatusManager extends HttpServlet {
 		String twitterScreenName = req.getParameter(Pages.PARAM_SCREENNAME);
 		String fileLocation = req.getParameter(Pages.PARAM_STATUS_SOURCE);
 		String message = null;
-		String level = "info";
+		String level = LEVEL_INFO;
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		Date startDate = new Date();
 		List<TwitterStatus> statuses = new ArrayList<TwitterStatus>();
@@ -211,11 +227,11 @@ public class StatusManager extends HttpServlet {
 			reader.close();
 		} catch (MalformedURLException e) {
 			message = "Invalid File location";
-			level = "error";
+			level = LEVEL_ERROR;
 			log.log(Level.SEVERE, "Invalid URL " + fileLocation);
 		} catch (IOException e) {
 			message = "Could not fetch contents from " + fileLocation;
-			level = "error";
+			level = LEVEL_ERROR;
 			log.log(Level.SEVERE, "Reading Error from location  " + fileLocation);
 		}
 		if (message != null) {
@@ -230,7 +246,7 @@ public class StatusManager extends HttpServlet {
 		String separator = "\n";
 		User user = UserServiceFactory.getUserService().getCurrentUser();
 		Date startDate = new Date();
-		String message = null, level = "info";
+		String message = null, level = LEVEL_INFO;
 		List<TwitterStatus> statuses = new ArrayList<TwitterStatus>();
 		try {
 			FileItemIterator iterator = upload.getItemIterator(req);
@@ -260,7 +276,7 @@ public class StatusManager extends HttpServlet {
 			log.log(Level.SEVERE, "", e);
 			e.printStackTrace(resp.getWriter());
 			message = "There was a problem in uploading the file";
-			level = "error";
+			level = LEVEL_ERROR;
 		}
 		if (message == null) {
 			message = "Please select the tweets that you would like to schedule and then click on Add";
@@ -269,23 +285,36 @@ public class StatusManager extends HttpServlet {
 	}
 
 	private void constructResponse(List<TwitterStatus> list, String message, String level,
-			HttpServletResponse resp) throws IOException {
+			HttpServletResponse resp, long start, long end) throws IOException {
 		Map<String, Object> templateValues = new HashMap<String, Object>();
 		templateValues.put(Pages.FTLVAR_TWITTER_STATUS, list);
 		templateValues.put(Pages.FTLVAR_LEVEL, level);
+		templateValues.put(Pages.FTLVAR_START, start);
+		templateValues.put(Pages.FTLVAR_END, start + list.size());
 		templateValues.put(Pages.FTLVAR_MESSAGE, message);
 		FreeMarkerConfiguration.writeResponse(templateValues, Pages.TEMPLATE_STATUSPAGE, resp.getWriter());
 	}
 
-	private List<TwitterStatus> getTwitterStatus(String screenName, PersistenceManager pm) {
+	private void constructResponse(List<TwitterStatus> list, String message, String level,
+			HttpServletResponse resp) throws IOException {
+		this.constructResponse(list, message, level, resp, 0, PAGE_SIZE);
+	}
+
+	private List<TwitterStatus> getTwitterStatus(String screenName, PersistenceManager pm, long start,
+			long end) {
 		Query query = pm.newQuery(TwitterStatus.class);
 		query.setFilter("twitterScreenName == twitterScreenNameVar && user == userVar");
 		query.declareParameters("String twitterScreenNameVar, com.google.appengine.api.users.User userVar");
 		query.setOrdering("updatedTime asc");
+		query.setRange(start, end);
 		@SuppressWarnings("unchecked")
 		List<TwitterStatus> twitterStatuses = (List<TwitterStatus>) query.execute(screenName,
 				UserServiceFactory.getUserService().getCurrentUser());
 		return twitterStatuses;
+	}
+
+	private List<TwitterStatus> getTwitterStatus(String screenName, PersistenceManager pm) {
+		return this.getTwitterStatus(screenName, pm, 0, PAGE_SIZE);
 	}
 
 	private boolean getBoolFromParam(String param, String trueValue) {

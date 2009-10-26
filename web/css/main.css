@@ -236,3 +236,20 @@ form {
     background-color: #FFFFFF;
 }
 
+.pagination {
+	width : 98%;
+	text-align : right;
+	margin : 0 1% 0 1%;
+}
+
+.pagination a {
+	text-decoration : none;
+	padding : 0.3em;
+	background-color : #E5ECF9;
+	color : #3366CC;
+}
+
+.pagination a:hover {
+	background-color : #3366CC;
+	color : #E5ECF9;
+}
