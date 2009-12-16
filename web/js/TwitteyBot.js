@@ -114,8 +114,9 @@ var TwitteyBot = (function(){
             });
             
             $("#uploadFileForm form").submit(function(){
+            	var csvFlag = $("input#csvFile").attr("checked") ? "&csvFile=true" : "";
                 $(this).attr("action", "/pages/status?action=Upload&screenName=" +
-                $("#twitterScreenName").html());
+                $("#twitterScreenName").html() + csvFlag);
                 me.selectAllByDefault = true;
                 me.showLoading();
                 $("#uploadButtons").show();

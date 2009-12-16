@@ -30,6 +30,7 @@ public class Pages {
 	public static final String PARAM_OAUTH_TOKEN = "oauth_token";
 	public static final String PARAM_TOKEN = "token";
 	public static final String PARAM_SCREENNAME = "screenName";
+	public static final String PARAM_CSVFILE = "csvFile";
 
 	public static final String PARAM_START = "start";
 	public static final String PARAM_END = "end";
