@@ -131,6 +131,8 @@
                                 <form target = "resultFrame" action = "#" method = "POST" name = "uploadFile" encType="multipart/form-data">
                                     <input type = "file" name = "fileName" class = "button"/>
                                     &nbsp;
+                                    <input type = "checkbox" id = "csvFile"/> CSV File
+									&nbsp;
                                     <input type = "submit" value = "Upload" class = "button"/>
                                     &nbsp;
                                     <input type = "reset" value = "Cancel" class = "button"/>
