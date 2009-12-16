@@ -383,12 +383,17 @@ var TwitteyBot = (function(){
             }
         },
         
-        addTweetLine: function(){
+        addTweetLine: function(sourceField){
             var changeAttr = function(elem, attrib, num){
                 $(elem).attr(attrib, $(elem).attr(attrib).split("_")[0] + "_" + num);
             }
             
-            var result = $(".tweetLine:first").clone(true);
+            if (typeof(sourceField) === "undefined"){
+				var result = $(".tweetLine:first").clone(true);	
+			}else {
+				var result = $(sourceField).clone(true);
+			}
+			
             var nextNum = parseInt($("#totalItems").val()) + 1;
             result.find("input, textarea").each(function(){
                 changeAttr(this, "name", nextNum);
@@ -436,7 +441,7 @@ var ShrinkTweets = function(type){
             
             $(field).val(tweetFrags[0]);
             for (var i = 1; i < tweetFrags.length; i++) {
-                var newTweetLine = TwitteyBot.addTweetLine();
+                var newTweetLine = TwitteyBot.addTweetLine(tweetLine);
                 tweetLine.after(newTweetLine);
                 newTweetLine.find(".tweetText").val(tweetFrags[tweetFrags.length - i]);
                 TwitteyBot.updateCharCount(newTweetLine.find(".tweetText"));
