@@ -27,12 +27,12 @@ import com.google.appengine.api.labs.taskqueue.TaskOptions.Builder;
 
 public class CronServlet extends HttpServlet {
 
-	private static final long serialVersionUID = -7767523786982743018L;
-	private static final Logger log = Logger.getLogger(CronServlet.class.getName());
+	private static final long	 serialVersionUID	= -7767523786982743018L;
+	private static final Logger	log	         = Logger.getLogger(CronServlet.class.getName());
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-			IOException {
+	      IOException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query query = pm.newQuery(TwitterStatus.class);
 		query.setFilter("updatedTime < maxTime && state == 'SCHEDULED'");
@@ -50,6 +50,7 @@ public class CronServlet extends HttpServlet {
 		taskOption.param(Pages.PARAM_ACTION, Pages.PARAM_ACTION_UPDATE);
 		for (TwitterStatus twitterStatus : twitterStatuses) {
 			taskOption.param(Pages.PARAM_STATUS_TWITTER_SCREEN + i, twitterStatus.getTwitterScreenName());
+			taskOption.param(Pages.PARAM_STATUS_KEY + i, twitterStatus.getEncodedKey());
 			taskOption.param(Pages.PARAM_STATUS_STATUS + i, twitterStatus.getStatus());
 			twitterStatus.setState(State.QUEUED);
 			i++;
