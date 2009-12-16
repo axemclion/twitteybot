@@ -51,6 +51,9 @@ public class TaskServlet extends HttpServlet {
 				this.updateMessage(req.getParameter(Pages.PARAM_STATUS_TWITTER_SCREEN + i), req
 						.getParameter(Pages.PARAM_STATUS_STATUS + i));
 				// TODO Catch DeadlineExceededException
+				String key = req.getParameter(Pages.PARAM_STATUS_KEY + i);
+				// TODO Add logic to delete this key
+				log.log(Level.FINE, "Key of this twitter, that can be deleted is " + key);
 			}
 		}
 	}

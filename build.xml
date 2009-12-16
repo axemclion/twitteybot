@@ -42,7 +42,7 @@
 		</copy>
 	</target>
 
-	<target name="compile" depends="copyFiles, copyjars" description="Compiles Java source and copies other source files to the WAR.">
+	<target name="compile" depends="copyFiles, copyjars, init_datastore" description="Compiles Java source and copies other source files to the WAR.">
 		<mkdir dir="${war.dir}/WEB-INF/classes" />
 		<copy todir="${war.dir}/WEB-INF/classes">
 			<fileset dir="src">
