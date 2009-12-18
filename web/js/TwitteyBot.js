@@ -51,6 +51,7 @@ var TwitteyBot = (function(){
         tweetLength: 140,
         dateFormat: "dddd, MMMM dd, yyyy, hh:mm:ss tt",
         selectAllByDefault: false,
+		__BASE__ : window.location.protocol + "//"+ window.location.host + "/",
         init: function(){
             var me = this;
             if ($("#twitterAccountList li").size() == 0) {
@@ -96,7 +97,7 @@ var TwitteyBot = (function(){
             });
             
             $("#sampleTweets").click(function(){
-                $("#resultFrame").attr("src", "/pages/status?action=fetch&source_=http://twitteybot.appspot.com/tweets.txt&screenName=" +
+                $("#resultFrame").attr("src", "/pages/status?action=fetch&source_=" + TwitteyBot.__BASE__ +  "tweets.txt&screenName=" +
                 $("#twitterScreenName").html());
                 me.showLoading();
                 me.selectAllByDefault = true;
@@ -104,6 +105,15 @@ var TwitteyBot = (function(){
                 $("#otherButtons").hide();
             });
             
+			$("input#OneTweet").click(function(){
+                $("#resultFrame").attr("src", "/pages/status?action=fetch&source_="+ TwitteyBot.__BASE__ + "onetweet.txt&screenName=" +
+                $("#twitterScreenName").html());
+                me.showLoading();
+                me.selectAllByDefault = true;
+                $("#uploadButtons").show();
+                $("#otherButtons").hide();
+			});
+			
             $("#fetchFileForm form").submit(function(){
                 $(this).attr("action", "/pages/status?action=fetch&screenName=" +
                 $("#twitterScreenName").html());
