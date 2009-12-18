@@ -112,11 +112,14 @@
                                     Upload Tweets from a file on
                                 </li>
                                 <li>
-                                    <a href = "#fetchFileForm">the internet </a>
+                                    <a href = "#fetchFileForm">the internet</a>
                                 </li>
                                 <li>
-                                    &nbsp;|&nbsp;<a href = "#uploadFileForm"> your computer </a>
+                                    &nbsp;|&nbsp;<a href = "#uploadFileForm"> your computer</a>
                                 </li>
+								<li>
+									&nbsp;&nbsp;<input type = "button" id = "OneTweet" value = "Schedule One Tweet" class = "button"/>
+								</li>
                             </ul>
                             <div id = "fetchFileForm">
                                 <form target = "resultFrame" action = "#" method = "POST" name = "uploadFile">
