@@ -283,10 +283,13 @@ public class StatusManager extends HttpServlet {
 								if (timePart != null) {
 									Calendar timeCal = Calendar.getInstance();
 									timeCal.setTime(timePart);
+									timeCal.add(Calendar.MINUTE, browserTimeZoneOffset);
 									cal.set(Calendar.HOUR, timeCal.get(Calendar.HOUR));
 									cal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
-									cal.add(Calendar.MINUTE, browserTimeZoneOffset);
 								}
+								System.out.println(cal.getTime());
+								System.out.println(status);
+								System.out.println("=========================");
 								status = parts[parts.length - 1];
 							} catch (ArrayIndexOutOfBoundsException e) {
 								message = "Some lines in the file that you uploaded could not be parsed";
