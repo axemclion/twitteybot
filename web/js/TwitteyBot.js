@@ -54,6 +54,7 @@ var TwitteyBot = (function(){
 		__BASE__ : window.location.protocol + "//"+ window.location.host + "/",
         init: function(){
             var me = this;
+			document.cookie = "timeZone=" + new Date().getTimezoneOffset();
             if ($("#twitterAccountList li").size() == 0) {
                 $("#twitterAccount").hide();
                 $("#scheduler").hide();
@@ -454,6 +455,8 @@ var ShrinkTweets = function(type){
                 var newTweetLine = TwitteyBot.addTweetLine(tweetLine);
                 tweetLine.after(newTweetLine);
                 newTweetLine.find(".tweetText").val(tweetFrags[tweetFrags.length - i]);
+				// adding very short increment so that time is sorted on the front end
+				newTweetLine.find(".actual-time").val(parseInt(newTweetLine.find(".actual-time").val()) + 1)
                 TwitteyBot.updateCharCount(newTweetLine.find(".tweetText"));
             }
         }

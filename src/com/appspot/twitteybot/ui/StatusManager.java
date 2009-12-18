@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,26 +45,26 @@ import com.google.appengine.api.users.UserServiceFactory;
  */
 public class StatusManager extends HttpServlet {
 
-	private static final Logger	log	               = Logger.getLogger(StatusManager.class.getName());
-	private static final long	 serialVersionUID	      = 1551252388567429753L;
-	private static final int	 DEFAULT_TIME_INCREMENT	= 60;
+	private static final Logger	log							= Logger.getLogger(StatusManager.class.getName());
+	private static final long		serialVersionUID			= 1551252388567429753L;
+	private static final int		DEFAULT_TIME_INCREMENT	= 60;
 
-	private static final String	LEVEL_INFO	         = "info";
-	private static final String	LEVEL_ERROR	         = "error";
-	private static final String	LEVEL_WARN	         = "warn";
-	private static final long	 PAGE_SIZE	            = 30;
-	public static final String	 DATE_FORMAT	         = "MM/dd/yyyy";
-	public static final String	 TIME_FORMAT	         = "hh:mm";
+	private static final String	LEVEL_INFO					= "info";
+	private static final String	LEVEL_ERROR					= "error";
+	private static final String	LEVEL_WARN					= "warn";
+	private static final long		PAGE_SIZE					= 30;
+	public static final String		DATE_FORMAT					= "MM/dd/yyyy";
+	public static final String		TIME_FORMAT					= "hh:mm";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-	      IOException {
+			IOException {
 		this.doPost(req, resp);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-	      IOException {
+			IOException {
 		String action = req.getParameter(Pages.PARAM_ACTION);
 		if (action == null) {
 			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
@@ -97,12 +98,12 @@ public class StatusManager extends HttpServlet {
 		} catch (NumberFormatException e) {
 		}
 		this.constructResponse(this.getTwitterStatus(req.getParameter(Pages.PARAM_SCREENNAME), pm, start, end),
-		      "Showing " + (end - start) + " tweets", LEVEL_INFO, resp, start, end);
+				"Showing " + (end - start) + " tweets", LEVEL_INFO, resp, start, end);
 		pm.close();
 	}
 
 	private void processUpdate(HttpServletRequest req, HttpServletResponse resp, boolean delete)
-	      throws IOException {
+			throws IOException {
 		int totalItems = Integer.parseInt(req.getParameter(Pages.PARAM_TOTAL_ITEMS));
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		User user = UserServiceFactory.getUserService().getCurrentUser();
@@ -123,7 +124,7 @@ public class StatusManager extends HttpServlet {
 					toAddStatuses.add(twitterStatus);
 				} else {
 					Key key = KeyFactory.createKey(TwitterStatus.class.getSimpleName(), Long.parseLong(id.replace(
-					      ",", "")));
+							",", "")));
 					twitterStatus = pm.getObjectById(TwitterStatus.class, key);
 					twitterStatuses.add(twitterStatus);
 				}
@@ -159,7 +160,7 @@ public class StatusManager extends HttpServlet {
 		pm.close();
 		pm = PMF.get().getPersistenceManager();
 		this.constructResponse(this.getTwitterStatus(req.getParameter(Pages.PARAM_SCREENNAME), pm), message,
-		      level, resp);
+				level, resp);
 
 		pm.close();
 	}
@@ -184,16 +185,16 @@ public class StatusManager extends HttpServlet {
 				if (this.getBoolFromParam(req.getParameter(Pages.PARAM_STATUS_CANADD + i), "on")) {
 					try {
 						twitterStatuses.add(new TwitterStatus(user, screenName, req
-						      .getParameter(Pages.PARAM_STATUS_SOURCE + i), req
-						      .getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i), req
-						      .getParameter(Pages.PARAM_STATUS_STATUS + i), this.getBoolFromParam(req
-						      .getParameter(Pages.PARAM_STATUS_CAN_DELETE + i), "on")));
+								.getParameter(Pages.PARAM_STATUS_SOURCE + i), req
+								.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i), req
+								.getParameter(Pages.PARAM_STATUS_STATUS + i), this.getBoolFromParam(req
+								.getParameter(Pages.PARAM_STATUS_CAN_DELETE + i), "on")));
 					} catch (RuntimeException e) {
 						message = "There were errors parsing the time for tweets." + (++failedTweetCount)
-						      + " tweets were not added.";
+								+ " tweets were not added.";
 						level = LEVEL_WARN;
 						log.log(Level.WARNING, "Could not add "
-						      + req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i) + " as parsing failed");
+								+ req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i) + " as parsing failed");
 					}
 				}
 			}
@@ -269,6 +270,7 @@ public class StatusManager extends HttpServlet {
 					dateFormat.setLenient(true);
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(startDate);
+					int browserTimeZoneOffset = this.getBrowserTimeZone(req);
 					for (String status : statusArray) {
 						if (isCSVFile) {
 							String[] parts = status.split(",", 3);
@@ -283,6 +285,7 @@ public class StatusManager extends HttpServlet {
 									timeCal.setTime(timePart);
 									cal.set(Calendar.HOUR, timeCal.get(Calendar.HOUR));
 									cal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
+									cal.add(Calendar.MINUTE, browserTimeZoneOffset);
 								}
 								status = parts[parts.length - 1];
 							} catch (ArrayIndexOutOfBoundsException e) {
@@ -294,7 +297,7 @@ public class StatusManager extends HttpServlet {
 							cal.add(Calendar.MINUTE, DEFAULT_TIME_INCREMENT);
 						}
 						statuses.add(new TwitterStatus(user, twitterScreenName, item.getName(), cal.getTime(),
-						      status, true));
+								status, true));
 					}
 					log.log(Level.INFO, "Added " + statuses.size() + "tweets from " + item.getName());
 				}
@@ -311,8 +314,24 @@ public class StatusManager extends HttpServlet {
 		this.constructResponse(statuses, message, level, resp);
 	}
 
+	private int getBrowserTimeZone(HttpServletRequest req) {
+		Cookie[] cookies = req.getCookies();
+		int result = 0;
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(Pages.COOKIE_TIMEZONE)) {
+				try {
+					result = Integer.parseInt(cookie.getValue());
+					break;
+				} catch (NumberFormatException e) {
+					log.log(Level.WARNING, "Could not parse timezeon " + cookie.getValue());
+				}
+			}
+		}
+		return result;
+	}
+
 	private void constructResponse(List<TwitterStatus> list, String message, String level,
-	      HttpServletResponse resp, long start, long end) throws IOException {
+			HttpServletResponse resp, long start, long end) throws IOException {
 		Map<String, Object> templateValues = new HashMap<String, Object>();
 		templateValues.put(Pages.FTLVAR_TWITTER_STATUS, list);
 		templateValues.put(Pages.FTLVAR_LEVEL, level);
@@ -323,7 +342,7 @@ public class StatusManager extends HttpServlet {
 	}
 
 	private void constructResponse(List<TwitterStatus> list, String message, String level,
-	      HttpServletResponse resp) throws IOException {
+			HttpServletResponse resp) throws IOException {
 		this.constructResponse(list, message, level, resp, 0, PAGE_SIZE);
 	}
 
@@ -335,7 +354,7 @@ public class StatusManager extends HttpServlet {
 		query.setRange(start, end);
 		@SuppressWarnings("unchecked")
 		List<TwitterStatus> twitterStatuses = (List<TwitterStatus>) query.execute(screenName,
-		      UserServiceFactory.getUserService().getCurrentUser());
+				UserServiceFactory.getUserService().getCurrentUser());
 		return twitterStatuses;
 	}
 

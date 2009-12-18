@@ -47,4 +47,5 @@ public class Pages {
 	public static final String FTLVAR_LEVEL = "level";
 	public static final String FTLVAR_START = "start";
 	public static final String FTLVAR_END = "end";
+	public static final Object	COOKIE_TIMEZONE	= "timeZone";
 }
