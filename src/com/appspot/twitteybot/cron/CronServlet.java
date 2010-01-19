@@ -27,12 +27,12 @@ import com.google.appengine.api.labs.taskqueue.TaskOptions.Builder;
 
 public class CronServlet extends HttpServlet {
 
-	private static final long	 serialVersionUID	= -7767523786982743018L;
-	private static final Logger	log	         = Logger.getLogger(CronServlet.class.getName());
+	private static final long		serialVersionUID	= -7767523786982743018L;
+	private static final Logger	log					= Logger.getLogger(CronServlet.class.getName());
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-	      IOException {
+			IOException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query query = pm.newQuery(TwitterStatus.class);
 		query.setFilter("updatedTime < maxTime && state == 'SCHEDULED'");
@@ -63,6 +63,8 @@ public class CronServlet extends HttpServlet {
 		Map<String, Object> templateValues = new HashMap<String, Object>();
 		templateValues.put(Pages.FTLVAR_TWITTER_STATUS, twitterStatuses);
 		templateValues.put(Pages.PARAM_ACTION, Pages.PARAM_ACTION_SHOW);
+		templateValues.put(Pages.FTLVAR_START, 0);
+		templateValues.put(Pages.FTLVAR_END, 0);
 		FreeMarkerConfiguration.writeResponse(templateValues, Pages.TEMPLATE_STATUSPAGE, resp.getWriter());
 
 		query.closeAll();
