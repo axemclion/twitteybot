@@ -5,4 +5,9 @@
         <property name="state" direction="asc"/>
         <property name="updatedTime" direction="asc"/>
     </datastore-index>
+    <datastore-index kind="TwitterStatus" ancestor="false">
+        <property name="twitterScreenName" direction="asc"/>
+        <property name="user" direction="asc"/>
+        <property name="updatedTime" direction="asc"/>
+    </datastore-index>
 </datastore-indexes>
