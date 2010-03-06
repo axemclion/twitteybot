@@ -14,7 +14,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import com.appspot.twitteybot.ui.Pages;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
@@ -94,6 +93,15 @@ public class ApplicationProperty {
 		cache.put(key, value);
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		ApplicationProperty prop = new ApplicationProperty(key, value);
+		Query query = pm.newQuery(ApplicationProperty.class);
+		query.setFilter("key == keyVar");
+		query.declareParameters("String keyVar");
+		List<ApplicationProperty> properties = (List<ApplicationProperty>) query.execute(key);
+		if (properties.size() != 0) {
+			prop = properties.get(0);
+		}
+		prop.setKey(key);
+		prop.setValue(value);
 		pm.makePersistent(prop);
 		pm.close();
 	}
