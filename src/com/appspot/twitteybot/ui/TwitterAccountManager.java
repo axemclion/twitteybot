@@ -17,7 +17,6 @@ import twitter4j.TwitterException;
 import twitter4j.http.AccessToken;
 import twitter4j.http.RequestToken;
 
-import com.appspot.twitteybot.Util;
 import com.appspot.twitteybot.datastore.ApplicationProperty;
 import com.appspot.twitteybot.datastore.PMF;
 import com.appspot.twitteybot.datastore.TwitterAccount;
@@ -33,14 +32,12 @@ public class TwitterAccountManager extends HttpServlet {
 	private static final Logger log = Logger.getLogger(TwitterAccountManager.class.getName());
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-			IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		this.doGet(req, resp);
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-			IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String action = req.getParameter(Pages.PARAM_ACTION);
 
 		if (action == null) {
@@ -49,9 +46,9 @@ public class TwitterAccountManager extends HttpServlet {
 		}
 
 		Twitter twitter = new Twitter();
-		twitter.setOAuthConsumer(Util.getApplicationProperty(ApplicationProperty.CONSUMER_KEY), Util
-				.getApplicationProperty(ApplicationProperty.CONSUMER_SECRET));
-		log.info("Using consumer key " + Util.getApplicationProperty(ApplicationProperty.CONSUMER_KEY));
+		twitter.setOAuthConsumer(ApplicationProperty.read(ApplicationProperty.CONSUMER_KEY), ApplicationProperty
+				.read(ApplicationProperty.CONSUMER_SECRET));
+		log.info("Using consumer key " + ApplicationProperty.read(ApplicationProperty.CONSUMER_KEY));
 		try {
 			if (action.equalsIgnoreCase(Pages.PARAM_ACTION_ADD)) {
 				RequestToken requestToken = twitter.getOAuthRequestToken();
