@@ -3,7 +3,9 @@ package com.appspot.twitteybot.ui;
 public class Pages {
 	public static final String TEMPLATE_MAIN_PAGE = "MainPage.ftl";
 	public static final String TEMPLATE_STATUSPAGE = "ShowStatus.ftl";
+	public static final String TEMPLATE_ADMINPAGE = "Admin.ftl";
 
+	
 	public static final String PARAM_SEPARATOR = "separator";
 	public static final String PARAM_KEY = "key";
 	public static final String PARAM_VALUE = "value";
@@ -47,5 +49,6 @@ public class Pages {
 	public static final String FTLVAR_LEVEL = "level";
 	public static final String FTLVAR_START = "start";
 	public static final String FTLVAR_END = "end";
-	public static final Object	COOKIE_TIMEZONE	= "timeZone";
+
+	public static final String	COOKIE_TIMEZONE	= "timeZone";
 }
