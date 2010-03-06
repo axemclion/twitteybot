@@ -1,6 +1,8 @@
 package com.appspot.twitteybot.task;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -44,49 +46,42 @@ public class TaskServlet extends HttpServlet {
 			return;
 		} else if (action.equals(Pages.PARAM_ACTION_UPDATE)) {
 			int totalItems = Integer.parseInt(req.getParameter(Pages.PARAM_TOTAL_ITEMS));
+			String consumer_key = ApplicationProperty.read(ApplicationProperty.CONSUMER_KEY);
+			String consumer_secret = ApplicationProperty.read(ApplicationProperty.CONSUMER_SECRET);
+			log.log(Level.INFO, "Consumer Key : " + consumer_key);
+
 			for (int i = 0; i < totalItems; i++) {
-				this.updateMessage(req.getParameter(Pages.PARAM_STATUS_TWITTER_SCREEN + i), req
-						.getParameter(Pages.PARAM_STATUS_STATUS + i));
-				// TODO Catch DeadlineExceededException
-				String key = req.getParameter(Pages.PARAM_STATUS_KEY + i);
-				// TODO Add logic to delete this key
-				log.log(Level.FINE, "Key of this twitter, that can be deleted is " + key);
+				try {
+					String twitterScreenName = req.getParameter(Pages.PARAM_STATUS_TWITTER_SCREEN + i);
+					String status = req.getParameter(Pages.PARAM_STATUS_STATUS + i);
+					TwitterAccount twitterAccount = this.getTwitterAccount(twitterScreenName);
+					Twitter twitter = new Twitter();
+					twitter.setOAuthConsumer(consumer_key, consumer_secret);
+					twitter.setOAuthAccessToken(new AccessToken(twitterAccount.getToken(), twitterAccount.getSecret()));
+					if (status.length() > 140) {
+						status = status.substring(0, 139);
+					}
+					twitter.updateStatus(status);
+					// TODO Catch DeadlineExceededException
+					String key = req.getParameter(Pages.PARAM_STATUS_KEY + i);
+					// TODO Add logic to delete this key
+					log.log(Level.FINE, "Key of this twitter, that can be deleted is " + key);
+				} catch (CacheException e) {
+					throw new ServletException(e);
+				} catch (TwitterException e) {
+					throw new ServletException(e);
+				}
 			}
 		}
 	}
 
-	private void updateMessage(String twitterScreenName, String status) throws ServletException {
-		TwitterAccount twitterAccount = this.getTwitterAccount(twitterScreenName);
-		if (twitterScreenName == null || twitterAccount == null) {
-			throw new ServletException("Error with input parameters");
-		}
-
-		Twitter twitter = new Twitter();
-		twitter.setOAuthConsumer(ApplicationProperty.read(ApplicationProperty.CONSUMER_KEY), ApplicationProperty
-				.read(ApplicationProperty.CONSUMER_SECRET));
-		twitter.setOAuthAccessToken(new AccessToken(twitterAccount.getToken(), twitterAccount.getSecret()));
-		if (status.length() > 140) {
-			status = status.substring(0, 139);
-		}
-		try {
-			twitter.updateStatus(status);
-		} catch (TwitterException e) {
-			throw new ServletException(e);
-		}
-		log.log(Level.INFO, "Upadte " + twitterAccount.getTwitterScreenName() + " : " + status);
-	}
-
 	@SuppressWarnings("unchecked")
-	private TwitterAccount getTwitterAccount(String screenName) throws ServletException {
+	private TwitterAccount getTwitterAccount(String screenName) throws CacheException {
 		CacheManager cacheManager = CacheManager.getInstance();
 		Cache cache = cacheManager.getCache(TWITTER_ACCOUNT_CACHE);
 		if (cache == null) {
 			log.info("Twitter Cache not found, creating a new cache");
-			try {
-				cache = cacheManager.getCacheFactory().createCache(Collections.emptyMap());
-			} catch (CacheException e) {
-				throw new ServletException(e);
-			}
+			cache = cacheManager.getCacheFactory().createCache(Collections.emptyMap());
 			cacheManager.registerCache(TWITTER_ACCOUNT_CACHE, cache);
 		}
 		Object obj = cache.get(screenName);

@@ -24,6 +24,8 @@ import com.google.appengine.api.labs.taskqueue.Queue;
 import com.google.appengine.api.labs.taskqueue.QueueFactory;
 import com.google.appengine.api.labs.taskqueue.TaskOptions;
 import com.google.appengine.api.labs.taskqueue.TaskOptions.Builder;
+import com.google.appengine.api.labs.taskqueue.TaskOptions.Method;
+import com.google.storage.onestore.v3.OnestoreEntity.Property.Meaning;
 
 public class CronServlet extends HttpServlet {
 
@@ -48,6 +50,7 @@ public class CronServlet extends HttpServlet {
 		Queue queue = QueueFactory.getDefaultQueue();
 		int i = 0;
 		TaskOptions taskOption = Builder.url(Pages.PAGE_TASK_QUEUE);
+		taskOption.method(Method.POST);
 		taskOption.param(Pages.PARAM_ACTION, Pages.PARAM_ACTION_UPDATE);
 		for (TwitterStatus twitterStatus : twitterStatuses) {
 			taskOption.param(Pages.PARAM_STATUS_TWITTER_SCREEN + i, twitterStatus.getTwitterScreenName());
@@ -61,12 +64,6 @@ public class CronServlet extends HttpServlet {
 			queue.add(taskOption);
 			log.log(Level.INFO, "Sending " + i + " tweets to task for updating at " + maxTime.getTime());
 		}
-		Map<String, Object> templateValues = new HashMap<String, Object>();
-		templateValues.put(Pages.FTLVAR_TWITTER_STATUS, twitterStatuses);
-		templateValues.put(Pages.PARAM_ACTION, Pages.PARAM_ACTION_SHOW);
-		templateValues.put(Pages.FTLVAR_START, 0);
-		templateValues.put(Pages.FTLVAR_END, 0);
-		FreeMarkerConfiguration.writeResponse(templateValues, Pages.TEMPLATE_STATUSPAGE, resp.getWriter());
 
 		query.closeAll();
 		pm.makePersistentAll(twitterStatuses);
