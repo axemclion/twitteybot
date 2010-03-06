@@ -1,11 +1,9 @@
 package com.appspot.twitteybot.cron;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
@@ -18,14 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.appspot.twitteybot.datastore.PMF;
 import com.appspot.twitteybot.datastore.TwitterStatus;
 import com.appspot.twitteybot.datastore.TwitterStatus.State;
-import com.appspot.twitteybot.ui.FreeMarkerConfiguration;
 import com.appspot.twitteybot.ui.Pages;
 import com.google.appengine.api.labs.taskqueue.Queue;
 import com.google.appengine.api.labs.taskqueue.QueueFactory;
 import com.google.appengine.api.labs.taskqueue.TaskOptions;
 import com.google.appengine.api.labs.taskqueue.TaskOptions.Builder;
 import com.google.appengine.api.labs.taskqueue.TaskOptions.Method;
-import com.google.storage.onestore.v3.OnestoreEntity.Property.Meaning;
 
 public class CronServlet extends HttpServlet {
 
@@ -38,7 +34,6 @@ public class CronServlet extends HttpServlet {
 		Query query = pm.newQuery(TwitterStatus.class);
 		query.setFilter("updatedTime < maxTime && state == 'SCHEDULED'");
 		query.setOrdering("updatedTime");
-		query.setRange(0, 10);
 		query.declareParameters("java.util.Date maxTime, ");
 		Calendar maxTime = Calendar.getInstance();
 		maxTime.add(Calendar.MINUTE, 1);
@@ -46,25 +41,25 @@ public class CronServlet extends HttpServlet {
 		maxTime.set(Calendar.MILLISECOND, 0);
 		@SuppressWarnings("unchecked")
 		List<TwitterStatus> twitterStatuses = (List<TwitterStatus>) query.execute(maxTime.getTime());
-
+		PrintWriter out = resp.getWriter();
 		Queue queue = QueueFactory.getDefaultQueue();
-		int i = 0;
-		TaskOptions taskOption = Builder.url(Pages.PAGE_TASK_QUEUE);
-		taskOption.method(Method.POST);
-		taskOption.param(Pages.PARAM_ACTION, Pages.PARAM_ACTION_UPDATE);
 		for (TwitterStatus twitterStatus : twitterStatuses) {
-			taskOption.param(Pages.PARAM_STATUS_TWITTER_SCREEN + i, twitterStatus.getTwitterScreenName());
-			taskOption.param(Pages.PARAM_STATUS_KEY + i, twitterStatus.getEncodedKey());
-			taskOption.param(Pages.PARAM_STATUS_STATUS + i, twitterStatus.getStatus());
+			TaskOptions taskOption = Builder.url(Pages.PAGE_TASK_QUEUE);
+			taskOption.method(Method.POST);
+			taskOption.param(Pages.PARAM_ACTION, Pages.PARAM_ACTION_UPDATE);
+			taskOption.param(Pages.PARAM_STATUS_TWITTER_SCREEN, twitterStatus.getTwitterScreenName());
+			taskOption.param(Pages.PARAM_STATUS_KEY, twitterStatus.getEncodedKey());
+			taskOption.param(Pages.PARAM_STATUS_STATUS, twitterStatus.getStatus());
 			twitterStatus.setState(State.QUEUED);
-			i++;
-		}
-		taskOption.param(Pages.PARAM_TOTAL_ITEMS, i + "");
-		if (i > 0) {
 			queue.add(taskOption);
-			log.log(Level.INFO, "Sending " + i + " tweets to task for updating at " + maxTime.getTime());
-		}
 
+			out.write(Pages.PAGE_TASK_QUEUE + "?");
+			out.write("&" + Pages.PARAM_ACTION + "=" + Pages.PARAM_ACTION_UPDATE);
+			out.write("&" + Pages.PARAM_STATUS_TWITTER_SCREEN + "=" + twitterStatus.getTwitterScreenName());
+			out.write("&" + Pages.PARAM_STATUS_KEY + "=" + twitterStatus.getEncodedKey());
+			out.write("&" + Pages.PARAM_STATUS_STATUS + "=" + twitterStatus.getStatus());
+			out.println();
+		}
 		query.closeAll();
 		pm.makePersistentAll(twitterStatuses);
 		pm.close();

@@ -45,33 +45,30 @@ public class TaskServlet extends HttpServlet {
 		if (action == null) {
 			return;
 		} else if (action.equals(Pages.PARAM_ACTION_UPDATE)) {
-			int totalItems = Integer.parseInt(req.getParameter(Pages.PARAM_TOTAL_ITEMS));
 			String consumer_key = ApplicationProperty.read(ApplicationProperty.CONSUMER_KEY);
 			String consumer_secret = ApplicationProperty.read(ApplicationProperty.CONSUMER_SECRET);
 			log.log(Level.INFO, "Consumer Key : " + consumer_key);
-
-			for (int i = 0; i < totalItems; i++) {
-				try {
-					String twitterScreenName = req.getParameter(Pages.PARAM_STATUS_TWITTER_SCREEN + i);
-					String status = req.getParameter(Pages.PARAM_STATUS_STATUS + i);
-					TwitterAccount twitterAccount = this.getTwitterAccount(twitterScreenName);
-					Twitter twitter = new Twitter();
-					twitter.setOAuthConsumer(consumer_key, consumer_secret);
-					twitter.setOAuthAccessToken(new AccessToken(twitterAccount.getToken(), twitterAccount.getSecret()));
-					if (status.length() > 140) {
-						status = status.substring(0, 139);
-					}
-					twitter.updateStatus(status);
-					// TODO Catch DeadlineExceededException
-					String key = req.getParameter(Pages.PARAM_STATUS_KEY + i);
-					// TODO Add logic to delete this key
-					log.log(Level.FINE, "Key of this twitter, that can be deleted is " + key);
-				} catch (CacheException e) {
-					throw new ServletException(e);
-				} catch (TwitterException e) {
-					throw new ServletException(e);
+			try {
+				String twitterScreenName = req.getParameter(Pages.PARAM_STATUS_TWITTER_SCREEN);
+				String status = req.getParameter(Pages.PARAM_STATUS_STATUS);
+				TwitterAccount twitterAccount = this.getTwitterAccount(twitterScreenName);
+				Twitter twitter = new Twitter();
+				twitter.setOAuthConsumer(consumer_key, consumer_secret);
+				twitter.setOAuthAccessToken(new AccessToken(twitterAccount.getToken(), twitterAccount.getSecret()));
+				if (status.length() > 140) {
+					status = status.substring(0, 139);
 				}
+				twitter.updateStatus(status);
+				// TODO Catch DeadlineExceededException
+				String key = req.getParameter(Pages.PARAM_STATUS_KEY);
+				// TODO Add logic to delete this key
+				log.log(Level.FINE, "Key of this twitter, that can be deleted is " + key);
+			} catch (CacheException e) {
+				throw new ServletException(e);
+			} catch (TwitterException e) {
+				throw new ServletException(e);
 			}
+
 		}
 	}
 
