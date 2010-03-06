@@ -1,6 +1,7 @@
 package com.appspot.twitteybot.admin;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,24 +20,31 @@ public class AdminServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 6405416403272879573L;
 
-	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String action = req.getParameter(Pages.PARAM_ACTION);
-		if (action == null) {
+		this.wrieAdminForm(resp.getWriter());
+	}
 
-		} else if (action.equalsIgnoreCase(Pages.PARAM_ACTION_ADD)) {
-			PersistenceManager pm = PMF.get().getPersistenceManager();
-			ApplicationProperty prop = new ApplicationProperty(req.getParameter(Pages.PARAM_KEY), req
-					.getParameter(Pages.PARAM_VALUE));
-			pm.makePersistent(prop);
-			pm.close();
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String action = req.getParameter(Pages.PARAM_ACTION);
+		if (action != null && action.equalsIgnoreCase(Pages.PARAM_ACTION_ADD)) {
+			ApplicationProperty.write(ApplicationProperty.CONSUMER_KEY, req
+					.getParameter(ApplicationProperty.CONSUMER_KEY));
+			ApplicationProperty.write(ApplicationProperty.CONSUMER_SECRET, req
+					.getParameter(ApplicationProperty.CONSUMER_SECRET));
+			resp.getWriter().write("Properties added");
 		} else {
-			String consumerKey = ApplicationProperty.read(ApplicationProperty.CONSUMER_KEY);
-			String consumerSecret = ApplicationProperty.read(ApplicationProperty.CONSUMER_SECRET);
-			Map<String, Object> templateValues = new HashMap<String, Object>();
-			templateValues.put(ApplicationProperty.CONSUMER_KEY, consumerKey);
-			templateValues.put(ApplicationProperty.CONSUMER_SECRET, consumerSecret);
-			FreeMarkerConfiguration.writeResponse(templateValues, Pages.TEMPLATE_ADMINPAGE, resp.getWriter());
+			this.wrieAdminForm(resp.getWriter());
 		}
+	}
+
+	private void wrieAdminForm(PrintWriter w) {
+		String consumerKey = ApplicationProperty.read(ApplicationProperty.CONSUMER_KEY);
+		String consumerSecret = ApplicationProperty.read(ApplicationProperty.CONSUMER_SECRET);
+		Map<String, Object> templateValues = new HashMap<String, Object>();
+		templateValues.put(ApplicationProperty.CONSUMER_KEY, consumerKey);
+		templateValues.put(ApplicationProperty.CONSUMER_SECRET, consumerSecret);
+		FreeMarkerConfiguration.writeResponse(templateValues, Pages.TEMPLATE_ADMINPAGE, w);
+
 	}
 }
