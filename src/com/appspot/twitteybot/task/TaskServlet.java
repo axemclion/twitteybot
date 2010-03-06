@@ -20,7 +20,6 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.http.AccessToken;
 
-import com.appspot.twitteybot.Util;
 import com.appspot.twitteybot.datastore.ApplicationProperty;
 import com.appspot.twitteybot.datastore.PMF;
 import com.appspot.twitteybot.datastore.TwitterAccount;
@@ -34,14 +33,12 @@ public class TaskServlet extends HttpServlet {
 	private static final Logger log = Logger.getLogger(TaskServlet.class.getName());
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-			IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doPost(req, resp);
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-			IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String action = req.getParameter(Pages.PARAM_ACTION);
 		if (action == null) {
 			return;
@@ -65,8 +62,8 @@ public class TaskServlet extends HttpServlet {
 		}
 
 		Twitter twitter = new Twitter();
-		twitter.setOAuthConsumer(Util.getApplicationProperty(ApplicationProperty.CONSUMER_KEY), Util
-				.getApplicationProperty(ApplicationProperty.CONSUMER_SECRET));
+		twitter.setOAuthConsumer(ApplicationProperty.read(ApplicationProperty.CONSUMER_KEY), ApplicationProperty
+				.read(ApplicationProperty.CONSUMER_SECRET));
 		twitter.setOAuthAccessToken(new AccessToken(twitterAccount.getToken(), twitterAccount.getSecret()));
 		if (status.length() > 140) {
 			status = status.substring(0, 139);
