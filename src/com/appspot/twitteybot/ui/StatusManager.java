@@ -45,26 +45,24 @@ import com.google.appengine.api.users.UserServiceFactory;
  */
 public class StatusManager extends HttpServlet {
 
-	private static final Logger	log							= Logger.getLogger(StatusManager.class.getName());
-	private static final long		serialVersionUID			= 1551252388567429753L;
-	private static final int		DEFAULT_TIME_INCREMENT	= 60;
+	private static final Logger log = Logger.getLogger(StatusManager.class.getName());
+	private static final long serialVersionUID = 1551252388567429753L;
+	private static final int DEFAULT_TIME_INCREMENT = 60;
 
-	private static final String	LEVEL_INFO					= "info";
-	private static final String	LEVEL_ERROR					= "error";
-	private static final String	LEVEL_WARN					= "warn";
-	private static final long		PAGE_SIZE					= 30;
-	public static final String		DATE_FORMAT					= "MM/dd/yyyy";
-	public static final String		TIME_FORMAT					= "hh:mm";
+	private static final String LEVEL_INFO = "info";
+	private static final String LEVEL_ERROR = "error";
+	private static final String LEVEL_WARN = "warn";
+	private static final long PAGE_SIZE = 30;
+	public static final String DATE_FORMAT = "MM/dd/yyyy";
+	public static final String TIME_FORMAT = "HH:mm";
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-			IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		this.doPost(req, resp);
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-			IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String action = req.getParameter(Pages.PARAM_ACTION);
 		if (action == null) {
 			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
@@ -102,8 +100,7 @@ public class StatusManager extends HttpServlet {
 		pm.close();
 	}
 
-	private void processUpdate(HttpServletRequest req, HttpServletResponse resp, boolean delete)
-			throws IOException {
+	private void processUpdate(HttpServletRequest req, HttpServletResponse resp, boolean delete) throws IOException {
 		int totalItems = Integer.parseInt(req.getParameter(Pages.PARAM_TOTAL_ITEMS));
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		User user = UserServiceFactory.getUserService().getCurrentUser();
@@ -123,8 +120,8 @@ public class StatusManager extends HttpServlet {
 					twitterStatus.setState(TwitterStatus.State.SCHEDULED);
 					toAddStatuses.add(twitterStatus);
 				} else {
-					Key key = KeyFactory.createKey(TwitterStatus.class.getSimpleName(), Long.parseLong(id.replace(
-							",", "")));
+					Key key = KeyFactory.createKey(TwitterStatus.class.getSimpleName(),
+							Long.parseLong(id.replace(",", "")));
 					twitterStatus = pm.getObjectById(TwitterStatus.class, key);
 					twitterStatuses.add(twitterStatus);
 				}
@@ -159,8 +156,8 @@ public class StatusManager extends HttpServlet {
 
 		pm.close();
 		pm = PMF.get().getPersistenceManager();
-		this.constructResponse(this.getTwitterStatus(req.getParameter(Pages.PARAM_SCREENNAME), pm), message,
-				level, resp);
+		this.constructResponse(this.getTwitterStatus(req.getParameter(Pages.PARAM_SCREENNAME), pm), message, level,
+				resp);
 
 		pm.close();
 	}
@@ -187,14 +184,14 @@ public class StatusManager extends HttpServlet {
 						twitterStatuses.add(new TwitterStatus(user, screenName, req
 								.getParameter(Pages.PARAM_STATUS_SOURCE + i), req
 								.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i), req
-								.getParameter(Pages.PARAM_STATUS_STATUS + i), this.getBoolFromParam(req
-								.getParameter(Pages.PARAM_STATUS_CAN_DELETE + i), "on")));
+								.getParameter(Pages.PARAM_STATUS_STATUS + i), this.getBoolFromParam(
+								req.getParameter(Pages.PARAM_STATUS_CAN_DELETE + i), "on")));
 					} catch (RuntimeException e) {
 						message = "There were errors parsing the time for tweets." + (++failedTweetCount)
 								+ " tweets were not added.";
 						level = LEVEL_WARN;
-						log.log(Level.WARNING, "Could not add "
-								+ req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i) + " as parsing failed");
+						log.log(Level.WARNING, "Could not add " + req.getParameter(Pages.PARAM_STATUS_UPDATE_DATE + i)
+								+ " as parsing failed");
 					}
 				}
 			}
@@ -280,12 +277,13 @@ public class StatusManager extends HttpServlet {
 									cal.setTime(datePart);
 								}
 								Date timePart = timeFormat.parse(parts[1], new ParsePosition(0));
+								System.out.println(timePart.toString() + " >>> ");
 								if (timePart != null) {
 									Calendar timeCal = Calendar.getInstance();
 									timeCal.setTime(timePart);
-									timeCal.add(Calendar.MINUTE, browserTimeZoneOffset);
 									cal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
 									cal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
+									cal.add(Calendar.MINUTE, browserTimeZoneOffset);
 								}
 								status = parts[parts.length - 1];
 							} catch (ArrayIndexOutOfBoundsException e) {
@@ -296,8 +294,8 @@ public class StatusManager extends HttpServlet {
 						} else {
 							cal.add(Calendar.MINUTE, DEFAULT_TIME_INCREMENT);
 						}
-						statuses.add(new TwitterStatus(user, twitterScreenName, item.getName(), cal.getTime(),
-								status, true));
+						statuses.add(new TwitterStatus(user, twitterScreenName, item.getName(), cal.getTime(), status,
+								true));
 					}
 					log.log(Level.INFO, "Added " + statuses.size() + "tweets from " + item.getName());
 				}
@@ -330,8 +328,8 @@ public class StatusManager extends HttpServlet {
 		return result;
 	}
 
-	private void constructResponse(List<TwitterStatus> list, String message, String level,
-			HttpServletResponse resp, long start, long end) throws IOException {
+	private void constructResponse(List<TwitterStatus> list, String message, String level, HttpServletResponse resp,
+			long start, long end) throws IOException {
 		Map<String, Object> templateValues = new HashMap<String, Object>();
 		templateValues.put(Pages.FTLVAR_TWITTER_STATUS, list);
 		templateValues.put(Pages.FTLVAR_LEVEL, level);
@@ -341,8 +339,8 @@ public class StatusManager extends HttpServlet {
 		FreeMarkerConfiguration.writeResponse(templateValues, Pages.TEMPLATE_STATUSPAGE, resp.getWriter());
 	}
 
-	private void constructResponse(List<TwitterStatus> list, String message, String level,
-			HttpServletResponse resp) throws IOException {
+	private void constructResponse(List<TwitterStatus> list, String message, String level, HttpServletResponse resp)
+			throws IOException {
 		this.constructResponse(list, message, level, resp, 0, PAGE_SIZE);
 	}
 
@@ -353,8 +351,8 @@ public class StatusManager extends HttpServlet {
 		query.setOrdering("updatedTime asc");
 		query.setRange(start, end);
 		@SuppressWarnings("unchecked")
-		List<TwitterStatus> twitterStatuses = (List<TwitterStatus>) query.execute(screenName,
-				UserServiceFactory.getUserService().getCurrentUser());
+		List<TwitterStatus> twitterStatuses = (List<TwitterStatus>) query.execute(screenName, UserServiceFactory
+				.getUserService().getCurrentUser());
 		return twitterStatuses;
 	}
 

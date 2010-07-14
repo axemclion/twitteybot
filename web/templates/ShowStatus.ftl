@@ -31,8 +31,7 @@
                     </span>
                 </span>
                 <span>
-                    <input title = "click to edit" class = "time" id = "time_${item_index}">
-                    </input>
+                    <input title = "click to edit" class = "time" id = "time_${item_index}" />
                 </span>
             </div>
             <div class = "right-pane" style ="width : 30%; text-align : right; padding : 0.5em; color:#3366CC">
